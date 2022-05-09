@@ -1,0 +1,29 @@
+@use './variables';
+@use './mixins';
+
+html {
+  height: 100%;
+
+  @include mixins.mq(sp) {
+    font-size: 12px;
+  }
+
+  @include mixins.mq(tablet) {
+    font-size: 14px;
+  }
+
+  @include mixins.mq(pc) {
+    font-size: 16px;
+  }
+}
+
+body {
+  background-color: variables.$base-color;
+  height: 100%;
+  font-family: variables.$font-family;
+  letter-spacing: 0.1rem;
+}
+
+#app {
+  height: 100%;
+}

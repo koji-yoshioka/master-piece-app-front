@@ -1,0 +1,15 @@
+@use './variables';
+
+@function getHeaderHeight($breakpoint: sp) {
+  @if $breakpoint=='sp' {
+    @return 60px;
+  }
+
+  @else if $breakpoint=='tablet' {
+    @return 80px;
+  }
+
+  @else if $breakpoint=='pc' {
+    @return 100px;
+  }
+}
