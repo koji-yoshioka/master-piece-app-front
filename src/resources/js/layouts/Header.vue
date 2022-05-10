@@ -1,48 +1,33 @@
 <script setup lang="ts">
-// import { defineComponent } from "vue";
-// export default defineComponent({
-//   setup() { },
-// });
+import { useRoute } from 'vue-router'
+const route = useRoute();
 </script>
 
 <template>
-  <header id="header">
-    <router-link to="/" exact>
-      <h1>
-        <figure class="logo">
-          <img class="logo__img" src="/images/logo.svg" alt="MASTER PIECE" />
+  <header id="header" class="l-header">
+    <router-link class="l-header__logo" to="/" exact>
+      <h1 class="l-header__logo-heading">
+        <figure class="l-header__logo-image-area">
+          <img class="l-header__logo-image" src="/images/logo/logo.svg" alt="MASTER PIECE" />
         </figure>
       </h1>
     </router-link>
-    <nav class="header-menu">
-      <ul class="header-menu__item-list">
-        <!-- <li class="header-menu__item">
-          <router-link :to="{ name: 'search', query: { prefectureId: 13 } }" exact>検索</router-link>
-        </li>
-        <li class="header-menu__item">
-          <router-link to="/reserve" exact>予約</router-link>
-        </li>
-
-        <li class=" header-menu__item">
+    <nav class="l-header__menu">
+      <ul class="l-header__menu-item-list">
+        <li class="l-header__menu-item" v-show="route.path !== '/contact'">
           <router-link to="/contact" exact>お問い合わせ</router-link>
         </li>
-        <li class="header-menu__item">
-          <router-link to="/user-login" exact>ログイン</router-link>
-        </li>
-        <li class="header-menu__item">
-          <router-link to="/user-sign-up" exact>新規登録</router-link>
-        </li> -->
       </ul>
     </nav>
   </header>
 </template>
 
 <style lang="scss" scoped>
-@use "~@/variables";
-@use "~@/mixins";
 @use "~@/functions";
+@use "~@/mixins";
+@use "~@/variables";
 
-#header {
+.l-header {
   align-items: center;
   background-color: variables.$base-color;
   border-bottom: 0.5px solid #dcc090;
@@ -69,39 +54,36 @@
   }
 }
 
-.logo {
-  width: max-content;
+.l-header__logo {}
 
+.l-header__logo-heading {}
+
+.l-header__logo-image-area {
+  width: max-content;
+}
+
+.l-header__logo-image {
   @include mixins.mq(sp) {
-    &__img {
-      width: 50px;
-    }
+    width: 50px;
   }
 
   @include mixins.mq(tablet) {
-    &__img {
-      width: 60px;
-    }
+    width: 60px;
   }
 
   @include mixins.mq(pc) {
-    &__img {
-      width: 80px;
-    }
+    width: 80px;
   }
 }
 
-.header-menu__item-list {
+.l-header__menu {}
+
+.l-header__menu-item-list {
+  column-gap: 20px;
   display: flex;
   flex: 1;
   justify-content: flex-end;
 }
 
-.header-menu__item {
-  margin-right: 20px;
-}
-
-.header-menu__item:last-child {
-  margin-right: 0;
-}
+.l-header__menu-item {}
 </style>

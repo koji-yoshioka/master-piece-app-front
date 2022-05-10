@@ -25,6 +25,7 @@
         "@fortawesome/fontawesome-svg-core": "^6.1.1",
         "@fortawesome/free-solid-svg-icons": "^6.1.1",
         "@fortawesome/vue-fontawesome": "^3.0.0-5",
+        "@hennge/vue3-pagination": "^1.0.17",
         "@types/lodash": "^4.14.182",
         "@types/vuelidate": "^0.7.15",
         "@types/webpack-env": "^1.16.4",

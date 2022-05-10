@@ -1,20 +1,20 @@
 <template>
-  <footer id="footer">
-    <ul class="footer__list">
-      <li class="footer__item">
-        <a class="footer__link">サイトポリシー</a>
+  <footer id="footer" class="l-footer">
+    <ul class="l-footer__list">
+      <li class="l-footer__item">
+        <a class="l-footer__link">サイトポリシー</a>
       </li>
-      <li class="footer__item">
-        <a class="footer__link">関連団体</a>
+      <li class="l-footer__item">
+        <a class="l-footer__link">関連団体</a>
       </li>
-      <li class="footer__item">
-        <a class="footer__link">情報セキュリティ基本方針</a>
+      <li class="l-footer__item">
+        <a class="l-footer__link">情報セキュリティ基本方針</a>
       </li>
-      <li class="footer__item">
-        <a class="footer__link">個人情報保護方針</a>
+      <li class="l-footer__item">
+        <a class="l-footer__link">個人情報保護方針</a>
       </li>
-      <li class="footer__item">
-        <a class="footer__link">サイトマップ</a>
+      <li class="l-footer__item">
+        <a class="l-footer__link">サイトマップ</a>
       </li>
     </ul>
     <p>Copyright © MASTER PIECE. All Rights Reserved</p>
@@ -22,10 +22,10 @@
 </template>
 
 <style lang="scss" scoped>
-@use "~@/variables";
 @use "~@/mixins";
+@use "~@/variables";
 
-#footer {
+.l-footer {
   background-color: variables.$base-color;
   border-top: 0.5px solid #dcc090;
   color: #ccc;
@@ -50,18 +50,18 @@
   }
 }
 
-#footer .footer__item {
+.l-footer__item {
   line-height: 1.8;
 }
 
-#footer .footer__list {
+.l-footer__list {
   @include mixins.mq(pc) {
     display: flex;
     flex-wrap: wrap;
   }
 }
 
-#footer .footer__item {
+.l-footer__item {
   width: 50%;
 }
 </style>
