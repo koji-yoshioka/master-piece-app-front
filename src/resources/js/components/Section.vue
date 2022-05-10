@@ -13,14 +13,14 @@
     padding-bottom: 60px;
   }
 
-  @include mixins.mq(tablet, pc) {
+  @include mixins.mq(tablet) {
+    padding-top: 50px;
+    padding-bottom: 70px;
+  }
+
+  @include mixins.mq(pc) {
     padding-top: 60px;
     padding-bottom: 80px;
   }
-
-  // @include mixins.mq(pc) {
-  //   padding-top: 80px;
-  //   padding-bottom: 120px;
-  // }
 }
 </style>
