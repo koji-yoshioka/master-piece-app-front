@@ -23,3 +23,9 @@ Route::post('/sign-up', 'Auth\RegisterController@register')->name('sign-up');
 Route::post('/login', 'Auth\LoginController@login')->name('login');
 // ログアウト
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
+
+// 市区町村取得
+Route::get('/city/{prefectureId}', 'CityController@getByPrefectureId')->name('city.get-by-prefecture-id');
+
+// 企業情報取得
+Route::get('/company', 'CompanyController@getByConditions')->name('company.get-by-conditions');
