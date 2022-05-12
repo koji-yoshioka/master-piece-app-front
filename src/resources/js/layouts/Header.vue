@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-const route = useRoute();
+import { computed } from 'vue'
+import { useStore } from "@/store/auth"
+const store = useStore()
+const isLoggingIn = computed(() => store.getters.isLoggingIn)
+
 </script>
 
 <template>
@@ -14,7 +17,16 @@ const route = useRoute();
     </router-link>
     <nav class="l-header__menu">
       <ul class="l-header__menu-item-list">
-        <li class="l-header__menu-item" v-show="route.path !== '/contact'">
+        <li class="l-header__menu-item">
+          <router-link :to="'/search'" exact>検索</router-link>
+        </li>
+        <li class="l-header__menu-item" v-show="!isLoggingIn">
+          <router-link to="/login" exact>ログイン</router-link>
+        </li>
+        <li class="l-header__menu-item" v-show="!isLoggingIn">
+          <router-link to="/sign-up" exact>新規登録</router-link>
+        </li>
+        <li class="l-header__menu-item">
           <router-link to="/contact" exact>お問い合わせ</router-link>
         </li>
       </ul>
@@ -25,11 +37,10 @@ const route = useRoute();
 <style lang="scss" scoped>
 @use "~@/functions";
 @use "~@/mixins";
-@use "~@/variables";
 
 .l-header {
   align-items: center;
-  background-color: variables.$base-color;
+  background-color: #1c1c1c;
   border-bottom: 0.5px solid #dcc090;
   color: #dcc090;
   display: flex;

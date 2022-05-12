@@ -7,7 +7,7 @@ const showError = ref(false)
 const props = defineProps({
   placeholder: {
     type: String,
-    defautl: '',
+    defautl: null,
   },
   withRequiredLabel: {
     type: Boolean,
@@ -44,15 +44,13 @@ const blur = (event: Event) => {
 </template>
 
 <style lang="scss" scoped>
-@use "~@/variables";
-
 .c-input-email {
   width: 100%;
 }
 
 .c-input-email__input {
   background-color: #eee;
-  border: #ffd9d9 2px solid;
+  border: #dcc090 2px solid;
   border-radius: 3px;
   height: 50px;
   padding: 10px;
@@ -65,6 +63,7 @@ const blur = (event: Event) => {
 
 .c-input-email__input.has-error {
   background-color: #ffd9d9;
+  border: transparent 2px solid;
 }
 
 .c-input-email__error-msg {

@@ -23,9 +23,9 @@ const props = defineProps({
 </template>
 
 <style lang="scss" scoped>
-@use "~@/variables";
-
-.c-label {}
+.c-label {
+  width: fit-content;
+}
 
 .c-label--required {
   &::before {
@@ -40,19 +40,4 @@ const props = defineProps({
   display: inline-block;
   margin-bottom: 10px;
 }
-
-// &__text {
-//   color: variables.$font-color;
-//   display: inline-block;
-//   margin-bottom: 10px;
-// }
-
-// &__text--required {
-//   background-color: #ff0000;
-//   border-radius: 10px;
-//   color: #fff;
-//   display: inline-block;
-//   padding: 5px 10px;
-//   margin-left: 10px;
-// }
 </style>

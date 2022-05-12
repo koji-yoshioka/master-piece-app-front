@@ -13,8 +13,8 @@ const fields = ref({
   comment: null,
 })
 const rules = {
-  email: { required: helpers.withMessage('メールアドレスは必須です。', required), email: helpers.withMessage('メールアドレスの形式が不正です。', email) },
-  comment: { required: helpers.withMessage('お問い合わせ内容は必須です。', required) },
+  email: { required: helpers.withMessage('メールアドレスを入力してください。', required), email: helpers.withMessage('メールアドレスの形式が不正です。', email) },
+  comment: { required: helpers.withMessage('お問い合わせ内容を入力してください。', required) },
 }
 const v$ = useVuelidate(rules, fields)
 
@@ -71,7 +71,6 @@ const submit = () => {
 </template>
 
 <style lang="scss" scoped>
-@use "~@/variables";
 @use "~@/mixins";
 
 .page-contact {}

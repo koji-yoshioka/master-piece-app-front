@@ -173,7 +173,6 @@ import Section from '@/components/Section.vue'
 
 <style lang="scss" scoped>
 @use "~@/mixins";
-@use "~@/variables";
 
 .page-home {
   @include mixins.mq(sp) {
