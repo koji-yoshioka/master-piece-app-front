@@ -1,7 +1,8 @@
 import './bootstrap'
 import { createApp } from 'vue'
 import { router } from './router'
-import { store } from './store/index';
+import { modules } from './store/index'
+import { store } from './store/store'
 import App from '@/App.vue'
 
 // Font Awesome
@@ -19,12 +20,27 @@ import "@hennge/vue3-pagination/dist/vue3-pagination.css"
 
 library.add(far, fas)
 
-const app = createApp(App)
-store.forEach(({ modelName, key }) => {
-  app.use(modelName, key)
-})
-app.use(router)
-app.component('font-awesome-icon', FontAwesomeIcon)
-app.component('vue-element-loading', VueElementLoading)
-app.component('v-pagination', VPagination)
-app.mount("#app")
+// const app = createApp(App)
+// modules.forEach(({ modelName, key }) => {
+//   app.use(modelName, key)
+// })
+// app.use(router)
+// app.component('font-awesome-icon', FontAwesomeIcon)
+// app.component('vue-element-loading', VueElementLoading)
+// app.component('v-pagination', VPagination)
+// app.mount("#app")
+
+const appInitialize = async () => {
+  await store.dispatch('currentUser')
+  const app = createApp(App)
+  modules.forEach(({ modelName, key }) => {
+    app.use(modelName, key)
+  })
+  app.use(router)
+  app.component('font-awesome-icon', FontAwesomeIcon)
+  app.component('vue-element-loading', VueElementLoading)
+  app.component('v-pagination', VPagination)
+  app.mount("#app")
+}
+
+appInitialize()

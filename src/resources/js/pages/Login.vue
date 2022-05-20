@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useStore } from '@/store/auth'
+import { useStore } from '@/store/store'
 import { useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
-import { required, alphaNum, minLength, email, helpers } from '@vuelidate/validators'
+import { required, email, helpers } from '@vuelidate/validators'
 import Section from '@/components/Section.vue'
 import TitleLabel from '@/components/TitleLabel.vue'
 import InputEMail from '@/components/InputEMail.vue'
@@ -13,6 +13,9 @@ import PrimaryButton from '@/components/PrimaryButton.vue'
 const currentPassword = ref<string>('')
 const router = useRouter()
 const store = useStore()
+
+// ログイン実行中フラグ
+const loggingIn = ref<boolean>(false)
 
 const fields = ref({
   email: null,
@@ -24,9 +27,7 @@ const rules = {
     email: helpers.withMessage('メールアドレスの形式が不正です。', email)
   },
   password: {
-    required: helpers.withMessage('パスワードを入力してください。', required),
-    minLength: helpers.withMessage('パスワードは8文字以上の半角英数字で入力してください。', minLength(8)),
-    alphaNum: helpers.withMessage('パスワードは8文字以上の半角英数字で入力してください。', alphaNum),
+    required: helpers.withMessage('パスワードを入力してください。', required)
   },
 }
 const v$ = useVuelidate(rules, fields)
@@ -38,11 +39,15 @@ const isDisabled = computed(() =>
 )
 
 const submit = async () => {
+  loggingIn.value = true
   await store.dispatch('login', {
     email: v$.value.email.$model,
     password: v$.value.password.$model,
   })
-  router.push('/');
+  loggingIn.value = false
+  if (!store.getters.hasError) {
+    router.push('/')
+  }
 }
 
 </script>
@@ -51,25 +56,24 @@ const submit = async () => {
   <div class="page-login">
     <Section class="page-login__form">
       <h2 class="page-login__form-title">ログイン</h2>
-
       <div class="page-login__input-area">
         <TitleLabel class="page-login__input-label" :required="true">メールアドレス</TitleLabel>
         <InputEMail class="page-login__input-input" :errors="v$.email.$errors" v-model="v$.email.$model">
         </InputEMail>
       </div>
-
       <div class="page-login__input-area">
         <TitleLabel class="page-login__input-label" :required="true">パスワード</TitleLabel>
         <InputPassword class="page-login__input-input" :errors="v$.password.$errors"
           @update:modelValue="currentPassword = $event" v-model="v$.password.$model">
         </InputPassword>
       </div>
-
       <div class="page-login__submit-area">
         <PrimaryButton class="page-login__submit" :disabled="isDisabled" @click="submit">送信</PrimaryButton>
       </div>
-
     </Section>
+
+    <vue-element-loading class="page-login__loading" :active="loggingIn" :background-color="'#1c1c1c'" :color="'#fff'"
+      :is-full-screen="true" :spinner="'spinner'" :text="'ログイン処理を実行しています'" />
   </div>
 </template>
 
@@ -130,5 +134,9 @@ const submit = async () => {
   @include mixins.mq(pc) {
     width: 50%;
   }
+}
+
+.page-login__loading {
+  opacity: 0.8;
 }
 </style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { getFullHeight } from '@/util'
 
 const props = defineProps({
   title: {
@@ -11,29 +11,25 @@ const props = defineProps({
     default: false,
   },
 })
+
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const bodyHeight = ref<number>(0)
-
 const close = (event: Event) => {
   emit('close')
 }
-
-onMounted(() => {
-  bodyHeight.value = document.body.scrollHeight
-})
-
 </script>
 
 <template>
   <teleport to="body">
     <div v-if="show" class="c-modal">
-      <div class="c-modal__background" :style="'height:' + bodyHeight + 'px'" @click.stop="close($event)">
+      <div class="c-modal__background" :style="'height:' + getFullHeight() + 'px'" @click.stop="close($event)">
         <div class="c-modal__body" @click.stop>
 
-          <slot name="loading"></slot>
+          <div class="c-modal__loading">
+            <slot name="loading"></slot>
+          </div>
 
           <div class="c-modal__header">
             <span class="c-modal__header-title">{{ title }}</span>
@@ -115,7 +111,6 @@ onMounted(() => {
 }
 
 .c-modal__content {
-  flex-grow: 1;
   overflow: auto;
   padding: 10px;
 }

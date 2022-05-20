@@ -24,7 +24,7 @@ const emit = defineEmits(['update:modelValue'])
 const input = (event: Event) => {
   showError.value = false
   const target = event.target as HTMLInputElement;
-  emit("update:modelValue", target.value)
+  emit('update:modelValue', target.value)
 }
 
 const blur = (event: Event) => {
