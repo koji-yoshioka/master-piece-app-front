@@ -1,12 +1,20 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
+import { useStore } from "@/store/store"
 import { required, email, helpers } from '@vuelidate/validators'
+import { OK } from '@/util'
 import axios from 'axios'
 import Section from '@/components/Section.vue'
 import TitleLabel from '@/components/TitleLabel.vue'
 import InputEMail from '@/components/InputEMail.vue'
 import InputTextArea from '@/components/InputTextArea.vue'
+import PrimaryButton from '@/components/PrimaryButton.vue'
+
+const store = useStore()
+
+// 送信中フラグ
+const sendIng = ref<boolean>(false)
 
 const fields = ref({
   email: null,
@@ -18,25 +26,32 @@ const rules = {
 }
 const v$ = useVuelidate(rules, fields)
 
-const isActiveSubmit = computed(
-  () => (v$.value.email.$model && v$.value.comment.$model)
-    && !v$.value.$invalid
+const isDisabled = computed(() =>
+  (!v$.value.email.$model
+    || !v$.value.comment.$model)
+  || v$.value.$invalid
 )
 
-const submit = () => {
+const submit = async () => {
   if (v$.value.$invalid) {
     return;
   }
-  console.log('submit')
+  sendIng.value = true
+  const response = await axios.post('/api/contact', {
+    customerEmail: v$.value.email.$model,
+    comment: v$.value.comment.$model,
+  }).catch(e => e.response || e)
+  sendIng.value = false
+  if (response.status !== OK) {
+    store.dispatch('setError', response)
+  }
 }
 </script>
 
 <template>
   <div class="page-contact">
     <Section class="page-contact__form">
-
       <h2 class="page-profile__form-title">お問い合わせ</h2>
-
       <div class="page-contact__tel-area">
         <div class="page-contact__tel-label-area">
           <font-awesome-icon class="page-contact__tel-label-icon" :icon="['fas', 'square-caret-down']" size="2x" />
@@ -44,29 +59,28 @@ const submit = () => {
         </div>
         <p class="page-contact__tel-number">0120-999-9999</p>
       </div>
-
       <div class="page-contact__mail-area">
         <div class="page-contact__mail-label-area">
           <font-awesome-icon class="page-contact__mail-label-icon" :icon="['fas', 'square-caret-down']" size="2x" />
           <h3 class="page-contact__mail-label">メールでのお問い合わせはコチラ</h3>
         </div>
-
         <div class="page-contact__address-area">
           <TitleLabel class="page-contact__address-label" :required="true">メールアドレス</TitleLabel>
           <InputEMail class="page-contact__address-input" :errors="v$.email.$errors" v-model="v$.email.$model">
           </InputEMail>
         </div>
-
         <div class="page-contact__text-area">
           <TitleLabel class="page-contact__text-label" :required="true">お問い合わせ内容</TitleLabel>
           <InputTextArea class="page-contact__text-input" :rows="20" :errors="v$.comment.$errors"
             v-model="v$.comment.$model"></InputTextArea>
         </div>
-
       </div>
-
+      <div class="page-contact__submit-area">
+        <PrimaryButton class="page-contact__submit" :disabled="isDisabled" @click="submit">送信</PrimaryButton>
+      </div>
     </Section>
-
+    <vue-element-loading class="page-contact__loading" :active="sendIng" :background-color="'#1c1c1c'" :color="'#fff'"
+      :is-full-screen="true" :spinner="'spinner'" :text="'送信中です'" />
   </div>
 </template>
 
@@ -197,5 +211,29 @@ const submit = () => {
   @include mixins.mq(pc) {
     width: 50%;
   }
+}
+
+.page-contact__submit-area {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.page-contact__submit {
+  @include mixins.mq(sp) {
+    width: 100%;
+  }
+
+  @include mixins.mq(tablet) {
+    width: 50%;
+  }
+
+  @include mixins.mq(pc) {
+    width: 50%;
+  }
+}
+
+.page-contact__loading {
+  opacity: 0.8;
 }
 </style>

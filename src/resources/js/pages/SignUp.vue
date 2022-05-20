@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useStore } from '@/store/auth'
+import { useStore } from '@/store/store'
 import { useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
 import { required, alphaNum, minLength, sameAs, email, helpers } from '@vuelidate/validators'
@@ -56,7 +56,7 @@ const submit = async () => {
     password: v$.value.password.$model,
     password_confirmation: v$.value.confirmPassword.$model,
   })
-  router.push('/');
+  router.push('/')
 }
 
 </script>

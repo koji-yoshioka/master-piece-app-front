@@ -32,7 +32,6 @@ const onClick = () => {
     background-color: #1c1c1c;
     border: 2px solid #dcc090;
     color: #dcc090;
-    // transform: translateY(-2px);
   }
 
   &:disabled {

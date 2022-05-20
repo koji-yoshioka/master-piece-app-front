@@ -2,10 +2,14 @@ export interface City {
   id: number
   name: string
 }
+export interface SellingPoint {
+  id: number
+  name: string
+}
 
 export interface Company {
-  id: number | null
-  name: string | null
+  id: number
+  name: string
   tel: string | null
   prefecture: string | null
   city: string | null
@@ -27,4 +31,5 @@ export interface Company {
     id: number
     name: string
   }[]
+  userLike: boolean
 }

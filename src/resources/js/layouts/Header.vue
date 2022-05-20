@@ -1,9 +1,31 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useStore } from "@/store/auth"
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from "@/store/store"
+import ConfirmModal from '@/components/ConfirmModal.vue'
+
+const router = useRouter()
 const store = useStore()
 const isLoggingIn = computed(() => store.getters.isLoggingIn)
 
+// ログアウト実行中フラグ
+const loggingOut = ref<boolean>(false)
+
+// ログアウト確認モーダル表示フラグ
+const showLogoutConfirmModal = ref<boolean>(false)
+
+// ログアウト確認モーダルを閉じる
+const closeLogoutConfirmModal = () => {
+  showLogoutConfirmModal.value = false
+}
+
+const logout = async () => {
+  loggingOut.value = true
+  await store.dispatch('logout')
+  loggingOut.value = false
+  showLogoutConfirmModal.value = false
+  router.push('/')
+}
 </script>
 
 <template>
@@ -26,12 +48,22 @@ const isLoggingIn = computed(() => store.getters.isLoggingIn)
         <li class="l-header__menu-item" v-show="!isLoggingIn">
           <router-link to="/sign-up" exact>新規登録</router-link>
         </li>
+        <li class="l-header__menu-item" v-show="isLoggingIn">
+          <p class="l-header__menu-item-link" @click.stop="showLogoutConfirmModal = true">ログアウト</p>
+        </li>
         <li class="l-header__menu-item">
           <router-link to="/contact" exact>お問い合わせ</router-link>
         </li>
       </ul>
     </nav>
   </header>
+
+  <ConfirmModal :title="'ログアウト確認'" :show="showLogoutConfirmModal" :executing="loggingOut"
+    :loadingLabel="'ログアウト処理を実行しています'" :executeBtnlabel="'ログアウト'" :cancelBtnlabel="'キャンセル'" @execute="logout"
+    @cancel="closeLogoutConfirmModal">
+    ログアウトしますか？
+  </ConfirmModal>
+
 </template>
 
 <style lang="scss" scoped>
@@ -47,7 +79,7 @@ const isLoggingIn = computed(() => store.getters.isLoggingIn)
   justify-content: space-between;
   position: fixed;
   width: 100%;
-  z-index: 9999;
+  z-index: 3001;
 
   @include mixins.mq(sp) {
     height: functions.getHeaderHeight(sp);
@@ -97,4 +129,10 @@ const isLoggingIn = computed(() => store.getters.isLoggingIn)
 }
 
 .l-header__menu-item {}
+
+.l-header__menu-item-link {
+  &:hover {
+    cursor: pointer;
+  }
+}
 </style>

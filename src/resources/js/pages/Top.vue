@@ -57,7 +57,7 @@ import Section from '@/components/Section.vue'
       <p class="page-home__merit-title">MERIT</p>
       <div class="page-home__merit-card-area">
         <div class="page-home__merit-card">
-          <img class="page-home__merit-card-image" src="/images/merit-1.jpeg" alt="merit-1">
+          <img class="page-home__merit-card-image" src="/images/professional.jpg" alt="professional">
           <p class="page-home__merit-card-title">１．プロが担当</p>
           <p class="page-home__merit-card-text">
             ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ
@@ -65,7 +65,7 @@ import Section from '@/components/Section.vue'
         </div>
 
         <div class="page-home__merit-card">
-          <img class="page-home__merit-card-image" src="/images/merit-1.jpeg" alt="merit-1">
+          <img class="page-home__merit-card-image" src="/images/staff.jpg" alt="staff">
           <p class="page-home__merit-card-title">2．コーディネーターが豊富</p>
           <p class="page-home__merit-card-text">
             ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ
@@ -73,7 +73,7 @@ import Section from '@/components/Section.vue'
         </div>
 
         <div class="page-home__merit-card">
-          <img class="page-home__merit-card-image" src="/images/merit-1.jpeg" alt="merit-1">
+          <img class="page-home__merit-card-image" src="/images/time.jpg" alt="time">
           <p class="page-home__merit-card-title">3．最短１日で対応</p>
           <p class="page-home__merit-card-text">
             ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ
@@ -81,7 +81,7 @@ import Section from '@/components/Section.vue'
         </div>
 
         <div class="page-home__merit-card">
-          <img class="page-home__merit-card-image" src="/images/merit-1.jpeg" alt="merit-1">
+          <img class="page-home__merit-card-image" src="/images/reasonable.jpg" alt="reasonable">
           <p class="page-home__merit-card-title">4．安定したご利用料金</p>
           <p class="page-home__merit-card-text">
             ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ

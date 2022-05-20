@@ -7,7 +7,31 @@ const props = defineProps({
     type: Object as PropType<Company>,
     required: true
   },
+  executing: {
+    type: Boolean,
+    default: true,
+  },
 })
+
+const emit = defineEmits<{
+  (e: 'toggleLike', value: number): void
+  (e: 'reserve', value: number): void
+}>()
+
+const like = (event: Event) => {
+  // 親側の非同期処理が完了していない場合、emitしない
+  if (props.executing) {
+    return
+  } else {
+    emit('toggleLike', props.company.id)
+  }
+}
+const reserve = (event: Event) => {
+  emit('reserve', props.company.id)
+}
+const review = (event: Event) => {
+
+}
 
 const getLogo = computed(() =>
   props.company.logo
@@ -46,9 +70,10 @@ const getHolidays = computed(() => {
       </div>
     </div>
     <div class="c-search-result__content">
-      <figure class="c-search-result__logo-area">
+      <router-link class="c-search-result__logo-link" to="/" exact>
         <img class="c-search-result__logo" :src="getLogo" alt="COMPANY LOGO" />
-      </figure>
+      </router-link>
+
       <div class="c-search-result__overview">
         <p class="c-search-result__comment">{{ company.comment }}</p>
 
@@ -71,18 +96,19 @@ const getHolidays = computed(() => {
         </div>
 
         <div class="c-search-result__link-area-group">
-          <div class="c-search-result__link-area">
-            <font-awesome-icon :icon="['far', 'heart']" size="2x" />
-            <!-- <font-awesome-icon :icon="['fas', 'heart']" size="2x" /> -->
-            <p>お気に入り</p>
+          <div class="c-search-result__link-area" @click.stop="like">
+            <font-awesome-icon v-if="company.userLike" class="c-search-result__link-icon-checked"
+              :icon="['fas', 'heart']" size="2x" />
+            <font-awesome-icon v-else class="c-search-result__link-icon-unchecked" :icon="['fas', 'heart']" size="2x" />
+            <p class="c-search-result__link is-like">お気に入り</p>
           </div>
-          <div class="c-search-result__link-area">
+          <div class="c-search-result__link-area" @click.stop="reserve">
             <font-awesome-icon :icon="['fas', 'calendar-days']" size="2x" />
-            <router-link :to="{ name: 'reserve', query: { companyId: company.id } }" exact>予約する</router-link>
+            <p class="c-search-result__link is-reserve">予約する</p>
           </div>
-          <div class="c-search-result__link-area">
+          <div class="c-search-result__link-area" @click.stop>
             <font-awesome-icon :icon="['far', 'comment-dots']" size="2x" />
-            <p>レビュー</p>
+            <p class="c-search-result__link is-review">レビュー</p>
           </div>
         </div>
       </div>
@@ -101,7 +127,11 @@ const getHolidays = computed(() => {
     padding: 10px;
   }
 
-  @include mixins.mq(tablet, pc) {
+  @include mixins.mq(tablet) {
+    padding: 20px;
+  }
+
+  @include mixins.mq(pc) {
     padding: 20px;
   }
 }
@@ -142,7 +172,7 @@ const getHolidays = computed(() => {
   // }
 }
 
-.c-search-result__logo-area {
+.c-search-result__logo-link {
   border: #dcc090 2px solid;
   height: 100%;
   position: relative;
@@ -255,5 +285,25 @@ const getHolidays = computed(() => {
   align-items: center;
   display: flex;
   column-gap: 20px;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
+
+.c-search-result__link-icon-unchecked {
+  color: #edeae2;
+}
+
+.c-search-result__link-icon-checked {
+  color: #d13939;
+}
+
+.c-search-result__link {}
+
+.c-search-result__link.is-like {}
+
+.c-search-result__link.is-reserve {}
+
+.c-search-result__link.is-review {}
 </style>

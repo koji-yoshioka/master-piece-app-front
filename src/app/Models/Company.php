@@ -88,4 +88,34 @@ class Company extends Model
     {
         return $this->belongsToMany('App\Models\DayOfWeek', 'company_holiday', 'company_id', 'day_of_week_id');
     }
+
+    /**
+     * Get rel menus.
+     *
+     * @return HasMany
+     */
+    public function menus(): HasMany
+    {
+        return $this->hasMany('App\Models\CompanyMenu');
+    }
+
+    /**
+     * Get rel reserves.
+     *
+     * @return HasMany
+     */
+    public function reserves(): HasMany
+    {
+        return $this->hasMany('App\Models\CompanyReserve');
+    }
+
+    /**
+     * Get rel likes.
+     *
+     * @return HasMany
+     */
+    public function likes(): HasMany
+    {
+        return $this->hasMany('App\Models\CompanyLike');
+    }
 }

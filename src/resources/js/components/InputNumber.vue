@@ -5,7 +5,11 @@ import { ErrorObject } from '@vuelidate/core'
 const showError = ref(false)
 
 const props = defineProps({
-  maxlength: {
+  min: {
+    type: Number,
+    default: 0,
+  },
+  max: {
     type: Number,
     default: null,
   },
@@ -19,12 +23,14 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: number | null): void
+}>()
 
 const input = (event: Event) => {
   showError.value = false
   const target = event.target as HTMLInputElement;
-  emit("update:modelValue", target.value)
+  emit('update:modelValue', target.value ? Number(target.value) : null)
 }
 
 const blur = (event: Event) => {
@@ -35,7 +41,7 @@ const blur = (event: Event) => {
 
 <template>
   <div class="c-input-number">
-    <input class="c-input-number__input" :class="{ 'has-error': showError }" type="number" :maxlength="maxlength"
+    <input class="c-input-number__input" :class="{ 'has-error': showError }" type="number" :min="min" :max="max"
       :placeholder="placeholder" :value="$attrs.modelValue" @input="input" @blur="blur" />
     <template v-if="showError" v-for="error of errors" :key="error.$uid">
       <p class="c-input-number__error-msg">{{ error.$message }}</p>

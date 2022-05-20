@@ -34,7 +34,7 @@ const click = (event: Event) => {
 </template>
 
 <style lang="scss" scoped>
-.c-check-box {
+.c-input-check-box {
   align-items: center;
   border: transparent 2px solid;
   column-gap: 5px;
