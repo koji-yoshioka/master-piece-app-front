@@ -15,9 +15,8 @@ import SearchResult from '@/components/SearchResult.vue'
 import VerticalTable from '@/components/VerticalTable.vue'
 import Modal from '@/components/Modal.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
-import { COMPARISON_BINARY_OPERATORS } from '@babel/types'
 
-// Vuexが管理している認証状態
+// グローバル情報
 const store = useStore()
 // ログイン済フラグ
 const isLoggingIn = store.getters.isLoggingIn
@@ -53,6 +52,9 @@ const showCitiesModal = ref<boolean>(false)
 const showSellingPointsModal = ref<boolean>(false)
 // ログイン確認モーダル表示フラグ
 const showLoginConfirmModal = ref<boolean>(false)
+// 評価モーダル表示フラグ
+const showStarRatingModal = ref<boolean>(false)
+
 // 非同期処理実行中の企業ID
 const executingCompanyIds = ref<number[]>([])
 
@@ -116,13 +118,28 @@ const closeLoginConfirmModal = () => {
   showLoginConfirmModal.value = false
 }
 
+// 評価モーダルを閉じる
+const closeStarRatingModal = () => {
+  showStarRatingModal.value = false
+}
+
 // 市区町村を取得
 const getCities = async () => {
   showCitiesModal.value = true
   // 未取得の場合のみ実施
   if (!citiesLoaded.value) {
-    cities.value = (await axios.get<City[], AxiosResponse<City[]>>(`/api/city/${prefectureId.value}`)).data
-    citiesLoaded.value = true
+    const response = await axios.get<City[], AxiosResponse<City[]>>('api/cities', {
+      params: {
+        prefectureId: prefectureId.value,
+      }
+    }).catch(e => e.response || e)
+    if (response.status === OK) {
+      citiesLoaded.value = true
+      cities.value = response.data
+    } else {
+      showCitiesModal.value = false
+      store.dispatch('setError', response)
+    }
   }
 }
 
@@ -150,8 +167,15 @@ const getSellingPoints = async () => {
   showSellingPointsModal.value = true
   // 未取得の場合のみ実施
   if (!sellingPointsLoaded.value) {
-    sellingPoints.value = (await axios.get<SellingPoint[], AxiosResponse<SellingPoint[]>>('/api/selling-point')).data
-    sellingPointsLoaded.value = true
+    const response = await axios.get<SellingPoint[], AxiosResponse<SellingPoint[]>>('/api/selling-point')
+      .catch(e => e.response || e)
+    if (response.status === OK) {
+      sellingPointsLoaded.value = true
+      sellingPoints.value = response.data
+    } else {
+      showSellingPointsModal.value = false
+      store.dispatch('setError', response)
+    }
   }
 }
 
@@ -174,10 +198,15 @@ const toggleSellingPoint = (value: string) => {
   }
 }
 
+const openStarRatingModal = (companyId: number) => {
+  showStarRatingModal.value = true
+}
+
+
 // 企業を検索する
 const search = async () => {
   companiesLoaded.value = false
-  const response = await axios.get<Company[], AxiosResponse<Company[]>>('/api/company', {
+  const response = await axios.get<Company[], AxiosResponse<Company[]>>('/api/companies', {
     params: {
       userId: loginUserId(),
       prefectureId: prefectureId.value,
@@ -212,14 +241,15 @@ const toggleLike = async (companyId: number) => {
     }).catch(e => e.response || e)
     if (response.status !== OK) {
       store.dispatch('setError', response)
+    } else {
+      // お気に入りのフラグ値を切り替える
+      companies.value.map(company => {
+        if (company.id === companyId) {
+          company.userLike = !company.userLike
+        }
+        return company
+      })
     }
-    // お気に入りのフラグ値を切り替える
-    companies.value.map(company => {
-      if (company.id === companyId) {
-        company.userLike = !company.userLike
-      }
-      return company
-    })
   } else {
     showLoginConfirmModal.value = true
   }
@@ -276,8 +306,8 @@ onMounted(
 
     <Section class="page-search__result-area">
       <div v-show="!companiesLoaded" class="page-search__search-loading-area">
-        <vue-element-loading :active="true" :background-color="'#1c1c1c'" :color="'#fff'" :is-full-screen="false"
-          :spinner="'spinner'" :text="'検索中'" />
+        <vue-element-loading :active="true" :background-color="'#1c1c1c'" :color="'#fff'" :spinner="'spinner'"
+          :text="'検索中'" />
       </div>
       <template v-if="companiesLoaded">
         <h2 class="page-search__result-title">
@@ -286,7 +316,7 @@ onMounted(
         <div class="page-search__result">
           <SearchResult v-for="company in getCompanies" :company="company"
             :executing="executingCompanyIds.indexOf(company.id) > -1" @toggleLike="toggleLike"
-            @reserve="toMenuListPage"></SearchResult>
+            @review="openStarRatingModal" @reserve="toMenuListPage"></SearchResult>
         </div>
         <v-pagination class="page-search__pagination" v-show="getCompanies.length > 0" v-model="currentPageNumber"
           :pages="getTotalPageCount" :range-size="3" active-color="#dcc090" @update:modelValue="updateHandler" />
@@ -337,6 +367,10 @@ onMounted(
     <ConfirmModal :title="'ログイン確認'" :show="showLoginConfirmModal" :executing="false" :executeBtnlabel="'ログイン'"
       :cancelBtnlabel="'キャンセル'" @execute="toLoginPage" @cancel="closeLoginConfirmModal">
       この操作にはログインが必要です
+    </ConfirmModal>
+
+    <ConfirmModal :title="'ログイン確認'" :show="showStarRatingModal" :executing="false" :executeBtnlabel="'保存'"
+      :cancelBtnlabel="'キャンセル'" @execute="toLoginPage" @cancel="closeStarRatingModal">
     </ConfirmModal>
 
   </div>

@@ -15,22 +15,21 @@ const toReservePage = (menuId: number) => {
   router.push({ name: 'reserve', query: { companyId: companyId.value, menuId } });
 }
 
-onMounted(
-  async () => {
-    companyId.value = (() => {
-      const { companyId } = useRoute().query
-      return companyId ? companyId.toString() : ''
-    })()
-    // メニュー取得
-    console.log('companyId', companyId.value)
-    const resCompanyMenus = (await axios.get<CompanyMenus, AxiosResponse<CompanyMenus>>(`/api/company/menu/${companyId.value}`))
-    companyMenus.value = resCompanyMenus.data
-    const status = resCompanyMenus.status
-    console.log('companyMenus', companyMenus.value)
-    console.log('status', status)
+onMounted(async () => {
+  companyId.value = (() => {
+    const { companyId } = useRoute().query
+    return companyId ? companyId.toString() : ''
+  })()
+  // メニュー取得
+  console.log('companyId', companyId.value)
+  const resCompanyMenus = (await axios.get<CompanyMenus, AxiosResponse<CompanyMenus>>(`/api/company/menu/${companyId.value}`))
+  companyMenus.value = resCompanyMenus.data
+  const status = resCompanyMenus.status
+  console.log('companyMenus', companyMenus.value)
+  console.log('status', status)
 
-    menusLoaded.value = true
-  })
+  menusLoaded.value = true
+})
 </script>
 
 <template>

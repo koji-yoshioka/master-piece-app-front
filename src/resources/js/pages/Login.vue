@@ -80,7 +80,13 @@ const submit = async () => {
 <style lang="scss" scoped>
 @use "~@/mixins";
 
-.page-login {}
+.page-login {
+
+  // 画面全体を覆うよう、ヘッダとフッタより大きなz-indexを指定
+  &::v-deep(.velmld-overlay) {
+    z-index: 9999;
+  }
+}
 
 .page-login__form {
   align-items: center;

@@ -39,6 +39,11 @@ const logout = async () => {
     </router-link>
     <nav class="l-header__menu">
       <ul class="l-header__menu-item-list">
+
+        <li class="l-header__menu-item">
+          <router-link :to="'/my-page'" exact>マイページ</router-link>
+        </li>
+
         <li class="l-header__menu-item">
           <router-link :to="'/search'" exact>検索</router-link>
         </li>

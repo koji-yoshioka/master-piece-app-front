@@ -27,15 +27,27 @@ Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/user', fn() => Auth::user())->name('user');
 
 // 市区町村取得
-Route::get('/city/{prefectureId}', 'CityController@getByPrefectureId')->name('city.get-by-prefecture-id');
+Route::get('/cities', 'CityController@getByConditions')->name('city.get-by-conditions');
 
 // 企業情報一覧取得
-Route::get('/company', 'CompanyController@getByConditions')->name('company.get-by-conditions');
+Route::get('/companies', 'CompanyController@getByConditions')->name('company.get-by-conditions');
+// 企業情報取得
+Route::get('/company', 'CompanyController@getById')->name('company.get-by-id');
+// お気に入り企業情報取得
+Route::get('/like/companies', 'CompanyController@getLikeCompanies')->name('company.get-like-companies');
+
+
 // メニュー取得
 Route::get('/company/menu/{companyId}', 'CompanyController@getMenusById')->name('company.get-menus-by-id');
 
 // 予約に必要な諸々の情報を取得
 Route::get('/reserve/base-info', 'ReserveController@getBaseInfo')->name('reserve.get-base-info');
+// 予約
+Route::post('/reserve', 'ReserveController@reserve')->name('reserve.reserve');
+// ユーザの予約履歴
+Route::get('/user-reserves', 'ReserveController@getUserReserves')->name('reserve.get-user-reserves');
+
+
 // 曜日マスタ取得
 Route::get('/day-of-week', 'DayOfWeekController@getAll')->name('day-of-week.get-all');
 // セールスポイントマスタ取得

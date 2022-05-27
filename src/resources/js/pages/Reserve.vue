@@ -4,12 +4,12 @@ import { useRoute, useRouter } from 'vue-router'
 import { useStore } from "@/store/store"
 import axios, { AxiosResponse } from 'axios'
 import { BaseInfo, Menu, Day, DayOfWeek, Reserve, Holiday, TimetableCell } from '@/typings/interfaces/reserve'
+import { OK } from '@/util'
 import Section from '@/components/Section.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 
 // Vuexが管理している認証状態
 const store = useStore()
-const userInfo = computed(() => store.getters.getLoginUser)
 
 // 予約中
 const reserving = ref<boolean>(false)
@@ -28,18 +28,27 @@ const reserve = async (targetDay: Day | undefined, time: TimetableCell | undefin
     return;
   }
   reserving.value = true
-  await axios.post('/api/user/reserve', {
+  const response = await axios.post('/api/reserve', {
     companyId: companyId.value,
-    userId: userInfo.value.id,
+    userId: store.getters.loginUser.id,
     menuId: menuId.value,
     date: targetDay.ymd,
     from: time.from,
     to: time.to,
-  })
-  // TODO:完了画面へ遷移する
+  }).catch(e => e.response || e)
+  if (response.status === OK) {
+    await getBaseInfo()
+    showModal.value = false
+    reserving.value = false
+    // reserves.value = response.data
+    // TODO:完了画面へ遷移する
+  } else {
+    showModal.value = false
+    reserving.value = false
+    store.dispatch('setError', response)
+  }
   //reserves.value = (await axios.get<{ [date: string]: Reserve[] }, AxiosResponse<{ [date: string]: Reserve[] }>>(`/api/user/reserve/${companyId.value}`)).data
-  //showModal.value = false
-  //reserving.value = false
+
 }
 
 // 企業ID
@@ -66,6 +75,22 @@ const selectTime = (day: Day, time: TimetableCell) => {
     time,
   }
 }
+
+
+const getBaseInfo = async () => {
+  const response = await axios.get<BaseInfo, AxiosResponse<BaseInfo>>('/api/reserve/base-info', {
+    params: {
+      companyId: companyId.value,
+      menuId: menuId.value,
+    }
+  })
+  if (response.status === OK) {
+    reserves.value = response.data.reserves
+    holidays.value = response.data.holidays
+  }
+}
+
+
 
 const isHoliday = (dayOfWeekId: number) => holidays.value.map(holiday => holiday.id).includes(dayOfWeekId)
 const isReserved = (targetYmd: string, from: string, to: string) => {
@@ -102,7 +127,7 @@ onMounted(
     console.log('companyId', companyId.value)
     console.log('menuId', menuId.value)
 
-    // 休業日と予約状況を取得
+    // 休業日と予約状況を取得 // TODO 後で削除
     const baseInfo = (await axios.get<BaseInfo, AxiosResponse<BaseInfo>>('/api/reserve/base-info', {
       params: {
         companyId: companyId.value,
@@ -223,8 +248,9 @@ onMounted(
       </div>
     </Section>
 
-    <ConfirmModal :title="'予約確認'" :show="showModal" :executing="reserving" :executeBtnlabel="'予約する'"
-      :cancelBtnlabel="'キャンセル'" @execute="reserve(selectedTime?.day, selectedTime?.time)" @cancel="close">
+    <ConfirmModal :title="'予約確認'" :show="showModal" :loading-label="'予約しています'" :executing="reserving"
+      :executeBtnlabel="'予約する'" :cancelBtnlabel="'キャンセル'" @execute="reserve(selectedTime?.day, selectedTime?.time)"
+      @cancel="close">
       {{
           `${selectedTime?.day.month}/${selectedTime?.day.date}(${selectedTime?.day.dayOfWeek.abbreviation})：${selectedTime?.time.from}〜${selectedTime?.time.to}で予約しますか？`
       }}

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ContactRequest extends FormRequest
+class ReserveRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,16 +24,24 @@ class ContactRequest extends FormRequest
     public function rules()
     {
         return [
-            'customerEmail' => 'required|string|email|max:255',
-            'comment' => 'required',
+            'companyId' => 'required|integer',
+            'menuId' => 'required|integer',
+            'userId' => 'required|integer',
+            'date' => 'required',
+            'from' => 'required',
+            'to' => 'required',
         ];
     }
 
     public function attributes()
     {
         return [
-            'customerEmail'           => 'メールアドレス',
-            'comment'        => 'お問い合わせ内容',
+            'companyId' => '企業ID',
+            'menuId' => 'メニューID',
+            'userId' => 'ユーザID',
+            'date' => '日付',
+            'from' => '開始時間',
+            'to' => '終了時間',
         ];
     }
 }

@@ -11,11 +11,17 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  showLike: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const emit = defineEmits<{
+  (e: 'openDetail', value: number): void
   (e: 'toggleLike', value: number): void
   (e: 'reserve', value: number): void
+  (e: 'review', value: number): void
 }>()
 
 const like = (event: Event) => {
@@ -30,7 +36,7 @@ const reserve = (event: Event) => {
   emit('reserve', props.company.id)
 }
 const review = (event: Event) => {
-
+  emit('review', props.company.id)
 }
 
 const getLogo = computed(() =>
@@ -63,14 +69,14 @@ const getHolidays = computed(() => {
 
 <template>
   <div class="c-search-result">
-    <p class="c-search-result__name">{{ company.name }}</p>
+    <h3 class="c-search-result__name">{{ company.name }}</h3>
     <div class="c-search-result__category-area">
       <div class="c-search-result__category" v-for="sellingPoint in company.sellingPoints">
         {{ sellingPoint.name }}
       </div>
     </div>
     <div class="c-search-result__content">
-      <router-link class="c-search-result__logo-link" to="/" exact>
+      <router-link class="c-search-result__logo-link" :to="{ path: '/company', query: { companyId: company.id } }">
         <img class="c-search-result__logo" :src="getLogo" alt="COMPANY LOGO" />
       </router-link>
 
@@ -96,19 +102,19 @@ const getHolidays = computed(() => {
         </div>
 
         <div class="c-search-result__link-area-group">
-          <div class="c-search-result__link-area" @click.stop="like">
-            <font-awesome-icon v-if="company.userLike" class="c-search-result__link-icon-checked"
+          <div v-show="showLike" class="c-search-result__link-area" @click.stop="like">
+            <font-awesome-icon v-if="company.userLike" class="c-search-result__like-icon-checked"
               :icon="['fas', 'heart']" size="2x" />
-            <font-awesome-icon v-else class="c-search-result__link-icon-unchecked" :icon="['fas', 'heart']" size="2x" />
+            <font-awesome-icon v-else class="c-search-result__like-icon-unchecked" :icon="['fas', 'heart']" size="2x" />
             <p class="c-search-result__link is-like">お気に入り</p>
           </div>
           <div class="c-search-result__link-area" @click.stop="reserve">
             <font-awesome-icon :icon="['fas', 'calendar-days']" size="2x" />
             <p class="c-search-result__link is-reserve">予約する</p>
           </div>
-          <div class="c-search-result__link-area" @click.stop>
-            <font-awesome-icon :icon="['far', 'comment-dots']" size="2x" />
-            <p class="c-search-result__link is-review">レビュー</p>
+          <div class="c-search-result__link-area" @click.stop="review">
+            <font-awesome-icon :icon="['far', 'star']" size="2x" />
+            <p class="c-search-result__link is-review">評価する</p>
           </div>
         </div>
       </div>
@@ -189,6 +195,10 @@ const getHolidays = computed(() => {
     content: "";
     display: block;
     padding-bottom: 100%;
+  }
+
+  &:hover {
+    cursor: pointer;
   }
 }
 
@@ -291,12 +301,12 @@ const getHolidays = computed(() => {
   }
 }
 
-.c-search-result__link-icon-unchecked {
-  color: #edeae2;
+.c-search-result__like-icon-checked {
+  color: #d13939;
 }
 
-.c-search-result__link-icon-checked {
-  color: #d13939;
+.c-search-result__like-icon-unchecked {
+  color: #edeae2;
 }
 
 .c-search-result__link {}

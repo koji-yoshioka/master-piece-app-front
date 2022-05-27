@@ -15,20 +15,14 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VueElementLoading from "vue-element-loading"
 
 // Pagination
-import VPagination from "@hennge/vue3-pagination"
-import "@hennge/vue3-pagination/dist/vue3-pagination.css"
+import VPagination from '@hennge/vue3-pagination'
+import '@hennge/vue3-pagination/dist/vue3-pagination.css'
+
+// star-rating
+// import vue3StarRatings from 'vue3-star-ratings'
+// import VueStarRating from 'vue-star-rating'
 
 library.add(far, fas)
-
-// const app = createApp(App)
-// modules.forEach(({ modelName, key }) => {
-//   app.use(modelName, key)
-// })
-// app.use(router)
-// app.component('font-awesome-icon', FontAwesomeIcon)
-// app.component('vue-element-loading', VueElementLoading)
-// app.component('v-pagination', VPagination)
-// app.mount("#app")
 
 const appInitialize = async () => {
   await store.dispatch('currentUser')
@@ -40,6 +34,7 @@ const appInitialize = async () => {
   app.component('font-awesome-icon', FontAwesomeIcon)
   app.component('vue-element-loading', VueElementLoading)
   app.component('v-pagination', VPagination)
+  // app.component("star-rating", vue3StarRatings)
   app.mount("#app")
 }
 
