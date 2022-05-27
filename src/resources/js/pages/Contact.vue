@@ -87,7 +87,13 @@ const submit = async () => {
 <style lang="scss" scoped>
 @use "~@/mixins";
 
-.page-contact {}
+.page-contact {
+
+  // 画面全体を覆うよう、ヘッダとフッタより大きなz-indexを指定
+  &::v-deep(.velmld-overlay) {
+    z-index: 9999;
+  }
+}
 
 .page-contact__form {
   margin: 0 auto;

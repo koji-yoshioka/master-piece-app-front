@@ -43,12 +43,22 @@ export const store = createStore<State>({
     async signUp({ commit }, data) {
       const response = await axios.post('/api/sign-up', data)
         .catch(e => e.response || e)
-      if (response.status === OK) {
+      if (response.status === OK || response.status === CREATED) {
         commit('setUser', response.data)
         return
+      } else if (response.status === UNPROCESSABLE_ENTITY) {
+        // 入力値不正
+        const messages: string[] = []
+        for (const [key, value] of Object.entries(response.data.errors)) {
+          if (Array.isArray(value)) {
+            value.forEach(v => messages.push(v))
+          }
+        }
+        commit('setErrorInfo', { messages })
+      } else {
+        // 500エラー
+        commit('setErrorInfo', { messages: ['システムエラーが発生しました'] })
       }
-      // 500エラー
-      commit('setErrorInfo', { messages: ['システムエラーが発生しました'] })
     },
     // ログイン
     async login({ commit }, data) {

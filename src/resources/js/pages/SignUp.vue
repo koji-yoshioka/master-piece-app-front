@@ -35,7 +35,7 @@ const rules = {
     alphaNum: helpers.withMessage('パスワードは8文字以上の半角英数字で入力してください。', alphaNum),
   },
   confirmPassword: {
-    required: helpers.withMessage('パスワード（確認用）を入力してください。', required),
+    required: helpers.withMessage('パスワードを入力してください。', required),
     sameAsPassword: helpers.withMessage('同じパスワードを入力してください。', sameAs(currentPassword))
   }
 }
@@ -56,7 +56,9 @@ const submit = async () => {
     password: v$.value.password.$model,
     password_confirmation: v$.value.confirmPassword.$model,
   })
-  router.push('/')
+  if (!store.getters.hasError) {
+    router.push('/')
+  }
 }
 
 </script>

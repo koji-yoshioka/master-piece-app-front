@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ContactRequest extends FormRequest
+class GetLikeCompaniesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,16 +24,14 @@ class ContactRequest extends FormRequest
     public function rules()
     {
         return [
-            'customerEmail' => 'required|string|email|max:255',
-            'comment' => 'required',
+            'userId' => 'required|integer',
         ];
     }
 
     public function attributes()
     {
         return [
-            'customerEmail'           => 'メールアドレス',
-            'comment'        => 'お問い合わせ内容',
+            'userId' => 'ユーザID',
         ];
     }
 }
