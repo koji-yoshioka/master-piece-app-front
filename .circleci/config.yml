@@ -7,15 +7,13 @@ jobs:
       - checkout
       - restore_cache:
           key: composer-v1-{{ checksum "composer.lock" }}
-          paths:
-            - src/vendor
       - run:
           working_directory: src
           command: composer install -n --prefer-dist
       - save_cache:
           key: composer-v1-{{ checksum "composer.lock" }}
           paths:
-            - src/vendor
+            - vendor
       - run:
           working_directory: src
           command: npm ci
