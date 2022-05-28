@@ -3,6 +3,7 @@ version: '3.8'
 volumes:
   mysql-volume:
 
+
 services:
   app:
     build:
@@ -11,12 +12,12 @@ services:
     volumes:
       - ./src/:/var/www/html
     environment:
-      - DB_CONNECTION=mysql
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_DATABASE=${DB_NAME}
-      - DB_USERNAME=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
+      - DOCKER_DB_CONNECTION=mysql
+      - DOCKER_DB_HOST=db
+      - DOCKER_DB_PORT=3306
+      - DOCKER_DB_DATABASE=${DB_NAME}
+      - DOCKER_DB_USERNAME=${DB_USER}
+      - DOCKER_DB_PASSWORD=${DB_PASSWORD}
 
   web:
     build:
