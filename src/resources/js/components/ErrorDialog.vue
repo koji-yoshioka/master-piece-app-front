@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import {
+  Teleport as teleport_,
+  TeleportProps,
+  VNodeProps
+} from 'vue'
 import { getFullHeight } from '@/util'
 
 const props = defineProps({
@@ -14,10 +19,17 @@ const emit = defineEmits<{
 const proceed = (event: Event) => {
   emit('proceed')
 }
+
+const Teleport = teleport_ as {
+  new(): {
+    $props: VNodeProps & TeleportProps
+  }
+}
+
 </script>
 
 <template>
-  <teleport to="body">
+  <component :is="Teleport" to="body">
     <div v-if="show" class="c-error-dialog">
       <div class="c-error-dialog__background" :style="'height:' + getFullHeight() + 'px'">
         <div class="c-error-dialog__body" @click.stop>
@@ -33,7 +45,7 @@ const proceed = (event: Event) => {
         </div>
       </div>
     </div>
-  </teleport>
+  </component>
 </template>
 
 <style lang="scss" scoped>

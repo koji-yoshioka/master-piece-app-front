@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import {
+  Teleport as teleport_,
+  TeleportProps,
+  VNodeProps
+} from 'vue'
 import { getFullHeight } from '@/util'
 
 const props = defineProps({
@@ -39,6 +43,12 @@ const emit = defineEmits<{
 
 // const executing = ref<boolean>(false)
 
+const Teleport = teleport_ as {
+  new(): {
+    $props: VNodeProps & TeleportProps
+  }
+}
+
 const execute = (event: Event) => {
   // executing.value = true
   emit('execute', props.value)
@@ -49,7 +59,7 @@ const cancel = (event: Event) => {
 </script>
 
 <template>
-  <teleport to="body">
+  <component :is="Teleport" to="body">
     <div v-if="show" class="c-confirm-modal">
       <div class="c-confirm-modal__background" :style="'height:' + getFullHeight() + 'px'" @click.stop="cancel">
         <div class="c-confirm-modal__body" @click.stop>
@@ -72,7 +82,7 @@ const cancel = (event: Event) => {
         </div>
       </div>
     </div>
-  </teleport>
+  </component>
 </template>
 
 <style lang="scss" scoped>

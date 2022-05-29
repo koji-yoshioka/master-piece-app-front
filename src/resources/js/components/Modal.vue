@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { getFullHeight } from '@/util'
+import {
+  Teleport as teleport_,
+  TeleportProps,
+  VNodeProps
+} from 'vue'
 
 const props = defineProps({
   title: {
@@ -19,10 +24,16 @@ const emit = defineEmits<{
 const close = (event: Event) => {
   emit('close')
 }
+
+const Teleport = teleport_ as {
+  new(): {
+    $props: VNodeProps & TeleportProps
+  }
+}
 </script>
 
 <template>
-  <teleport to="body">
+  <component :is="Teleport" to="body">
     <div v-if="show" class="c-modal">
       <div class="c-modal__background" :style="'height:' + getFullHeight() + 'px'" @click.stop="close($event)">
         <div class="c-modal__body" @click.stop>
@@ -45,7 +56,7 @@ const close = (event: Event) => {
         </div>
       </div>
     </div>
-  </teleport>
+  </component>
 </template>
 
 <style lang="scss" scoped>
