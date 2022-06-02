@@ -11,11 +11,13 @@ import InputEMail from '@/components/InputEMail.vue'
 import InputTextArea from '@/components/InputTextArea.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 
+// グローバル情報
 const store = useStore()
 
 // 送信中フラグ
 const sendIng = ref<boolean>(false)
 
+// --start バリデーション関連
 const fields = ref({
   email: null,
   comment: null,
@@ -25,13 +27,16 @@ const rules = {
   comment: { required: helpers.withMessage('お問い合わせ内容を入力してください。', required) },
 }
 const v$ = useVuelidate(rules, fields)
+// --end
 
+// 送信ボタンの活性制御
 const isDisabled = computed(() =>
   (!v$.value.email.$model
     || !v$.value.comment.$model)
   || v$.value.$invalid
 )
 
+// 送信
 const submit = async () => {
   if (v$.value.$invalid) {
     return;

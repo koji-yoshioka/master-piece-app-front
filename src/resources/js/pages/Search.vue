@@ -268,7 +268,7 @@ const toMenuListPage = (companyId: number) => {
 }
 
 // ログインページへ遷移する
-const toLoginPage = () => {
+const toLogin = () => {
   router.push({ name: 'login' })
 }
 
@@ -365,12 +365,12 @@ onMounted(
     </Modal>
 
     <ConfirmModal :title="'ログイン確認'" :show="showLoginConfirmModal" :executing="false" :executeBtnlabel="'ログイン'"
-      :cancelBtnlabel="'キャンセル'" @execute="toLoginPage" @cancel="closeLoginConfirmModal">
+      :cancelBtnlabel="'キャンセル'" @execute="toLogin" @cancel="closeLoginConfirmModal">
       この操作にはログインが必要です
     </ConfirmModal>
 
     <ConfirmModal :title="'ログイン確認'" :show="showStarRatingModal" :executing="false" :executeBtnlabel="'保存'"
-      :cancelBtnlabel="'キャンセル'" @execute="toLoginPage" @cancel="closeStarRatingModal">
+      :cancelBtnlabel="'キャンセル'" @execute="toLogin" @cancel="closeStarRatingModal">
     </ConfirmModal>
 
   </div>

@@ -13,9 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:api')->get('/user', fn(Request $request) => $request->user()
+);
 
 // ユーザ登録
 Route::post('/sign-up', 'Auth\RegisterController@register')->name('sign-up');
@@ -25,6 +24,8 @@ Route::post('/login', 'Auth\LoginController@login')->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 // ログインユーザー取得
 Route::get('/user', fn() => Auth::user())->name('user');
+// パスワード変更
+Route::post('/password-change', 'Auth\ChangePasswordController@changePassword')->name('change-password');
 
 // 市区町村取得
 Route::get('/cities', 'CityController@getByConditions')->name('city.get-by-conditions');

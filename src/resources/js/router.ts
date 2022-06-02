@@ -95,14 +95,10 @@ const routes = [
     // meta: { requiresAuth: true }
   },
   {
-    path: '/error',
+    path: '/:catchAll(.*)',
     name: 'error',
     component: Error,
   },
-  // {
-  //   path: '*',
-  //   component: Top, // TODO:最終的にエラーページを出すようにする
-  // },
 ]
 
 const scrollBehavior: RouterScrollBehavior = (to, from, savedPosition) => {

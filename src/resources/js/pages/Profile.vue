@@ -10,6 +10,15 @@ import InputEMail from '@/components/InputEMail.vue'
 import InputText from '@/components/InputText.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 
+// グローバル情報
+const store = useStore()
+// ルーティング情報
+const router = useRouter()
+
+// 更新実行中フラグ
+const isUpdating = ref<boolean>(false)
+
+// --start バリデーション関連
 const fields = ref({
   name: null,
   email: null,
@@ -24,15 +33,20 @@ const rules = {
   },
 }
 const v$ = useVuelidate(rules, fields)
+// --end
 
+// 送信ボタンの活性制御
 const isDisabled = computed(() =>
   (!v$.value.name.$model
     || !v$.value.email.$model)
   || v$.value.$invalid
 )
 
+// 送信
 const submit = async () => {
+  isUpdating.value = true
   console.log('save profile')
+  isUpdating.value = false
 }
 
 </script>
@@ -52,9 +66,11 @@ const submit = async () => {
         </InputEMail>
       </div>
       <div class="page-profile__submit-area">
-        <PrimaryButton class="page-profile__submit" :disabled="isDisabled" @click="submit">保存</PrimaryButton>
+        <PrimaryButton class="page-profile__submit" :disabled="isDisabled" @click="submit">送信</PrimaryButton>
       </div>
     </Section>
+    <vue-element-loading class="page-profile__loading" :active="isUpdating" :background-color="'#1c1c1c'"
+      :color="'#fff'" :is-full-screen="true" :spinner="'spinner'" :text="'ユーザ情報を更新しています'" />
   </div>
 </template>
 
@@ -130,5 +146,9 @@ const submit = async () => {
   @include mixins.mq(pc) {
     width: 50%;
   }
+}
+
+.page-profile__loading {
+  opacity: 0.8;
 }
 </style>

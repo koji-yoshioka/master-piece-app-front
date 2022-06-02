@@ -16,6 +16,7 @@ const close = () => {
 </script>
 
 <template>
+  <FlashMessage position="left top" />
   <Header></Header>
   <Main></Main>
   <Footer></Footer>

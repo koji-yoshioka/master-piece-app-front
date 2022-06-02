@@ -10,40 +10,39 @@ import VerticalTable from '@/components/VerticalTable.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 
-const router = useRouter()
+
 // グローバル情報
 const store = useStore()
+// ルーティング情報
+const router = useRouter()
 
 // ログイン済フラグ
 const isLoggingIn = store.getters.isLoggingIn
 
+// 企業ID
 const companyId = ref<string>('')
 // 企業情報取得済フラグ
 const companyLoaded = ref<boolean>(false)
-
 // お気に入り更新フラグ
 const toggleLikeExecuting = ref<boolean>(false)
-
-
-// 企業リスト
-const company = ref<Company>()
-
 // ログイン確認モーダル表示フラグ
 const showLoginConfirmModal = ref<boolean>(false)
+// 企業情報
+const company = ref<Company>()
+
 // ログイン確認モーダルを閉じる
 const closeLoginConfirmModal = () => {
   showLoginConfirmModal.value = false
 }
 // ログインページへ遷移する
-const toLoginPage = () => {
+const toLogin = () => {
   router.push({ name: 'login' })
 }
-
-
+// ロゴ取得
 const getLogo = computed(() =>
   `https://s3-ap-northeast-1.amazonaws.com/master-piece-company-images/common/no-image.jpeg`
 )
-
+// 営業時間取得
 const getBusinessHours = computed(() => {
   const businessHoursFrom = company?.value?.businessHoursFrom
     ? company.value.businessHoursFrom.substring(0, 2) + ':' + company.value.businessHoursFrom.substring(2)
@@ -54,17 +53,18 @@ const getBusinessHours = computed(() => {
   return [businessHoursFrom, businessHoursTo].join(' 〜 ')
 })
 
+// 休業日取得
 const getHolidays = computed(() => {
   return company?.value?.holidays.map(holiday => holiday.name).join(' ')
 })
 
+// 住所取得
 const getAddress = computed(() => {
   const prefecture = company?.value?.prefecture ? company.value.prefecture : ''
   const city = company?.value?.city ? company.value.city : ''
   const restAddress = company?.value?.restAddress ? company.value.restAddress : ''
   return [prefecture, city, restAddress].join(' ')
 })
-
 
 // ログインユーザID取得
 const loginUserId = () => {
@@ -102,9 +102,9 @@ onMounted(async () => {
     const { companyId } = useRoute().query
     return companyId ? companyId.toString() : ''
   })()
-  // TODO:エラーチェック
-  console.log('companyId', companyId.value)
-
+  if (!companyId) {
+    router.push({ name: 'error' })
+  }
   const response = await axios.get<Company, AxiosResponse<Company>>('/api/company', {
     params: {
       companyId: companyId.value,
@@ -227,7 +227,7 @@ onMounted(async () => {
     </template>
 
     <ConfirmModal :title="'ログイン確認'" :show="showLoginConfirmModal" :executing="false" :executeBtnlabel="'ログイン'"
-      :cancelBtnlabel="'キャンセル'" @execute="toLoginPage" @cancel="closeLoginConfirmModal">
+      :cancelBtnlabel="'キャンセル'" @execute="toLogin" @cancel="closeLoginConfirmModal">
       この操作にはログインが必要です
     </ConfirmModal>
   </div>

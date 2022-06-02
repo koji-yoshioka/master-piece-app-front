@@ -4,15 +4,26 @@ import { useStore } from '@/store/store'
 import { useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
 import { required, alphaNum, minLength, sameAs, helpers } from '@vuelidate/validators'
+import { OK } from '@/util'
+import axios, { AxiosResponse } from 'axios'
 import Section from '@/components/Section.vue'
 import TitleLabel from '@/components/TitleLabel.vue'
 import InputText from '@/components/InputText.vue'
 import InputPassword from '@/components/InputPassword.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 
+// グローバル情報
+const store = useStore()
+// ルーティング情報
+const router = useRouter()
 
+// パスワード更新フラグ
+const isUpdating = ref<boolean>(false)
+
+// 入力した新パスワード
 const inputNewPassword = ref<string>('')
 
+// --start バリデーション関連
 const fields = ref({
   currentPassword: null,
   newPassword: null,
@@ -33,7 +44,9 @@ const rules = {
   }
 }
 const v$ = useVuelidate(rules, fields)
+// --end
 
+// 送信ボタンの活性制御
 const isDisabled = computed(() =>
   (!v$.value.currentPassword.$model
     || !v$.value.newPassword.$model
@@ -42,7 +55,20 @@ const isDisabled = computed(() =>
 )
 
 const submit = async () => {
-  console.log('save profile')
+  if (v$.value.$invalid) {
+    return;
+  }
+  isUpdating.value = true
+  console.log('change password')
+  const response = await axios.post('/api/password-change', {
+    currentPassword: v$.value.currentPassword.$model,
+    newPassword: v$.value.newPassword.$model,
+    newPassword_confirmation: v$.value.confirmNewPassword.$model,
+  }).catch(e => e.response || e)
+  isUpdating.value = false
+  if (response.status !== OK) {
+    store.dispatch('setError', response)
+  }
 }
 
 </script>
@@ -69,8 +95,12 @@ const submit = async () => {
           v-model="v$.confirmNewPassword.$model">
         </InputPassword>
       </div>
-
+      <div class="page-password-change__submit-area">
+        <PrimaryButton class="page-password-change__submit" :disabled="isDisabled" @click="submit">送信</PrimaryButton>
+      </div>
     </Section>
+    <vue-element-loading class="page-password-change__loading" :active="isUpdating" :background-color="'#1c1c1c'"
+      :color="'#fff'" :is-full-screen="true" :spinner="'spinner'" :text="'パスワードを変更しています'" />
   </div>
 </template>
 
@@ -146,5 +176,29 @@ const submit = async () => {
   @include mixins.mq(pc) {
     width: 50%;
   }
+}
+
+.page-password-change__submit-area {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.page-password-change__submit {
+  @include mixins.mq(sp) {
+    width: 100%;
+  }
+
+  @include mixins.mq(tablet) {
+    width: 50%;
+  }
+
+  @include mixins.mq(pc) {
+    width: 50%;
+  }
+}
+
+.page-profile__loading {
+  opacity: 0.8;
 }
 </style>

@@ -1,34 +1,23 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useStore } from "@/store/store"
 import axios, { AxiosResponse } from 'axios'
-
-
 import { Reserve } from '@/typings/interfaces/useReserve'
 import { OK } from '@/util'
 import Section from '@/components/Section.vue'
-
 
 // グローバル情報
 const store = useStore()
 // ルーティング情報
 const router = useRouter()
-
 // ログイン済フラグ
 const isLoggingIn = store.getters.isLoggingIn
+
 // 予約取得済フラグ
 const reservesLoaded = ref<boolean>(false)
-
 // 予約リスト
 const reserves = ref<Reserve[]>([])
-
-
-// ログインユーザID取得
-const loginUserId = () => {
-  const loginUser = store.getters.loginUser
-  return loginUser ? loginUser.id : null
-}
 
 // --start ページング関連
 const currentPageNumber = ref<number>(1)
@@ -44,6 +33,11 @@ const updateHandler = (pageNumber: number) => {
 const getTotalPageCount = computed(() => Math.ceil(reserves.value.length) / perPage.value)
 // --end
 
+// ログインユーザID取得
+const loginUserId = () => {
+  const loginUser = store.getters.loginUser
+  return loginUser ? loginUser.id : null
+}
 
 const getFormattedTime = (time: string) => {
   const hour = time.substring(0, 2)

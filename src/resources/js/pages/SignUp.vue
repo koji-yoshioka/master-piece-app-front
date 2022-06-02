@@ -11,10 +11,15 @@ import InputText from '@/components/InputText.vue'
 import InputPassword from '@/components/InputPassword.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 
-const currentPassword = ref<string>('')
-const router = useRouter()
+// グローバル情報
 const store = useStore()
+// ルーティング情報
+const router = useRouter()
 
+// 入力したパスワード
+const currentPassword = ref<string>('')
+
+// --start バリデーション関連
 const fields = ref({
   name: null,
   email: null,
@@ -40,7 +45,9 @@ const rules = {
   }
 }
 const v$ = useVuelidate(rules, fields)
+// --end
 
+// 送信ボタンの活性制御
 const isDisabled = computed(() =>
   (!v$.value.name.$model
     || !v$.value.email.$model
@@ -49,6 +56,7 @@ const isDisabled = computed(() =>
   || v$.value.$invalid
 )
 
+// 送信
 const submit = async () => {
   await store.dispatch('signUp', {
     name: v$.value.name.$model,
@@ -60,7 +68,6 @@ const submit = async () => {
     router.push('/')
   }
 }
-
 </script>
 
 <template>

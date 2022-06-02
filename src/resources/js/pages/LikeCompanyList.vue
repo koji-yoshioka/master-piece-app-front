@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useStore } from "@/store/store"
 import axios, { AxiosResponse } from 'axios'
 import { Company } from '@/typings/interfaces/search'
@@ -12,32 +12,13 @@ import SearchResult from '@/components/SearchResult.vue'
 const store = useStore()
 // ルーティング情報
 const router = useRouter()
-
-// ログイン確認モーダル表示フラグ
-const showLoginConfirmModal = ref<boolean>(false)
-
-// ログインページへ遷移する
-const toLoginPage = () => {
-  router.push({ name: 'login' })
-}
-
-// ログイン確認モーダルを閉じる
-const closeLoginConfirmModal = () => {
-  showLoginConfirmModal.value = false
-}
+// ログイン済フラグ
+const isLoggingIn = store.getters.isLoggingIn
 
 // 企業情報取得済フラグ
 const companiesLoaded = ref<boolean>(false)
 // 企業情報リスト
 const companies = ref<Company[]>([])
-// ログイン済フラグ
-const isLoggingIn = store.getters.isLoggingIn
-
-// ログインユーザID取得
-const loginUserId = () => {
-  const loginUser = store.getters.loginUser
-  return loginUser ? loginUser.id : null
-}
 
 // --start ページング関連
 const currentPageNumber = ref<number>(1)
@@ -53,15 +34,16 @@ const updateHandler = (pageNumber: number) => {
 const getTotalPageCount = computed(() => Math.ceil(companies.value.length) / perPage.value)
 // --end
 
-// メニューリストページへ遷移する
-const toMenuListPage = (companyId: number) => {
-  if (isLoggingIn) {
-    router.push({ name: 'menu-list', query: { companyId } })
-  } else {
-    showLoginConfirmModal.value = true
-  }
+// ログインユーザID取得
+const loginUserId = () => {
+  const loginUser = store.getters.loginUser
+  return loginUser ? loginUser.id : null
 }
 
+// メニューリストページへ遷移する
+const toMenuList = (companyId: number) => {
+  router.push({ name: 'menu-list', query: { companyId } })
+}
 
 // 企業を検索する
 const getLikeCompanies = async () => {
@@ -86,8 +68,6 @@ onMounted(async () => {
     router.push({ name: 'login' })
   }
 })
-
-
 </script>
 
 <template>
@@ -101,7 +81,7 @@ onMounted(async () => {
         </div>
         <template v-if="companiesLoaded">
           <SearchResult v-for="company in getCompanies" :company="company" :executing="false" :show-like="false"
-            @reserve="toMenuListPage">
+            @reserve="toMenuList">
           </SearchResult>
           <v-pagination class="page-like-company__pagination" v-show="getCompanies.length > 0"
             v-model="currentPageNumber" :pages="getTotalPageCount" :range-size="3" active-color="#dcc090"
