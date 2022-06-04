@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useStore } from '@/store/store'
-import { useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, helpers } from '@vuelidate/validators'
 import Section from '@/components/Section.vue'
@@ -10,18 +8,13 @@ import InputEMail from '@/components/InputEMail.vue'
 import InputText from '@/components/InputText.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 
-// グローバル情報
-const store = useStore()
-// ルーティング情報
-const router = useRouter()
-
 // 更新実行中フラグ
 const isUpdating = ref<boolean>(false)
 
 // --start バリデーション関連
 const fields = ref({
-  name: null,
-  email: null,
+  name: '',
+  email: '',
 })
 const rules = {
   name: {
@@ -48,7 +41,6 @@ const submit = async () => {
   console.log('save profile')
   isUpdating.value = false
 }
-
 </script>
 
 <template>
@@ -78,6 +70,12 @@ const submit = async () => {
 @use "~@/mixins";
 
 .page-profile {
+
+  // 画面全体を覆うよう、ヘッダとフッタより大きなz-indexを指定
+  &::v-deep(.velmld-overlay) {
+    z-index: 9999;
+  }
+
   @include mixins.mq(sp) {
     padding-left: 20px;
     padding-right: 20px;

@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore } from "@/store/store"
-import axios, { AxiosResponse } from 'axios'
+import { useStore as useAuthStore } from '@/store/auth'
+import { httpService } from '@/services/httpService'
 import { Company } from '@/typings/interfaces/search'
-import { OK } from '@/util'
 import Section from '@/components/Section.vue'
 import SearchResult from '@/components/SearchResult.vue'
 
-// グローバル情報
-const store = useStore()
+// 認証情報
+const authStore = useAuthStore()
 // ルーティング情報
 const router = useRouter()
-// ログイン済フラグ
-const isLoggingIn = store.getters.isLoggingIn
 
 // 企業情報取得済フラグ
 const companiesLoaded = ref<boolean>(false)
@@ -22,7 +19,7 @@ const companies = ref<Company[]>([])
 
 // --start ページング関連
 const currentPageNumber = ref<number>(1)
-const perPage = ref<number>(2)
+const perPage = ref<number>(5)
 const getCompanies = computed(() => {
   let current = currentPageNumber.value * perPage.value
   let start = current - perPage.value;
@@ -36,7 +33,7 @@ const getTotalPageCount = computed(() => Math.ceil(companies.value.length) / per
 
 // ログインユーザID取得
 const loginUserId = () => {
-  const loginUser = store.getters.loginUser
+  const loginUser = authStore.getters.loginUser
   return loginUser ? loginUser.id : null
 }
 
@@ -48,25 +45,13 @@ const toMenuList = (companyId: number) => {
 // 企業を検索する
 const getLikeCompanies = async () => {
   companiesLoaded.value = false
-  const response = await axios.get<Company[], AxiosResponse<Company[]>>('/api/like/companies', {
-    params: {
-      userId: loginUserId()
-    }
-  }).catch(e => e.response || e)
+  const resCompanies = await httpService.getLikeCompanies(loginUserId())
   companiesLoaded.value = true
-  if (response.status == OK) {
-    companies.value = response.data
-  } else {
-    store.dispatch('setError', response)
-  }
+  companies.value = resCompanies
 }
 
 onMounted(async () => {
-  if (isLoggingIn) {
-    getLikeCompanies()
-  } else {
-    router.push({ name: 'login' })
-  }
+  getLikeCompanies()
 })
 </script>
 
@@ -87,8 +72,10 @@ onMounted(async () => {
             v-model="currentPageNumber" :pages="getTotalPageCount" :range-size="3" active-color="#dcc090"
             @update:modelValue="updateHandler" />
         </template>
+        <div v-if="companiesLoaded && getCompanies.length === 0" class="ppage-like-company__empty">
+          お気に入りはありません
+        </div>
       </div>
-
     </Section>
 
   </div>
@@ -176,5 +163,13 @@ onMounted(async () => {
 
 .page-like-company__pagination {
   justify-content: end;
+}
+
+.ppage-like-company__empty {
+  background-color: #edeae2;
+  color: #1c1c1c;
+  height: 300px;
+  line-height: 300px;
+  text-align: center;
 }
 </style>

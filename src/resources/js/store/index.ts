@@ -1,8 +1,8 @@
-import { store, key } from './store'
+import { auth as authUser, key as authUserKey } from './auth';
 
-export const modules = [
+export const store = [
   {
-    modelName: store,
-    key: key,
+    modelName: authUser,
+    key: authUserKey
   }
 ]

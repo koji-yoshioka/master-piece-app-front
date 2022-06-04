@@ -1,26 +1,21 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { useStore } from "@/store/store"
+import { httpService } from '@/services/httpService'
 import { required, email, helpers } from '@vuelidate/validators'
-import { OK } from '@/util'
-import axios from 'axios'
 import Section from '@/components/Section.vue'
 import TitleLabel from '@/components/TitleLabel.vue'
 import InputEMail from '@/components/InputEMail.vue'
 import InputTextArea from '@/components/InputTextArea.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 
-// グローバル情報
-const store = useStore()
-
 // 送信中フラグ
 const sendIng = ref<boolean>(false)
 
 // --start バリデーション関連
 const fields = ref({
-  email: null,
-  comment: null,
+  email: '',
+  comment: '',
 })
 const rules = {
   email: { required: helpers.withMessage('メールアドレスを入力してください。', required), email: helpers.withMessage('メールアドレスの形式が不正です。', email) },
@@ -42,14 +37,8 @@ const submit = async () => {
     return;
   }
   sendIng.value = true
-  const response = await axios.post('/api/contact', {
-    customerEmail: v$.value.email.$model,
-    comment: v$.value.comment.$model,
-  }).catch(e => e.response || e)
+  const isSuccess = await httpService.postContact(v$.value.email.$model, v$.value.comment.$model)
   sendIng.value = false
-  if (response.status !== OK) {
-    store.dispatch('setError', response)
-  }
 }
 </script>
 

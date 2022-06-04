@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useStore } from '@/store/store'
+import { useStore as useAuthStore } from '@/store/auth'
+import { httpService } from '@/services/httpService'
 import { useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
 import { required, alphaNum, minLength, sameAs, email, helpers } from '@vuelidate/validators'
@@ -11,20 +12,22 @@ import InputText from '@/components/InputText.vue'
 import InputPassword from '@/components/InputPassword.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 
-// グローバル情報
-const store = useStore()
+// 認証情報
+const authStore = useAuthStore()
 // ルーティング情報
 const router = useRouter()
 
 // 入力したパスワード
 const currentPassword = ref<string>('')
+// サインアップ実行中フラグ
+const signUping = ref<boolean>(false)
 
 // --start バリデーション関連
 const fields = ref({
-  name: null,
-  email: null,
-  password: null,
-  confirmPassword: null,
+  name: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
 })
 const rules = {
   name: {
@@ -58,14 +61,17 @@ const isDisabled = computed(() =>
 
 // 送信
 const submit = async () => {
-  await store.dispatch('signUp', {
+  signUping.value = true
+  const userInfo = await httpService.signUp({
     name: v$.value.name.$model,
     email: v$.value.email.$model,
     password: v$.value.password.$model,
     password_confirmation: v$.value.confirmPassword.$model,
   })
-  if (!store.getters.hasError) {
-    router.push('/')
+  signUping.value = false
+  authStore.dispatch('setUser', userInfo)
+  if (userInfo) {
+    router.push({ name: 'top' })
   }
 }
 </script>
@@ -106,13 +112,21 @@ const submit = async () => {
       </div>
 
     </Section>
+    <vue-element-loading class="page-sign-up__loading" :active="signUping" :background-color="'#1c1c1c'" :color="'#fff'"
+      :is-full-screen="true" :spinner="'spinner'" :text="'登録処理を実行しています'" />
   </div>
 </template>
 
 <style lang="scss" scoped>
 @use "~@/mixins";
 
-.page-sign-up {}
+.page-sign-up {
+
+  // 画面全体を覆うよう、ヘッダとフッタより大きなz-indexを指定
+  &::v-deep(.velmld-overlay) {
+    z-index: 9999;
+  }
+}
 
 .page-sign-up__form {
   align-items: center;
@@ -166,5 +180,9 @@ const submit = async () => {
   @include mixins.mq(pc) {
     width: 50%;
   }
+}
+
+.page-sign-up__loading {
+  opacity: 0.8;
 }
 </style>

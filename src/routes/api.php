@@ -42,12 +42,14 @@ Route::get('/like/companies', 'CompanyController@getLikeCompanies')->name('compa
 Route::get('/company/menu/{companyId}', 'CompanyController@getMenusById')->name('company.get-menus-by-id');
 
 // 予約に必要な諸々の情報を取得
-Route::get('/reserve/base-info', 'ReserveController@getBaseInfo')->name('reserve.get-base-info');
+Route::get('/reserve/reserve-info', 'ReserveController@getReserveInfo')->name('reserve.get-reserve-info');
 // 予約
 Route::post('/reserve', 'ReserveController@reserve')->name('reserve.reserve');
 // ユーザの予約履歴
 Route::get('/user-reserves', 'ReserveController@getUserReserves')->name('reserve.get-user-reserves');
-
+// 予約キャンセル
+Route::delete('/reserve/{reserveId}', 'ReserveController@delete')->name('reserve.delete')
+->where('reserveId', '[0-9]+');
 
 // 曜日マスタ取得
 Route::get('/day-of-week', 'DayOfWeekController@getAll')->name('day-of-week.get-all');

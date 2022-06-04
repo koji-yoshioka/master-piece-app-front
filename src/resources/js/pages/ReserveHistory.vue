@@ -1,23 +1,30 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore } from "@/store/store"
-import axios, { AxiosResponse } from 'axios'
+import { useStore as useAuthStore } from '@/store/auth'
+import { httpService } from '@/services/httpService'
 import { Reserve } from '@/typings/interfaces/useReserve'
-import { OK } from '@/util'
 import Section from '@/components/Section.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
-// グローバル情報
-const store = useStore()
+// 認証情報
+const authStore = useAuthStore()
 // ルーティング情報
 const router = useRouter()
 // ログイン済フラグ
-const isLoggingIn = store.getters.isLoggingIn
+const isLoggingIn = !!authStore.getters.loginUser
 
+// キャンセル実行中フラグ
+const canceling = ref<boolean>(false)
+// 確認モーダル表示フラグ
+const showConfirmModal = ref<boolean>(false)
 // 予約取得済フラグ
 const reservesLoaded = ref<boolean>(false)
 // 予約リスト
 const reserves = ref<Reserve[]>([])
+
+// 選択したキャンセル対象の予約ID
+const selectedReserveId = ref<number | null>(null)
 
 // --start ページング関連
 const currentPageNumber = ref<number>(1)
@@ -35,7 +42,7 @@ const getTotalPageCount = computed(() => Math.ceil(reserves.value.length) / perP
 
 // ログインユーザID取得
 const loginUserId = () => {
-  const loginUser = store.getters.loginUser
+  const loginUser = authStore.getters.loginUser
   return loginUser ? loginUser.id : null
 }
 
@@ -53,27 +60,36 @@ const getDate = (date: string) => {
   return `${year}/${month}/${day}(${dayOfWeek})`
 }
 
-const getReserveList = async () => {
-  reservesLoaded.value = false
-  const response = await axios.get<Reserve[], AxiosResponse<Reserve[]>>('/api/user-reserves', {
-    params: {
-      userId: loginUserId()
-    }
-  }).catch(e => e.response || e)
-  reservesLoaded.value = true
-  if (response.status == OK) {
-    reserves.value = response.data
-  } else {
-    store.dispatch('setError', response)
+// 確認モーダルを閉じる
+const closeConfirmModal = () => {
+  showConfirmModal.value = false
+}
+
+// キャンセル対象を選択
+const selectMenu = (reserveId: number) => {
+  selectedReserveId.value = reserveId
+  showConfirmModal.value = true
+}
+
+// キャンセル
+const cancel = async () => {
+  if (!selectedReserveId.value) {
+    return
   }
+  canceling.value = true
+  const isSuccess = await httpService.cancelReserve(selectedReserveId.value)
+  if (isSuccess) {
+    reserves.value = reserves.value.filter(reserve => reserve.id !== selectedReserveId.value)
+  }
+  canceling.value = false
+  showConfirmModal.value = false
 }
 
 onMounted(async () => {
-  if (isLoggingIn) {
-    getReserveList()
-  } else {
-    router.push({ name: 'login' })
-  }
+  reservesLoaded.value = false
+  const resReserves = await httpService.getReserveHistory(loginUserId())
+  reservesLoaded.value = true
+  reserves.value = resReserves
 })
 </script>
 
@@ -99,16 +115,26 @@ onMounted(async () => {
               <p class="page-reserve-history__reserve-detail-item is-menu">{{ reserve.menuName }}</p>
               <p class="page-reserve-history__reserve-detail-item is-price">{{ `¥${reserve.price.toLocaleString()}` }}
               </p>
-              <button class="page-reserve-history__reserve-detail-item is-button" @click.stop>キャンセル</button>
+              <button class="page-reserve-history__reserve-detail-item is-button"
+                @click="selectMenu(reserve.id)">キャンセル</button>
             </div>
           </div>
-          <v-pagination class="page-reserve-history__pagination" v-show="reserves.length > 0"
+          <v-pagination class="page-reserve-history__pagination" v-show="getReserves.length > 0"
             v-model="currentPageNumber" :pages="getTotalPageCount" :range-size="3" active-color="#dcc090"
             @update:modelValue="updateHandler" />
         </template>
+        <div v-if="reservesLoaded && getReserves.length === 0" class="page-reserve-history__empty">
+          予約はありません
+        </div>
       </div>
     </Section>
   </div>
+
+  <ConfirmModal :title="'キャンセル確認'" :show="showConfirmModal" :executing="canceling" :loadingLabel="'予約をキャンセルしています'"
+    :executeBtnlabel="'はい'" :cancelBtnlabel="'いいえ'" @execute="cancel" @cancel="closeConfirmModal">
+    予約をキャンセルしますか？
+  </ConfirmModal>
+
 </template>
 
 <style lang="scss" scoped>
@@ -279,5 +305,13 @@ onMounted(async () => {
 
 .page-reserve-history__pagination {
   justify-content: end;
+}
+
+.page-reserve-history__empty {
+  background-color: #edeae2;
+  color: #1c1c1c;
+  height: 300px;
+  line-height: 300px;
+  text-align: center;
 }
 </style>

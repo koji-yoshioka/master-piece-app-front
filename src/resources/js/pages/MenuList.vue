@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useStore } from "@/store/store"
-import axios, { AxiosResponse } from 'axios'
+import { httpService } from '@/services/httpService'
 import { CompanyMenus } from '@/typings/interfaces/menuList'
-import { OK } from '@/util'
 import Section from '@/components/Section.vue'
 
-// グローバル情報
-const store = useStore()
 // ルーティング情報
 const router = useRouter()
 
@@ -32,14 +28,9 @@ onMounted(async () => {
     router.push({ name: 'error' })
   }
   // メニュー取得
-  const response = await axios.get<CompanyMenus, AxiosResponse<CompanyMenus>>(`/api/company/menu/${companyId.value}`)
-    .catch(e => e.response || e)
+  const menus = await httpService.getMenus(Number(companyId.value))
   menusLoaded.value = true
-  if (response.status === OK) {
-    companyMenus.value = response.data
-  } else {
-    store.dispatch('setError', response)
-  }
+  companyMenus.value = menus
 })
 </script>
 

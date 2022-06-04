@@ -1,19 +1,17 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useStore } from '@/store/store'
+import { useStore as useAuthStore } from '@/store/auth'
+import { httpService } from '@/services/httpService'
 import { useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
 import { required, alphaNum, minLength, sameAs, helpers } from '@vuelidate/validators'
-import { OK } from '@/util'
-import axios, { AxiosResponse } from 'axios'
 import Section from '@/components/Section.vue'
 import TitleLabel from '@/components/TitleLabel.vue'
-import InputText from '@/components/InputText.vue'
 import InputPassword from '@/components/InputPassword.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 
-// グローバル情報
-const store = useStore()
+// 認証情報
+const authStore = useAuthStore()
 // ルーティング情報
 const router = useRouter()
 
@@ -25,9 +23,9 @@ const inputNewPassword = ref<string>('')
 
 // --start バリデーション関連
 const fields = ref({
-  currentPassword: null,
-  newPassword: null,
-  confirmNewPassword: null,
+  currentPassword: '',
+  newPassword: '',
+  confirmNewPassword: '',
 })
 const rules = {
   currentPassword: {
@@ -59,18 +57,16 @@ const submit = async () => {
     return;
   }
   isUpdating.value = true
-  console.log('change password')
-  const response = await axios.post('/api/password-change', {
+  const isSuccess = await httpService.changePassword({
     currentPassword: v$.value.currentPassword.$model,
     newPassword: v$.value.newPassword.$model,
     newPassword_confirmation: v$.value.confirmNewPassword.$model,
-  }).catch(e => e.response || e)
+  })
   isUpdating.value = false
-  if (response.status !== OK) {
-    store.dispatch('setError', response)
+  if (isSuccess) {
+    router.push({ name: 'my-page' })
   }
 }
-
 </script>
 
 <template>
@@ -108,6 +104,12 @@ const submit = async () => {
 @use "~@/mixins";
 
 .page-password-change {
+
+  // 画面全体を覆うよう、ヘッダとフッタより大きなz-indexを指定
+  &::v-deep(.velmld-overlay) {
+    z-index: 9999;
+  }
+
   @include mixins.mq(sp) {
     padding-left: 20px;
     padding-right: 20px;
@@ -198,7 +200,7 @@ const submit = async () => {
   }
 }
 
-.page-profile__loading {
+.page-password-change__loading {
   opacity: 0.8;
 }
 </style>

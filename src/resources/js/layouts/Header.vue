@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useStore as useAuthStore } from '@/store/auth'
+import { httpService } from '@/services/httpService'
 import { useRouter } from 'vue-router'
-import { useStore } from "@/store/store"
 import ConfirmModal from '@/components/ConfirmModal.vue'
 
-// グローバル情報
-const store = useStore()
+// 認証情報
+const authStore = useAuthStore()
 // ルーティング情報
 const router = useRouter()
 
@@ -17,7 +18,7 @@ const loggingOut = ref<boolean>(false)
 const showLogoutConfirmModal = ref<boolean>(false)
 
 // ログイン済フラグ
-const isLoggingIn = computed(() => store.getters.isLoggingIn)
+const isLoggingIn = computed(() => !!authStore.getters.loginUser)
 
 // ログアウト確認モーダルを閉じる
 const closeLogoutConfirmModal = () => {
@@ -64,7 +65,8 @@ const toContact = () => {
 const logout = async () => {
   toggleHamburgerMenu.value = false
   loggingOut.value = true
-  await store.dispatch('logout')
+  const userInfo = await httpService.logout()
+  authStore.dispatch('setUser', userInfo)
   loggingOut.value = false
   showLogoutConfirmModal.value = false
   router.push('/')
@@ -88,7 +90,7 @@ const logout = async () => {
 
     <nav class="l-header__menu" :class="{ 'is-selected': toggleHamburgerMenu }">
       <ul class="l-header__menu-item-list">
-        <li class="l-header__menu-item" @click.stop="toMyPage">
+        <li class="l-header__menu-item" v-show="isLoggingIn" @click.stop="toMyPage">
           マイページ
         </li>
         <li class="l-header__menu-item" @click.stop="toSearch">

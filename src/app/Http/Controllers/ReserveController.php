@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GetUserReservesRequest;
 use App\Http\Requests\ReserveRequest;
 use App\Models\Company;
+use App\Models\CompanyReserve;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,7 @@ class ReserveController extends Controller
             ->only(['reserve']);
     }
 
-    public function getBaseInfo(Request $request): JsonResponse
+    public function getReserveInfo(Request $request): JsonResponse
     {
         $companyId = $request->companyId;
         $menuId = $request->menuId;
@@ -102,8 +103,12 @@ class ReserveController extends Controller
                     ['company_reserves.user_id', '=', $request->userId],
                     ['company_reserves.date', '>=', date('Ymd')],
                 ])
-                ->orderBy('company_reserves.id', 'desc')
+                ->orderBy('company_reserves.date', 'desc')
                 ->get()
         );
+    }
+
+    public function delete($reserveId) {
+        CompanyReserve::destroy($reserveId);
     }
 }

@@ -112,10 +112,10 @@ const getHolidays = computed(() => {
             <font-awesome-icon :icon="['fas', 'calendar-days']" size="2x" />
             <p class="c-search-result__link is-reserve">予約する</p>
           </div>
-          <div class="c-search-result__link-area" @click.stop="review">
+          <!-- <div class="c-search-result__link-area" @click.stop="review">
             <font-awesome-icon :icon="['far', 'star']" size="2x" />
             <p class="c-search-result__link is-review">評価する</p>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

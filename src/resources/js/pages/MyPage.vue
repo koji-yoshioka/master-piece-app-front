@@ -1,28 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useStore } from "@/store/store"
-import { Company } from '@/typings/interfaces/search'
 import Section from '@/components/Section.vue'
-
-// グローバル情報
-const store = useStore()
-// ルーティング情報
-const router = useRouter()
-// ログイン済フラグ
-const isLoggingIn = store.getters.isLoggingIn
-
-// 企業情報取得済フラグ
-const companiesLoaded = ref<boolean>(false)
-// 企業情報リスト
-const companies = ref<Company[]>([])
-
-// TODO:後ほど外す
-// onMounted(async () => {
-//   if (!isLoggingIn) {
-//     router.push({ name: 'login' })
-//   }
-// })
 </script>
 
 <template>
@@ -141,15 +118,12 @@ const companies = ref<Company[]>([])
   color: #d7d5d3;
   padding: 10px;
   position: relative;
-  // width: 160px;
 
   @include mixins.mq(sp) {}
 
   @include mixins.mq(tablet) {}
 
-  @include mixins.mq(pc) {
-    // width: 160px;
-  }
+  @include mixins.mq(pc) {}
 }
 
 .page-my-page__menu::before {

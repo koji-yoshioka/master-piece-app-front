@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { useStore } from '@/store/store'
+import { computed, ref } from 'vue'
+import { useStore as useAuthStore } from '@/store/auth'
+import { httpService } from '@/services/httpService'
 import { useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, helpers } from '@vuelidate/validators'
@@ -10,8 +11,8 @@ import InputEMail from '@/components/InputEMail.vue'
 import InputPassword from '@/components/InputPassword.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 
-// グローバル情報
-const store = useStore()
+// 認証情報
+const authStore = useAuthStore()
 // ルーティング情報
 const router = useRouter()
 
@@ -22,8 +23,8 @@ const loggingIn = ref<boolean>(false)
 
 // --start バリデーション関連
 const fields = ref({
-  email: null,
-  password: null,
+  email: '',
+  password: '',
 })
 const rules = {
   email: {
@@ -47,13 +48,17 @@ const isDisabled = computed(() =>
 // 送信
 const submit = async () => {
   loggingIn.value = true
-  await store.dispatch('login', {
+  if (v$.value.$invalid) {
+    return;
+  }
+  const userInfo = await httpService.login({
     email: v$.value.email.$model,
     password: v$.value.password.$model,
   })
   loggingIn.value = false
-  if (!store.getters.hasError) {
-    router.push('/')
+  authStore.dispatch('setUser', userInfo)
+  if (userInfo) {
+    router.push({ name: 'top' })
   }
 }
 </script>
@@ -75,7 +80,7 @@ const submit = async () => {
       </div>
       <div class="page-login__submit-area">
         <PrimaryButton class="page-login__submit" :disabled="isDisabled" @click="submit">送信</PrimaryButton>
-        <router-link class="page-login__to-password-reset" to="/password-reset" exact>パスワードを忘れた場合</router-link>
+        <!-- <router-link class="page-login__to-password-reset" to="/password-reset" exact>パスワードを忘れた場合</router-link> -->
       </div>
     </Section>
 
