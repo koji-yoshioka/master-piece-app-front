@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useStore } from '@/store/store'
+import { useStore as useAuthStore } from '@/store/auth'
+import { httpService } from '@/services/httpService'
 import { useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, helpers } from '@vuelidate/validators'
@@ -10,16 +11,20 @@ import InputEMail from '@/components/InputEMail.vue'
 import InputPassword from '@/components/InputPassword.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 
-const currentPassword = ref<string>('')
+// 認証情報
+const authStore = useAuthStore()
+// ルーティング情報
 const router = useRouter()
-const store = useStore()
 
+// 入力したパスワード
+const currentPassword = ref<string>('')
 // ログイン実行中フラグ
 const loggingIn = ref<boolean>(false)
 
+// --start バリデーション関連
 const fields = ref({
-  email: null,
-  password: null,
+  email: '',
+  password: '',
 })
 const rules = {
   email: {
@@ -31,25 +36,31 @@ const rules = {
   },
 }
 const v$ = useVuelidate(rules, fields)
+// --end
 
+// 送信ボタンの活性制御
 const isDisabled = computed(() =>
   (!v$.value.email.$model
     || !v$.value.password.$model)
   || v$.value.$invalid
 )
 
+// 送信
 const submit = async () => {
   loggingIn.value = true
-  await store.dispatch('login', {
+  if (v$.value.$invalid) {
+    return;
+  }
+  const userInfo = await httpService.login({
     email: v$.value.email.$model,
     password: v$.value.password.$model,
   })
   loggingIn.value = false
-  if (!store.getters.hasError) {
-    router.push('/')
+  authStore.dispatch('setUser', userInfo)
+  if (userInfo) {
+    router.push({ name: 'top' })
   }
 }
-
 </script>
 
 <template>
@@ -69,6 +80,7 @@ const submit = async () => {
       </div>
       <div class="page-login__submit-area">
         <PrimaryButton class="page-login__submit" :disabled="isDisabled" @click="submit">送信</PrimaryButton>
+        <!-- <router-link class="page-login__to-password-reset" to="/password-reset" exact>パスワードを忘れた場合</router-link> -->
       </div>
     </Section>
 
@@ -123,8 +135,11 @@ const submit = async () => {
 .page-login__input-input {}
 
 .page-login__submit-area {
+  // align-items: center;
   display: flex;
+  flex-direction: column;
   justify-content: flex-end;
+  row-gap: 30px;
   width: 100%;
 }
 
@@ -134,10 +149,32 @@ const submit = async () => {
   }
 
   @include mixins.mq(tablet) {
+    align-self: flex-end;
     width: 50%;
   }
 
   @include mixins.mq(pc) {
+    align-self: flex-end;
+    width: 50%;
+  }
+}
+
+.page-login__to-password-reset {
+  color: #dcc090;
+  text-align: right;
+  text-decoration: underline;
+
+  @include mixins.mq(sp) {
+    width: 100%;
+  }
+
+  @include mixins.mq(tablet) {
+    align-self: flex-end;
+    width: 50%;
+  }
+
+  @include mixins.mq(pc) {
+    align-self: flex-end;
     width: 50%;
   }
 }

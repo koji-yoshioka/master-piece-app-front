@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore } from "@/store/store"
+import { useStore as useAuthStore } from '@/store/auth'
+import { httpService } from '@/services/httpService'
 import { useVuelidate } from '@vuelidate/core'
 import { helpers } from '@vuelidate/validators'
 import { City, Company, SellingPoint } from '@/typings/interfaces/search'
-import { OK } from '@/util'
-import axios, { AxiosResponse } from 'axios'
 import InputCheckBox from '@/components/InputCheckBox.vue'
 import InputNumber from '@/components/InputNumber.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
@@ -16,16 +15,15 @@ import VerticalTable from '@/components/VerticalTable.vue'
 import Modal from '@/components/Modal.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 
-// グローバル情報
-const store = useStore()
-// ログイン済フラグ
-const isLoggingIn = store.getters.isLoggingIn
-
+// 認証情報
+const authStore = useAuthStore()
 // ルーティング情報
 const router = useRouter()
+// ログイン済フラグ
+const isLoggingIn = !!authStore.getters.loginUser
 
 // 都道府県ID ※現時点では東京のみを想定しているため、固定値で設定
-const prefectureId = ref<string>('13')
+const prefectureId = ref<number>(13)
 // 市区町村取得済フラグ
 const citiesLoaded = ref<boolean>(false)
 // セールスポイント取得済フラグ
@@ -91,7 +89,7 @@ const v$ = useVuelidate(rules, fields)
 
 // --start ページング関連
 const currentPageNumber = ref<number>(1)
-const perPage = ref<number>(2)
+const perPage = ref<number>(10)
 const getCompanies = computed(() => {
   let current = currentPageNumber.value * perPage.value
   let start = current - perPage.value;
@@ -128,18 +126,12 @@ const getCities = async () => {
   showCitiesModal.value = true
   // 未取得の場合のみ実施
   if (!citiesLoaded.value) {
-    const response = await axios.get<City[], AxiosResponse<City[]>>('api/cities', {
-      params: {
-        prefectureId: prefectureId.value,
-      }
-    }).catch(e => e.response || e)
-    if (response.status === OK) {
+    const resCities = await httpService.findCities(prefectureId.value)
+    if (resCities.length > 0) {
+      // １件以上取得できた場合のみ、取得済フラグをON
       citiesLoaded.value = true
-      cities.value = response.data
-    } else {
-      showCitiesModal.value = false
-      store.dispatch('setError', response)
     }
+    cities.value = resCities
   }
 }
 
@@ -167,15 +159,12 @@ const getSellingPoints = async () => {
   showSellingPointsModal.value = true
   // 未取得の場合のみ実施
   if (!sellingPointsLoaded.value) {
-    const response = await axios.get<SellingPoint[], AxiosResponse<SellingPoint[]>>('/api/selling-point')
-      .catch(e => e.response || e)
-    if (response.status === OK) {
+    const resSellingPoints = await httpService.findSellingPoints()
+    if (resSellingPoints.length > 0) {
+      // １件以上取得できた場合のみ、取得済フラグをON
       sellingPointsLoaded.value = true
-      sellingPoints.value = response.data
-    } else {
-      showSellingPointsModal.value = false
-      store.dispatch('setError', response)
     }
+    sellingPoints.value = resSellingPoints
   }
 }
 
@@ -202,31 +191,24 @@ const openStarRatingModal = (companyId: number) => {
   showStarRatingModal.value = true
 }
 
-
 // 企業を検索する
 const search = async () => {
   companiesLoaded.value = false
-  const response = await axios.get<Company[], AxiosResponse<Company[]>>('/api/companies', {
-    params: {
-      userId: loginUserId(),
-      prefectureId: prefectureId.value,
-      cities: selectedCities.value,
-      priceMin: inputPriceMin.value,
-      priceMax: inputPriceMax.value,
-      sellingPointIds: selectedSellingPointIds.value,
-    }
-  }).catch(e => e.response || e)
+  const resResCompanies = await httpService.findCompanies({
+    userId: loginUserId(),
+    prefectureId: prefectureId.value,
+    cities: selectedCities.value,
+    priceMin: inputPriceMin.value,
+    priceMax: inputPriceMax.value,
+    sellingPointIds: selectedSellingPointIds.value,
+  })
   companiesLoaded.value = true
-  if (response.status == OK) {
-    companies.value = response.data
-  } else {
-    store.dispatch('setError', response)
-  }
+  companies.value = resResCompanies
 }
 
 // ログインユーザID取得
 const loginUserId = () => {
-  const loginUser = store.getters.loginUser
+  const loginUser = authStore.getters.loginUser
   return loginUser ? loginUser.id : null
 }
 
@@ -235,13 +217,11 @@ const toggleLike = async (companyId: number) => {
   // 実行中のID追加
   executingCompanyIds.value.push(companyId)
   if (isLoggingIn) {
-    const response = await axios.post('/api/like', {
+    const isSuccess = await httpService.toggleLike({
       companyId,
       userId: loginUserId(),
-    }).catch(e => e.response || e)
-    if (response.status !== OK) {
-      store.dispatch('setError', response)
-    } else {
+    })
+    if (isSuccess) {
       // お気に入りのフラグ値を切り替える
       companies.value.map(company => {
         if (company.id === companyId) {
@@ -268,7 +248,7 @@ const toMenuListPage = (companyId: number) => {
 }
 
 // ログインページへ遷移する
-const toLoginPage = () => {
+const toLogin = () => {
   router.push({ name: 'login' })
 }
 
@@ -365,12 +345,12 @@ onMounted(
     </Modal>
 
     <ConfirmModal :title="'ログイン確認'" :show="showLoginConfirmModal" :executing="false" :executeBtnlabel="'ログイン'"
-      :cancelBtnlabel="'キャンセル'" @execute="toLoginPage" @cancel="closeLoginConfirmModal">
+      :cancelBtnlabel="'キャンセル'" @execute="toLogin" @cancel="closeLoginConfirmModal">
       この操作にはログインが必要です
     </ConfirmModal>
 
     <ConfirmModal :title="'ログイン確認'" :show="showStarRatingModal" :executing="false" :executeBtnlabel="'保存'"
-      :cancelBtnlabel="'キャンセル'" @execute="toLoginPage" @cancel="closeStarRatingModal">
+      :cancelBtnlabel="'キャンセル'" @execute="toLogin" @cancel="closeStarRatingModal">
     </ConfirmModal>
 
   </div>

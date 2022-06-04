@@ -1,8 +1,9 @@
 import './bootstrap'
 import { createApp } from 'vue'
 import { router } from './router'
-import { modules } from './store/index'
-import { store } from './store/store'
+import { store } from './store/index'
+import { auth } from './store/auth'
+import FlashMessage, { FlashMessagePlugin } from '@smartweb/vue-flash-message'
 import App from '@/App.vue'
 
 // Font Awesome
@@ -18,23 +19,33 @@ import VueElementLoading from "vue-element-loading"
 import VPagination from '@hennge/vue3-pagination'
 import '@hennge/vue3-pagination/dist/vue3-pagination.css'
 
-// star-rating
-// import vue3StarRatings from 'vue3-star-ratings'
-// import VueStarRating from 'vue-star-rating'
+// Http
+import { httpService } from '@/services/httpService'
+
+// FlashMessage
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
+    $flashMessage: FlashMessagePlugin
+  }
+}
 
 library.add(far, fas)
 
 const appInitialize = async () => {
-  await store.dispatch('currentUser')
+  console.log('start')
+  // ログイン済みの状態でページリロードした場合、ログイン情報をサーバから取得
+  const loginUser = await httpService.getLoginUser()
+  auth.dispatch('setUser', loginUser)
+
   const app = createApp(App)
-  modules.forEach(({ modelName, key }) => {
+  store.forEach(({ modelName, key }) => {
     app.use(modelName, key)
   })
   app.use(router)
   app.component('font-awesome-icon', FontAwesomeIcon)
   app.component('vue-element-loading', VueElementLoading)
   app.component('v-pagination', VPagination)
-  // app.component("star-rating", vue3StarRatings)
+  app.use(FlashMessage)
   app.mount("#app")
 }
 

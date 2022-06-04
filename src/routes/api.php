@@ -13,9 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:api')->get('/user', fn(Request $request) => $request->user()
+);
 
 // ユーザ登録
 Route::post('/sign-up', 'Auth\RegisterController@register')->name('sign-up');
@@ -25,6 +24,8 @@ Route::post('/login', 'Auth\LoginController@login')->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 // ログインユーザー取得
 Route::get('/user', fn() => Auth::user())->name('user');
+// パスワード変更
+Route::post('/password-change', 'Auth\ChangePasswordController@changePassword')->name('change-password');
 
 // 市区町村取得
 Route::get('/cities', 'CityController@getByConditions')->name('city.get-by-conditions');
@@ -41,12 +42,14 @@ Route::get('/like/companies', 'CompanyController@getLikeCompanies')->name('compa
 Route::get('/company/menu/{companyId}', 'CompanyController@getMenusById')->name('company.get-menus-by-id');
 
 // 予約に必要な諸々の情報を取得
-Route::get('/reserve/base-info', 'ReserveController@getBaseInfo')->name('reserve.get-base-info');
+Route::get('/reserve/reserve-info', 'ReserveController@getReserveInfo')->name('reserve.get-reserve-info');
 // 予約
 Route::post('/reserve', 'ReserveController@reserve')->name('reserve.reserve');
 // ユーザの予約履歴
 Route::get('/user-reserves', 'ReserveController@getUserReserves')->name('reserve.get-user-reserves');
-
+// 予約キャンセル
+Route::delete('/reserve/{reserveId}', 'ReserveController@delete')->name('reserve.delete')
+->where('reserveId', '[0-9]+');
 
 // 曜日マスタ取得
 Route::get('/day-of-week', 'DayOfWeekController@getAll')->name('day-of-week.get-all');

@@ -1,49 +1,45 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useStore } from "@/store/store"
-import axios, { AxiosResponse } from 'axios'
+import { httpService } from '@/services/httpService'
+import { useStore as useAuthStore } from '@/store/auth'
 import { Company } from '@/typings/interfaces/company'
-import { OK } from '@/util'
 import Section from '@/components/Section.vue'
 import VerticalTable from '@/components/VerticalTable.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 
+// 認証情報
+const authStore = useAuthStore()
+// ルーティング情報
 const router = useRouter()
-// グローバル情報
-const store = useStore()
-
 // ログイン済フラグ
-const isLoggingIn = store.getters.isLoggingIn
+const isLoggingIn = !!authStore.getters.loginUser
 
+// 企業ID
 const companyId = ref<string>('')
 // 企業情報取得済フラグ
 const companyLoaded = ref<boolean>(false)
-
 // お気に入り更新フラグ
 const toggleLikeExecuting = ref<boolean>(false)
-
-
-// 企業リスト
-const company = ref<Company>()
-
 // ログイン確認モーダル表示フラグ
 const showLoginConfirmModal = ref<boolean>(false)
+// 企業情報
+const company = ref<Company>()
+
 // ログイン確認モーダルを閉じる
 const closeLoginConfirmModal = () => {
   showLoginConfirmModal.value = false
 }
 // ログインページへ遷移する
-const toLoginPage = () => {
+const toLogin = () => {
   router.push({ name: 'login' })
 }
-
-
+// ロゴ取得
 const getLogo = computed(() =>
   `https://s3-ap-northeast-1.amazonaws.com/master-piece-company-images/common/no-image.jpeg`
 )
-
+// 営業時間取得
 const getBusinessHours = computed(() => {
   const businessHoursFrom = company?.value?.businessHoursFrom
     ? company.value.businessHoursFrom.substring(0, 2) + ':' + company.value.businessHoursFrom.substring(2)
@@ -54,10 +50,12 @@ const getBusinessHours = computed(() => {
   return [businessHoursFrom, businessHoursTo].join(' 〜 ')
 })
 
+// 休業日取得
 const getHolidays = computed(() => {
   return company?.value?.holidays.map(holiday => holiday.name).join(' ')
 })
 
+// 住所取得
 const getAddress = computed(() => {
   const prefecture = company?.value?.prefecture ? company.value.prefecture : ''
   const city = company?.value?.city ? company.value.city : ''
@@ -65,10 +63,9 @@ const getAddress = computed(() => {
   return [prefecture, city, restAddress].join(' ')
 })
 
-
 // ログインユーザID取得
 const loginUserId = () => {
-  const loginUser = store.getters.loginUser
+  const loginUser = authStore.getters.loginUser
   return loginUser ? loginUser.id : null
 }
 
@@ -79,17 +76,13 @@ const toggleLike = async () => {
       return
     }
     toggleLikeExecuting.value = true
-    const response = await axios.post('/api/like', {
-      companyId: companyId.value,
+
+    const isSuccess = await httpService.toggleLike({
+      companyId: Number(companyId.value),
       userId: loginUserId(),
-    }).catch(e => e.response || e)
-    if (response.status !== OK) {
-      store.dispatch('setError', response)
-    } else {
-      // お気に入りのフラグ値を切り替える
-      if (company.value) {
-        company.value.userLike = !company.value.userLike
-      }
+    })
+    if (isSuccess && company.value) {
+      company.value.userLike = !company.value.userLike
     }
     toggleLikeExecuting.value = false
   } else {
@@ -97,26 +90,33 @@ const toggleLike = async () => {
   }
 }
 
+// メニューリストページへ遷移する
+const toMenuListPage = () => {
+  if (isLoggingIn) {
+    router.push({ name: 'menu-list', query: { companyId: companyId.value } })
+  } else {
+    showLoginConfirmModal.value = true
+  }
+}
+
+
+
+
 onMounted(async () => {
   companyId.value = (() => {
     const { companyId } = useRoute().query
     return companyId ? companyId.toString() : ''
   })()
-  // TODO:エラーチェック
-  console.log('companyId', companyId.value)
-
-  const response = await axios.get<Company, AxiosResponse<Company>>('/api/company', {
-    params: {
-      companyId: companyId.value,
-      userId: loginUserId(),
-    }
-  }).catch(e => e.response || e)
-  companyLoaded.value = true
-  if (response.status == OK) {
-    company.value = response.data
-  } else {
-    store.dispatch('setError', response)
+  if (!companyId) {
+    router.push({ name: 'error' })
   }
+  const resCompany = await httpService.findCompanyById(Number(companyId.value), loginUserId())
+  if (!resCompany) {
+    // nullは異常
+    return
+  }
+  company.value = resCompany
+  companyLoaded.value = true
 })
 </script>
 
@@ -171,14 +171,14 @@ onMounted(async () => {
                     size="2x" />
                   <p class="page-company__link is-like">お気に入り</p>
                 </div>
-                <div class="page-company__link-area" @click.stop>
+                <div class="page-company__link-area" @click.stop="toMenuListPage">
                   <font-awesome-icon :icon="['fas', 'calendar-days']" size="2x" />
                   <p class="page-company__link is-reserve">予約する</p>
                 </div>
-                <div class="page-company__link-area" @click.stop>
+                <!-- <div class="page-company__link-area" @click.stop>
                   <font-awesome-icon :icon="['far', 'star']" size="2x" />
                   <p class="page-company__link is-review">評価する</p>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -221,13 +221,13 @@ onMounted(async () => {
           </VerticalTable>
         </div>
         <div class="page-company__submit-area">
-          <PrimaryButton class="page-company__submit" @click.stop>予約する</PrimaryButton>
+          <PrimaryButton class="page-company__submit" @click="toMenuListPage">予約する</PrimaryButton>
         </div>
       </Section>
     </template>
 
     <ConfirmModal :title="'ログイン確認'" :show="showLoginConfirmModal" :executing="false" :executeBtnlabel="'ログイン'"
-      :cancelBtnlabel="'キャンセル'" @execute="toLoginPage" @cancel="closeLoginConfirmModal">
+      :cancelBtnlabel="'キャンセル'" @execute="toLogin" @cancel="closeLoginConfirmModal">
       この操作にはログインが必要です
     </ConfirmModal>
   </div>

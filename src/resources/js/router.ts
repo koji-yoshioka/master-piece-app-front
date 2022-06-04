@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouterScrollBehavior } from 'vue-router'
-import { store } from './store/store'
+import { auth } from '@/store/auth'
 import Top from '@/pages/Top.vue'
 import Contact from '@/pages/Contact.vue'
 import SignUp from '@/pages/SignUp.vue'
@@ -13,7 +13,6 @@ import Profile from '@/pages/Profile.vue'
 import PasswordChange from '@/pages/PasswordChange.vue'
 import ReserveHistory from '@/pages/ReserveHistory.vue'
 import LikeCompanyList from '@/pages/LikeCompanyList.vue'
-
 import Error from '@/pages/Error.vue'
 
 const routes = [
@@ -31,11 +30,13 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login,
+    meta: { requiresNotAuth: true }
   },
   {
     path: '/sign-up',
     name: 'sign-up',
     component: SignUp,
+    meta: { requiresNotAuth: true }
   },
   {
     path: '/search',
@@ -63,46 +64,37 @@ const routes = [
     path: '/my-page',
     name: 'my-page',
     component: MyPage,
-    // TODO:ページ作ったらコメント外す
-    // meta: { requiresAuth: true }
+    meta: { requiresAuth: true }
   },
   {
     path: '/profile',
     name: 'profile',
     component: Profile,
-    // TODO:ページ作ったらコメント外す
-    // meta: { requiresAuth: true }
+    meta: { requiresAuth: true }
   },
   {
     path: '/password-change',
     name: 'password-change',
     component: PasswordChange,
-    // TODO:ページ作ったらコメント外す
-    // meta: { requiresAuth: true }
+    meta: { requiresAuth: true }
   },
   {
     path: '/reserve-history',
     name: 'reserve-history',
     component: ReserveHistory,
-    // TODO:ページ作ったらコメント外す
-    // meta: { requiresAuth: true }
+    meta: { requiresAuth: true }
   },
   {
     path: '/like-company-list',
     name: 'like-company-list',
     component: LikeCompanyList,
-    // TODO:ページ作ったらコメント外す
-    // meta: { requiresAuth: true }
+    meta: { requiresAuth: true }
   },
   {
-    path: '/error',
+    path: '/:catchAll(.*)',
     name: 'error',
     component: Error,
   },
-  // {
-  //   path: '*',
-  //   component: Top, // TODO:最終的にエラーページを出すようにする
-  // },
 ]
 
 const scrollBehavior: RouterScrollBehavior = (to, from, savedPosition) => {
@@ -116,11 +108,18 @@ export const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  const isLoggingIn = !!auth.getters.loginUser
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (store.getters.isLoggingIn) {
+    if (isLoggingIn) {
       next()
     } else {
       next({ path: '/login' })
+    }
+  } else if (to.matched.some((record) => record.meta.requiresNotAuth)) {
+    if (isLoggingIn) {
+      next({ path: '/' })
+    } else {
+      next()
     }
   } else {
     next()

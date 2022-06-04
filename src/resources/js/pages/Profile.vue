@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useStore } from '@/store/store'
-import { useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, helpers } from '@vuelidate/validators'
 import Section from '@/components/Section.vue'
@@ -10,9 +8,13 @@ import InputEMail from '@/components/InputEMail.vue'
 import InputText from '@/components/InputText.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 
+// 更新実行中フラグ
+const isUpdating = ref<boolean>(false)
+
+// --start バリデーション関連
 const fields = ref({
-  name: null,
-  email: null,
+  name: '',
+  email: '',
 })
 const rules = {
   name: {
@@ -24,17 +26,21 @@ const rules = {
   },
 }
 const v$ = useVuelidate(rules, fields)
+// --end
 
+// 送信ボタンの活性制御
 const isDisabled = computed(() =>
   (!v$.value.name.$model
     || !v$.value.email.$model)
   || v$.value.$invalid
 )
 
+// 送信
 const submit = async () => {
+  isUpdating.value = true
   console.log('save profile')
+  isUpdating.value = false
 }
-
 </script>
 
 <template>
@@ -52,9 +58,11 @@ const submit = async () => {
         </InputEMail>
       </div>
       <div class="page-profile__submit-area">
-        <PrimaryButton class="page-profile__submit" :disabled="isDisabled" @click="submit">保存</PrimaryButton>
+        <PrimaryButton class="page-profile__submit" :disabled="isDisabled" @click="submit">送信</PrimaryButton>
       </div>
     </Section>
+    <vue-element-loading class="page-profile__loading" :active="isUpdating" :background-color="'#1c1c1c'"
+      :color="'#fff'" :is-full-screen="true" :spinner="'spinner'" :text="'ユーザ情報を更新しています'" />
   </div>
 </template>
 
@@ -62,6 +70,12 @@ const submit = async () => {
 @use "~@/mixins";
 
 .page-profile {
+
+  // 画面全体を覆うよう、ヘッダとフッタより大きなz-indexを指定
+  &::v-deep(.velmld-overlay) {
+    z-index: 9999;
+  }
+
   @include mixins.mq(sp) {
     padding-left: 20px;
     padding-right: 20px;
@@ -130,5 +144,9 @@ const submit = async () => {
   @include mixins.mq(pc) {
     width: 50%;
   }
+}
+
+.page-profile__loading {
+  opacity: 0.8;
 }
 </style>

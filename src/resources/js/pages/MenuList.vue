@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import axios, { AxiosResponse } from 'axios'
+import { httpService } from '@/services/httpService'
 import { CompanyMenus } from '@/typings/interfaces/menuList'
 import Section from '@/components/Section.vue'
 
+// ルーティング情報
+const router = useRouter()
+
+// 企業ID
 const companyId = ref<string>('')
+// メニューリスト
 const companyMenus = ref<CompanyMenus | null>(null)
-// メニュー取得
+// メニュー取得済フラグ
 const menusLoaded = ref<boolean>(false)
 
-const router = useRouter()
-const toReservePage = (menuId: number) => {
+const toReserve = (menuId: number) => {
   router.push({ name: 'reserve', query: { companyId: companyId.value, menuId } });
 }
 
@@ -20,15 +24,13 @@ onMounted(async () => {
     const { companyId } = useRoute().query
     return companyId ? companyId.toString() : ''
   })()
+  if (!companyId) {
+    router.push({ name: 'error' })
+  }
   // メニュー取得
-  console.log('companyId', companyId.value)
-  const resCompanyMenus = (await axios.get<CompanyMenus, AxiosResponse<CompanyMenus>>(`/api/company/menu/${companyId.value}`))
-  companyMenus.value = resCompanyMenus.data
-  const status = resCompanyMenus.status
-  console.log('companyMenus', companyMenus.value)
-  console.log('status', status)
-
+  const menus = await httpService.getMenus(Number(companyId.value))
   menusLoaded.value = true
+  companyMenus.value = menus
 })
 </script>
 
@@ -45,7 +47,7 @@ onMounted(async () => {
         <div class="page-menu-list__menu-detail">
           <p class="page-menu-list__menu-detail-comment">{{ menu.comment }}</p>
           <p class="page-menu-list__menu-detail-price">{{ `¥${menu.price.toLocaleString()}` }}</p>
-          <button class="page-menu-list__menu-detail-forward" @click="toReservePage(menu.id)">日程を選択</button>
+          <button class="page-menu-list__menu-detail-forward" @click="toReserve(menu.id)">日程を選択</button>
         </div>
       </div>
     </Section>

@@ -11,7 +11,7 @@
     },
     "devDependencies": {
         "@vue/compiler-sfc": "^3.2.33",
-        "axios": "^0.19",
+        "axios": "^0.21.4",
         "cross-env": "^7.0",
         "laravel-mix": "^6.0.43",
         "lodash": "^4.17.19",
@@ -27,6 +27,7 @@
         "@fortawesome/free-solid-svg-icons": "^6.1.1",
         "@fortawesome/vue-fontawesome": "^3.0.0-5",
         "@hennge/vue3-pagination": "^1.0.17",
+        "@smartweb/vue-flash-message": "^1.0.0-alpha.12",
         "@types/lodash": "^4.14.182",
         "@types/vuelidate": "^0.7.15",
         "@types/webpack-env": "^1.16.4",

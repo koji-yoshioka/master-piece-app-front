@@ -16,7 +16,7 @@ export interface Holiday {
   abbreviation: string
 }
 
-export interface BaseInfo {
+export interface ReserveInfo {
   // 企業情報
   id: number
   name: string

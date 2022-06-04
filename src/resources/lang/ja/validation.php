@@ -145,6 +145,10 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'currentPassword' => '現在のパスワード',
+        'newPassword' => '新しいパスワード',
+        'reserveId' => '予約ID',
+    ],
 
 ];

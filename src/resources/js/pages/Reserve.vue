@@ -1,73 +1,87 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useStore } from "@/store/store"
-import axios, { AxiosResponse } from 'axios'
-import { BaseInfo, Menu, Day, DayOfWeek, Reserve, Holiday, TimetableCell } from '@/typings/interfaces/reserve'
-import { OK } from '@/util'
+import { useStore as useAuthStore } from '@/store/auth'
+import { httpService } from '@/services/httpService'
+import { Menu, Day, ReserveInfo, TimetableCell } from '@/typings/interfaces/reserve'
 import Section from '@/components/Section.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 
-// Vuexが管理している認証状態
-const store = useStore()
-
-// 予約中
-const reserving = ref<boolean>(false)
-
+// 認証情報
+const authStore = useAuthStore()
+// ルーティング情報
 const router = useRouter()
-const showModal = ref<boolean>(false)
-const close = () => {
-  showModal.value = false
-}
+
+// 予約状況
+const reserveInfo = ref<ReserveInfo | null>(null)
+// 選択した時間帯
 const selectedTime = ref<{
   day: Day
   time: TimetableCell
 }>()
+// 企業ID
+const companyId = ref<string>('')
+// メニューID
+const menuId = ref<string>('')
+// メニュー情報
+const menu = ref<Menu>()
+// 表示する全ての日付(横軸)
+const allDays = ref<Day[]>([])
+// 時間帯(縦軸)
+const timetableCells = ref<TimetableCell[]>([])
+
+// 予約状況読み込み中フラグ
+const contentLoaded = ref<boolean>(false)
+// 予約実行中フラグ
+const reserving = ref<boolean>(false)
+// モーダル表示フラグ
+const showModal = ref<boolean>(false)
+
+// 市区町村モーダルを閉じる
+const close = () => {
+  showModal.value = false
+}
+
+// ログインユーザID取得
+const loginUserId = () => {
+  const loginUser = authStore.getters.loginUser
+  return loginUser ? loginUser.id : null
+}
+
+// 予約実行
 const reserve = async (targetDay: Day | undefined, time: TimetableCell | undefined) => {
   if (!targetDay || !time) {
     return;
   }
   reserving.value = true
-  const response = await axios.post('/api/reserve', {
-    companyId: companyId.value,
-    userId: store.getters.loginUser.id,
-    menuId: menuId.value,
+
+  const isSuccess = await httpService.reserve({
+    companyId: Number(companyId.value),
+    userId: loginUserId(),
+    menuId: Number(menuId.value),
     date: targetDay.ymd,
     from: time.from,
     to: time.to,
-  }).catch(e => e.response || e)
-  if (response.status === OK) {
-    await getBaseInfo()
-    showModal.value = false
-    reserving.value = false
-    // reserves.value = response.data
-    // TODO:完了画面へ遷移する
-  } else {
-    showModal.value = false
-    reserving.value = false
-    store.dispatch('setError', response)
+  })
+  // 予約済みに変える
+  if (isSuccess) {
+    if (reserveInfo.value) {
+      if (!reserveInfo.value.reserves[targetDay.ymd]) {
+        // プロパティを追加する
+        reserveInfo.value.reserves[targetDay.ymd] = []
+      }
+      reserveInfo.value.reserves[targetDay.ymd].push({
+        date: targetDay.ymd,
+        from: time.from,
+        to: time.to,
+      })
+    }
   }
-  //reserves.value = (await axios.get<{ [date: string]: Reserve[] }, AxiosResponse<{ [date: string]: Reserve[] }>>(`/api/user/reserve/${companyId.value}`)).data
-
+  showModal.value = false
+  reserving.value = false
 }
 
-// 企業ID
-const companyId = ref<string>('')
-// メニューID
-const menuId = ref<string>('')
-
-// メニュー情報
-const menu = ref<Menu>()
-// 休業日
-const holidays = ref<Holiday[]>([])
-// 予約済みの日程
-const reserves = ref<{ [date: string]: Reserve[] }>({ '': [] })
-// 表示する全ての日付
-const allDays = ref<Day[]>([])
-
-const timetableCells = ref<TimetableCell[]>([])
-const contentLoaded = ref<boolean>(false)
-
+// 予約時刻を選択
 const selectTime = (day: Day, time: TimetableCell) => {
   showModal.value = true
   selectedTime.value = {
@@ -76,31 +90,22 @@ const selectTime = (day: Day, time: TimetableCell) => {
   }
 }
 
-
-const getBaseInfo = async () => {
-  const response = await axios.get<BaseInfo, AxiosResponse<BaseInfo>>('/api/reserve/base-info', {
-    params: {
-      companyId: companyId.value,
-      menuId: menuId.value,
-    }
-  })
-  if (response.status === OK) {
-    reserves.value = response.data.reserves
-    holidays.value = response.data.holidays
-  }
+// 予約状況取得
+const getReserveInfo = async (companyId: number, menuId: number) => {
+  const resReserveInfo = await httpService.getReserveInfo(companyId, menuId)
+  reserveInfo.value = resReserveInfo
 }
 
-
-
-const isHoliday = (dayOfWeekId: number) => holidays.value.map(holiday => holiday.id).includes(dayOfWeekId)
+// 引数のIDに該当する曜日が休業日か
+const isHoliday = (dayOfWeekId: number) => reserveInfo.value?.holidays.map(holiday => holiday.id).includes(dayOfWeekId)
+// 引数の時間が予約済か
 const isReserved = (targetYmd: string, from: string, to: string) => {
   // その日の予約一覧を取得
-  const sameDayReserves = reserves.value[targetYmd]
+  const sameDayReserves = reserveInfo.value?.reserves[targetYmd]
   if (!sameDayReserves) {
     // その日に全く予約がない場合は「false:予約なし」を返す
     return false
   }
-
   return sameDayReserves.some(reserve =>
     (parseInt(from) < parseInt(reserve.to) && (parseInt(reserve.to) <= parseInt(to)))
     ||
@@ -121,26 +126,13 @@ onMounted(
       return menuId ? menuId.toString() : ''
     })()
     if (!companyId.value || !menuId.value) {
-      // TODO:エラー処理
-      console.log('falsy')
+      router.push({ name: 'error' })
     }
-    console.log('companyId', companyId.value)
-    console.log('menuId', menuId.value)
-
-    // 休業日と予約状況を取得 // TODO 後で削除
-    const baseInfo = (await axios.get<BaseInfo, AxiosResponse<BaseInfo>>('/api/reserve/base-info', {
-      params: {
-        companyId: companyId.value,
-        menuId: menuId.value,
-      }
-    })).data
-    console.log('baseInfo', baseInfo)
-
-    // 休業日
-    holidays.value = baseInfo.holidays
-
-    // 予約状況を取得
-    reserves.value = baseInfo.reserves
+    await getReserveInfo(Number(companyId.value), Number(menuId.value))
+    if (!reserveInfo.value) {
+      // 取得できない=異常
+      return
+    }
 
     // 今日の日付〜1ヶ月後の日付までの日数
     const locale = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })
@@ -151,7 +143,7 @@ onMounted(
       return Math.floor((to.getTime() - from.getTime()) / 86400000)
     })()
     // 曜日マスタを取得
-    const daysOfWeek = (await axios.get<DayOfWeek[], AxiosResponse<DayOfWeek[]>>('/api/day-of-week')).data
+    const daysOfWeek = await httpService.getDaysOfWeek()
     for (let i = 0; i < diffDays; i++) {
       const day = new Date(locale)
       day.setDate(day.getDate() + i)
@@ -163,15 +155,14 @@ onMounted(
         dayOfWeek: daysOfWeek[day.getDay()]
       })
     }
-
     // 時間帯
-    const fromMinutes = Number(baseInfo.businessHoursFrom.substring(0, 2)) * 60
-      + Number(baseInfo.businessHoursFrom.substring(2, 4))
-    const toMinutes = Number(baseInfo.businessHoursTo.substring(0, 2)) * 60
-      + Number(baseInfo.businessHoursTo.substring(2, 4))
+    const fromMinutes = Number(reserveInfo.value.businessHoursFrom.substring(0, 2)) * 60
+      + Number(reserveInfo.value.businessHoursFrom.substring(2, 4))
+    const toMinutes = Number(reserveInfo.value.businessHoursTo.substring(0, 2)) * 60
+      + Number(reserveInfo.value.businessHoursTo.substring(2, 4))
 
     // 予約枠の間隔
-    const businessHoursInterval = baseInfo.menu.minutesLength
+    const businessHoursInterval = reserveInfo.value.menu.minutesLength
 
     for (let i = 0; i < (toMinutes - fromMinutes) / businessHoursInterval; i++) {
       timetableCells.value.push({

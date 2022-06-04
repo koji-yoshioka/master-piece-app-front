@@ -1,96 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useStore } from "@/store/store"
-import axios, { AxiosResponse } from 'axios'
-import { Company } from '@/typings/interfaces/search'
-import { OK } from '@/util'
 import Section from '@/components/Section.vue'
-
-// グローバル情報
-const store = useStore()
-// ルーティング情報
-const router = useRouter()
-
-// ログイン確認モーダル表示フラグ
-const showLoginConfirmModal = ref<boolean>(false)
-
-// ログインページへ遷移する
-const toLoginPage = () => {
-  router.push({ name: 'login' })
-}
-
-// ログイン確認モーダルを閉じる
-const closeLoginConfirmModal = () => {
-  showLoginConfirmModal.value = false
-}
-
-// --start ページング関連
-const currentPageNumber = ref<number>(1)
-const perPage = ref<number>(2)
-const getCompanies = computed(() => {
-  let current = currentPageNumber.value * perPage.value
-  let start = current - perPage.value;
-  return companies.value.slice(start, current);
-})
-const updateHandler = (pageNumber: number) => {
-  currentPageNumber.value = pageNumber
-}
-const getTotalPageCount = computed(() => Math.ceil(companies.value.length) / perPage.value)
-// --end
-
-
-// メニューリストページへ遷移する
-const toMenuListPage = (companyId: number) => {
-  if (isLoggingIn) {
-    router.push({ name: 'menu-list', query: { companyId } })
-  } else {
-    showLoginConfirmModal.value = true
-  }
-}
-
-
-// 企業情報取得済フラグ
-const companiesLoaded = ref<boolean>(false)
-// 企業情報リスト
-const companies = ref<Company[]>([])
-
-// ログイン済フラグ
-const isLoggingIn = store.getters.isLoggingIn
-
-// ログインユーザID取得
-const loginUserId = () => {
-  const loginUser = store.getters.loginUser
-  return loginUser ? loginUser.id : null
-}
-
-// 選択中のタブ番号
-const activeTabNumber = ref<number>(1)
-
-const isReserveHistoryTab = computed(() => activeTabNumber.value === 1)
-const isLikeListTab = computed(() => activeTabNumber.value === 2)
-
-watch(activeTabNumber, (newValue, oldValue) => {
-  if (newValue === 2) {
-    getLikeCompanies()
-  }
-})
-
-// 企業を検索する
-const getLikeCompanies = async () => {
-  companiesLoaded.value = false
-  const response = await axios.get<Company[], AxiosResponse<Company[]>>('/api/like/companies', {
-    params: {
-      userId: loginUserId()
-    }
-  }).catch(e => e.response || e)
-  companiesLoaded.value = true
-  if (response.status == OK) {
-    companies.value = response.data
-  } else {
-    store.dispatch('setError', response)
-  }
-}
 </script>
 
 <template>
@@ -209,15 +118,12 @@ const getLikeCompanies = async () => {
   color: #d7d5d3;
   padding: 10px;
   position: relative;
-  // width: 160px;
 
   @include mixins.mq(sp) {}
 
   @include mixins.mq(tablet) {}
 
-  @include mixins.mq(pc) {
-    // width: 160px;
-  }
+  @include mixins.mq(pc) {}
 }
 
 .page-my-page__menu::before {
