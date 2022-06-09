@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -61,13 +60,14 @@ class UserController extends Controller
         }
     }
 
-    public function delete($id)
+    public function delete(Request $request)
     {
+        $userId = $request->user()->id;
         // テーブル削除
-        DB::transaction(function () use ($id) {
-            User::find($id)->delete();
+        DB::transaction(function () use ($userId) {
+            User::find($userId)->delete();
         });
         // イメージ画像削除
-        Storage::cloud()->deleteDirectory("users/{$id}");
+        Storage::cloud()->deleteDirectory("users/{$userId}");
     }
 }

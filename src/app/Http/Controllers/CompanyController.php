@@ -128,7 +128,7 @@ class CompanyController extends Controller
         );
     }
 
-    public function getById(Request $request, $companyId): JsonResponse
+    public function getById(Request $request, $id): JsonResponse
     {
         $request->validate([
             'userId' => 'nullable|integer',
@@ -142,7 +142,7 @@ class CompanyController extends Controller
                     return $query->where('user_id', $userId);
                 });
             }
-        ])->find($companyId);
+        ])->find($id);
 
         if (!$company) {
             abort(404);

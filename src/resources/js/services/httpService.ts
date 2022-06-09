@@ -146,9 +146,9 @@ const changePassword = async (data: ChangePasswordReq) => {
 }
 
 // 退会 ※成否の真偽値を返す
-const withdraw = async (userId: number) => {
+const withdraw = async () => {
   try {
-    await axios.delete(`/api/user/${userId}`)
+    await axios.delete('/api/user')
     flashMessage.show({
       type: 'success',
       text: '退会処理が完了しました。',

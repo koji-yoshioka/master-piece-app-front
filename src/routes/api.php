@@ -21,7 +21,7 @@ Route::post('/sign-up', 'Auth\RegisterController@register');
 // ログイン
 Route::post('/login', 'Auth\LoginController@login');
 // ゲストログイン
-Route::post('/login/guest', 'Auth\LoginController@guestLogin');
+Route::post('/login/guest', 'Auth\LoginController@guestLogin    ');
 // ログアウト
 Route::post('/logout', 'Auth\LoginController@logout');
 // ログインユーザー取得
@@ -31,8 +31,7 @@ Route::post('/password-change', 'Auth\ChangePasswordController@changePassword');
 // ユーザ更新
 Route::put('/user', 'UserController@update');
 // 退会
-Route::delete('/user/{id}', 'UserController@delete')
-    ->where('id', '[0-9]+');
+Route::delete('/user', 'UserController@delete');
 
 // 市区町村取得
 Route::get('/prefecture/city/{prefectureId}', 'PrefectureController@getCitiesByPrefectureId')
@@ -41,8 +40,8 @@ Route::get('/prefecture/city/{prefectureId}', 'PrefectureController@getCitiesByP
 // 企業情報一覧取得
 Route::get('/company', 'CompanyController@getByConditions');
 // 企業情報取得
-Route::get('/company/{companyId}', 'CompanyController@getById')
-    ->where('companyId', '[0-9]+');
+Route::get('/company/{id}', 'CompanyController@getById')
+    ->where('id', '[0-9]+');
 
 // メニュー取得
 Route::get('/company/menu/{companyId}', 'CompanyController@getMenusById')

@@ -40488,7 +40488,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 withdrawing.value = true;
                 _context.next = 3;
-                return _services_httpService__WEBPACK_IMPORTED_MODULE_6__.httpService.withdraw(Number(authStore.getters.loginUser.id));
+                return _services_httpService__WEBPACK_IMPORTED_MODULE_6__.httpService.withdraw();
 
               case 3:
                 isSuccess = _context.sent;
@@ -47125,14 +47125,14 @@ var changePassword = /*#__PURE__*/function () {
 
 
 var withdraw = /*#__PURE__*/function () {
-  var _ref8 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee8(userId) {
+  var _ref8 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee8() {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee8$(_context8) {
       while (1) {
         switch (_context8.prev = _context8.next) {
           case 0:
             _context8.prev = 0;
             _context8.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default()["delete"]("/api/user/".concat(userId));
+            return axios__WEBPACK_IMPORTED_MODULE_1___default()["delete"]('/api/user');
 
           case 3:
             _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
@@ -47159,7 +47159,7 @@ var withdraw = /*#__PURE__*/function () {
     }, _callee8, null, [[0, 7]]);
   }));
 
-  return function withdraw(_x5) {
+  return function withdraw() {
     return _ref8.apply(this, arguments);
   };
 }(); // 市区町村を取得
@@ -47198,7 +47198,7 @@ var findCities = /*#__PURE__*/function () {
     }, _callee9, null, [[0, 7]]);
   }));
 
-  return function findCities(_x6) {
+  return function findCities(_x5) {
     return _ref9.apply(this, arguments);
   };
 }(); // こだわり条件を取得
@@ -47278,7 +47278,7 @@ var findCompanies = /*#__PURE__*/function () {
     }, _callee11, null, [[0, 7]]);
   }));
 
-  return function findCompanies(_x7) {
+  return function findCompanies(_x6) {
     return _ref11.apply(this, arguments);
   };
 }(); // 企業情報を取得(1件)
@@ -47321,7 +47321,7 @@ var findCompanyById = /*#__PURE__*/function () {
     }, _callee12, null, [[0, 7]]);
   }));
 
-  return function findCompanyById(_x8, _x9) {
+  return function findCompanyById(_x7, _x8) {
     return _ref12.apply(this, arguments);
   };
 }(); // お気に入りに登録/削除 ※成否の真偽値を返す
@@ -47360,7 +47360,7 @@ var toggleLike = /*#__PURE__*/function () {
     }, _callee13, null, [[0, 7]]);
   }));
 
-  return function toggleLike(_x10) {
+  return function toggleLike(_x9) {
     return _ref13.apply(this, arguments);
   };
 }(); // 予約履歴を取得
@@ -47399,7 +47399,7 @@ var getReserveHistory = /*#__PURE__*/function () {
     }, _callee14, null, [[0, 7]]);
   }));
 
-  return function getReserveHistory(_x11) {
+  return function getReserveHistory(_x10) {
     return _ref14.apply(this, arguments);
   };
 }(); // お気に入り一覧を取得
@@ -47438,7 +47438,7 @@ var getLikes = /*#__PURE__*/function () {
     }, _callee15, null, [[0, 7]]);
   }));
 
-  return function getLikes(_x12) {
+  return function getLikes(_x11) {
     return _ref15.apply(this, arguments);
   };
 }(); // メニューリストを取得
@@ -47477,7 +47477,7 @@ var getMenus = /*#__PURE__*/function () {
     }, _callee16, null, [[0, 7]]);
   }));
 
-  return function getMenus(_x13) {
+  return function getMenus(_x12) {
     return _ref16.apply(this, arguments);
   };
 }(); // 予約状況を取得
@@ -47521,7 +47521,7 @@ var getReserveInfo = /*#__PURE__*/function () {
     }, _callee17, null, [[0, 7]]);
   }));
 
-  return function getReserveInfo(_x14, _x15) {
+  return function getReserveInfo(_x13, _x14) {
     return _ref17.apply(this, arguments);
   };
 }(); // 曜日マスタを取得
@@ -47601,7 +47601,7 @@ var reserve = /*#__PURE__*/function () {
     }, _callee19, null, [[0, 7]]);
   }));
 
-  return function reserve(_x16) {
+  return function reserve(_x15) {
     return _ref19.apply(this, arguments);
   };
 }(); // 予約キャンセル ※成否の真偽値を返す
@@ -47642,7 +47642,7 @@ var cancelReserve = /*#__PURE__*/function () {
     }, _callee20, null, [[0, 7]]);
   }));
 
-  return function cancelReserve(_x17) {
+  return function cancelReserve(_x16) {
     return _ref20.apply(this, arguments);
   };
 }(); // お問い合わせ ※成否の真偽値を返す
@@ -47686,7 +47686,7 @@ var postContact = /*#__PURE__*/function () {
     }, _callee21, null, [[0, 7]]);
   }));
 
-  return function postContact(_x18, _x19) {
+  return function postContact(_x17, _x18) {
     return _ref21.apply(this, arguments);
   };
 }(); // 共通処理：エラーハンドリング
