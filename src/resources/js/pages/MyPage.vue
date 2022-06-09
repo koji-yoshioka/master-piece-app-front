@@ -76,7 +76,7 @@ const toLikeCompanyList = () => {
 //　退会
 const withdraw = async () => {
   withdrawing.value = true
-  const isSuccess = await httpService.withdraw(Number(authStore.getters.loginUser.id))
+  const isSuccess = await httpService.withdraw()
   withdrawing.value = false
   if (isSuccess) {
     authStore.dispatch('setUser', null)
