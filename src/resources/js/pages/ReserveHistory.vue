@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore as useAuthStore } from '@/store/auth'
 import { httpService } from '@/services/httpService'
-import { Reserve } from '@/typings/interfaces/useReserve'
+import { Reserve } from '@/typings/interfaces/reserveHistory'
 import Section from '@/components/Section.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 

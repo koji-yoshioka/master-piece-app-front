@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GetUserReservesRequest;
-use App\Http\Requests\ReserveRequest;
+use App\Http\Requests\RegisterReserveRequest;
 use App\Models\Company;
 use App\Models\CompanyReserve;
 use Illuminate\Http\JsonResponse;
@@ -68,7 +68,7 @@ class ReserveController extends Controller
         );
     }
 
-    public function reserve(ReserveRequest $request)
+    public function store(RegisterReserveRequest $request)
     {
         DB::table('company_reserves')->insert(
             [
@@ -84,7 +84,7 @@ class ReserveController extends Controller
         );
     }
 
-    public function getUserReserves(GetUserReservesRequest $request): JsonResponse
+    public function getReservesByUserId($userId): JsonResponse
     {
         return response()->json(
             DB::table('company_reserves')
@@ -100,7 +100,7 @@ class ReserveController extends Controller
                     , 'company_menus.price'
                 )
                 ->where([
-                    ['company_reserves.user_id', '=', $request->userId],
+                    ['company_reserves.user_id', '=', $userId],
                     ['company_reserves.date', '>=', date('Ymd')],
                 ])
                 ->orderBy('company_reserves.date', 'desc')

@@ -14,8 +14,8 @@ class CompaniesTableSeeder extends Seeder
         DB::table('companies')->insert([
             [
                 'name' => 'テスト1株式会社',
-                'email'      => 'test-company1@test.com',
-                'password'   => Hash::make('password123'),
+//                'email'      => 'test-company1@test.com',
+//                'password'   => Hash::make('password123'),
                 'tel' => '0364066000',
                 'zip_code' => '1066108',
                 'prefecture' => '東京都',
@@ -31,8 +31,8 @@ class CompaniesTableSeeder extends Seeder
             ],
             [
                 'name' => 'テスト2株式会社',
-                'email'      => 'test-company2@test.com',
-                'password'   => Hash::make('password123'),
+//                'email'      => 'test-company2@test.com',
+//                'password'   => Hash::make('password123'),
                 'tel' => '0364066000',
                 'zip_code' => '1066108',
                 'prefecture' => '東京都',

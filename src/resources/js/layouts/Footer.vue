@@ -2,19 +2,16 @@
   <footer id="footer" class="l-footer">
     <ul class="l-footer__list">
       <li class="l-footer__item">
-        <a class="l-footer__link">サイトポリシー</a>
+        <router-link to="/privacy-policy" exact>プライバシーポリシー</router-link>
       </li>
       <li class="l-footer__item">
-        <a class="l-footer__link">関連団体</a>
+        <router-link to="/security" exact>情報セキュリティ方針</router-link>
       </li>
       <li class="l-footer__item">
-        <a class="l-footer__link">情報セキュリティ基本方針</a>
+        <router-link to="/term" exact>利用規約</router-link>
       </li>
       <li class="l-footer__item">
-        <a class="l-footer__link">個人情報保護方針</a>
-      </li>
-      <li class="l-footer__item">
-        <a class="l-footer__link">サイトマップ</a>
+        <router-link to="/contact" exact>お問い合わせ</router-link>
       </li>
     </ul>
     <p>Copyright © MASTER PIECE. All Rights Reserved</p>
@@ -42,7 +39,10 @@
     padding-left: 20px;
   }
 
-  @include mixins.mq(tablet) {}
+  @include mixins.mq(tablet) {
+    align-items: center;
+    row-gap: 30px;
+  }
 
   @include mixins.mq(pc) {
     align-items: center;
@@ -55,6 +55,13 @@
 }
 
 .l-footer__list {
+  @include mixins.mq(sp) {}
+
+  @include mixins.mq(tablet) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   @include mixins.mq(pc) {
     display: flex;
     flex-wrap: wrap;
@@ -62,6 +69,17 @@
 }
 
 .l-footer__item {
-  width: 50%;
+  @include mixins.mq(sp) {
+    width: 100%;
+  }
+
+  @include mixins.mq(tablet) {
+    width: 50%;
+  }
+
+  @include mixins.mq(pc) {
+    width: 50%;
+  }
+
 }
 </style>

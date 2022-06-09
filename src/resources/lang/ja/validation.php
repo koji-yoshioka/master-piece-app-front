@@ -148,7 +148,12 @@ return [
     'attributes' => [
         'currentPassword' => '現在のパスワード',
         'newPassword' => '新しいパスワード',
+        'companyId' => '企業ID',
+        'userId' => 'ユーザID',
         'reserveId' => '予約ID',
+        'name' => 'ユーザ名',
+        'email' => 'メールアドレス',
+        'image' => '画像',
     ],
 
 ];

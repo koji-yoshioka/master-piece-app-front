@@ -24,16 +24,26 @@ class GetCompanyRequest extends FormRequest
     public function rules()
     {
         return [
-            'companyId' => 'required|integer',
+            'cities' => 'array',
+            'cities.*' => 'string',
+            'priceMin' => 'nullable|integer',
+            'priceMax' => 'nullable|integer',
             'userId' => 'nullable|integer',
+            'sellingPointIds' => 'array',
+            'sellingPointIds.*' => 'integer',
+            'prefectureId' => 'required|integer',
         ];
     }
 
     public function attributes()
     {
         return [
-            'companyId'           => '企業ID',
-            'userId'        => 'ユーザID',
+            'cities' => '市区町村',
+            'priceMin' => '金額(下限)',
+            'priceMax' => '金額(上限)',
+            'userId' => 'ユーザID',
+            'sellingPointIds' => 'セールスポイント',
+            'prefectureId' => '都道府県ID',
         ];
     }
 }

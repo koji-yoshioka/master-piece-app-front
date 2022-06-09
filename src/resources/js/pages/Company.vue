@@ -37,7 +37,7 @@ const toLogin = () => {
 }
 // ロゴ取得
 const getLogo = computed(() =>
-  `https://s3-ap-northeast-1.amazonaws.com/master-piece-company-images/common/no-image.jpeg`
+  `https://static.master-piece.site/common/no-image.jpeg`
 )
 // 営業時間取得
 const getBusinessHours = computed(() => {
@@ -98,9 +98,6 @@ const toMenuListPage = () => {
     showLoginConfirmModal.value = true
   }
 }
-
-
-
 
 onMounted(async () => {
   companyId.value = (() => {
@@ -164,11 +161,13 @@ onMounted(async () => {
                 <p class="page-company__overview-item-text">{{ company?.nearestStation }}</p>
               </div>
               <div class="page-company__link-area-group">
-                <div class="page-company__link-area" @click.stop="toggleLike">
+                <div class="page-company__link-area is-like" @click.stop="toggleLike">
                   <font-awesome-icon v-if="company?.userLike" class="page-company__like-icon-checked"
                     :icon="['fas', 'heart']" size="2x" />
                   <font-awesome-icon v-else class="page-company__like-icon-unchecked" :icon="['fas', 'heart']"
                     size="2x" />
+                  <font-awesome-icon v-if="toggleLikeExecuting" class="page-company__like-icon-toggling"
+                    :icon="['fas', 'spinner']" size="2x" :spin="true" />
                   <p class="page-company__link is-like">お気に入り</p>
                 </div>
                 <div class="page-company__link-area" @click.stop="toMenuListPage">
@@ -423,6 +422,16 @@ onMounted(async () => {
   &:hover {
     cursor: pointer;
   }
+}
+
+.page-company__link-area.is-like {
+  position: relative;
+}
+
+.page-company__like-icon-toggling {
+  color: #1c1c1c;
+  opacity: 0.5;
+  position: absolute;
 }
 
 .page-company__like-icon-checked {

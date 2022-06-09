@@ -41,8 +41,8 @@ const review = (event: Event) => {
 
 const getLogo = computed(() =>
   props.company.logo
-    ? `https://s3-ap-northeast-1.amazonaws.com/master-piece-company-images/${props.company.id}/logo/${props.company.logo}`
-    : `https://s3-ap-northeast-1.amazonaws.com/master-piece-company-images/common/no-image.jpeg`
+    ? `https://static.master-piece.site/companies/${props.company.id}/logo/${props.company.logo}`
+    : `https://static.master-piece.site/common/no-image.jpeg`
 )
 
 const getAddress = computed(() => {
@@ -102,10 +102,12 @@ const getHolidays = computed(() => {
         </div>
 
         <div class="c-search-result__link-area-group">
-          <div v-show="showLike" class="c-search-result__link-area" @click.stop="like">
+          <div v-show="showLike" class="c-search-result__link-area is-like" @click.stop="like">
             <font-awesome-icon v-if="company.userLike" class="c-search-result__like-icon-checked"
               :icon="['fas', 'heart']" size="2x" />
             <font-awesome-icon v-else class="c-search-result__like-icon-unchecked" :icon="['fas', 'heart']" size="2x" />
+            <font-awesome-icon v-if="executing" class="c-search-result__like-icon-toggling" :icon="['fas', 'spinner']"
+              size="2x" :spin="true" />
             <p class="c-search-result__link is-like">お気に入り</p>
           </div>
           <div class="c-search-result__link-area" @click.stop="reserve">
@@ -299,6 +301,16 @@ const getHolidays = computed(() => {
   &:hover {
     cursor: pointer;
   }
+}
+
+.c-search-result__link-area.is-like {
+  position: relative;
+}
+
+.c-search-result__like-icon-toggling {
+  color: #1c1c1c;
+  opacity: 0.5;
+  position: absolute;
 }
 
 .c-search-result__like-icon-checked {

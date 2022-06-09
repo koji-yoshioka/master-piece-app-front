@@ -60,7 +60,9 @@ import Section from '@/components/Section.vue'
           <img class="page-home__merit-card-image" src="/images/professional.jpg" alt="professional">
           <p class="page-home__merit-card-title">１．プロが担当</p>
           <p class="page-home__merit-card-text">
-            ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ
+            大手百貨店や有名ブランドの専属として数千名のコーディネートを担当したスタッフが多数在籍。<br>
+            厳しい審査を通過した実績十分のスタッフ達が対応致します。<br>
+            無料相談を実施している企業もございますので安心してご利用頂けます。
           </p>
         </div>
 
@@ -68,7 +70,9 @@ import Section from '@/components/Section.vue'
           <img class="page-home__merit-card-image" src="/images/staff.jpg" alt="staff">
           <p class="page-home__merit-card-title">2．コーディネーターが豊富</p>
           <p class="page-home__merit-card-text">
-            ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ
+            体型、人種、第一印象など、その人の持つ個性は様々です。<br>
+            そして個性を最大限に活かす能力は一朝一夕で身に付くものではありません。<br>
+            本サービスでは豊富な経験をもつスタッフのみが在籍しており、高い顧客満足度を誇っています。
           </p>
         </div>
 
@@ -76,7 +80,9 @@ import Section from '@/components/Section.vue'
           <img class="page-home__merit-card-image" src="/images/time.jpg" alt="time">
           <p class="page-home__merit-card-title">3．最短１日で対応</p>
           <p class="page-home__merit-card-text">
-            ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ
+            無料相談を受けてから数日後にサービスをご利用頂く方が大半ですが、２回目以降のご利用の方やお時間の関係で即日中にご利用頂きたい方にも対応しています。<br>
+            即日対応でも料金は変わりません。<br>
+            (一部の企業を除く)
           </p>
         </div>
 
@@ -84,7 +90,8 @@ import Section from '@/components/Section.vue'
           <img class="page-home__merit-card-image" src="/images/reasonable.jpg" alt="reasonable">
           <p class="page-home__merit-card-title">4．安定したご利用料金</p>
           <p class="page-home__merit-card-text">
-            ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ
+            平均として、ご利用頂くメニューの基本料金＋店頭での購入代金の５％〜１５％を利用料金として頂戴しております。<br>
+            また、規定により返品が発生した場合はそのぶんの料金をお返しさせて頂きます。<br>
           </p>
         </div>
       </div>
@@ -107,7 +114,9 @@ import Section from '@/components/Section.vue'
           <div class="page-home__flow-card-text-area">
             <p class="page-home__flow-card-title">会員登録</p>
             <p class="page-home__flow-card-text">
-              ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ
+              普段お使いのメールアドレスで会員登録を行います。<br>
+              <br>
+              ※画面上部のメニュー「会員登録」から実施頂けます。
             </p>
           </div>
         </div>
@@ -123,9 +132,11 @@ import Section from '@/components/Section.vue'
             <img class="page-home__flow-card-image" src="/images/designate.jpg" alt="designate">
           </div>
           <div class="page-home__flow-card-text-area">
-            <p class="page-home__flow-card-title">コーディネーターを選択</p>
+            <p class="page-home__flow-card-title">企業を選択</p>
             <p class="page-home__flow-card-text">
-              ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ
+              地域やご予算の条件に合った企業を選択します。<br>
+              <br>
+              ※現状は東京都のみです。今後のサービス拡大にご期待ください。
             </p>
           </div>
         </div>
@@ -143,7 +154,7 @@ import Section from '@/components/Section.vue'
           <div class="page-home__flow-card-text-area">
             <p class="page-home__flow-card-title">ご予約</p>
             <p class="page-home__flow-card-text">
-              ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ
+              企業が提供する各プランからご利用するサービスを選んで頂き、予約します。
             </p>
           </div>
         </div>
@@ -161,7 +172,7 @@ import Section from '@/components/Section.vue'
           <div class="page-home__flow-card-text-area">
             <p class="page-home__flow-card-title">お支払い</p>
             <p class="page-home__flow-card-text">
-              ＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸＸ
+              当日にコーディネーター同伴でお買い物頂き、その後コーディネーターの所属企業へ料金をお支払い下さい。
             </p>
           </div>
         </div>

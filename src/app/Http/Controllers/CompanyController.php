@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\GetCompaniesRequest;
 use App\Http\Requests\GetCompanyRequest;
 use App\Http\Requests\GetLikeCompaniesRequest;
 use App\Models\Company;
@@ -28,7 +27,7 @@ class CompanyController extends Controller
             ->only(['getLikeCompanies']);
     }
 
-    public function getByConditions(GetCompaniesRequest $request): JsonResponse
+    public function getByConditions(GetCompanyRequest $request): JsonResponse
     {
         // オプション条件：市区町村
         $cities = $request->cities;
@@ -129,10 +128,11 @@ class CompanyController extends Controller
         );
     }
 
-    public function getById(GetCompanyRequest $request): JsonResponse
+    public function getById(Request $request, $companyId): JsonResponse
     {
-        // 企業ID
-        $companyId = $request->companyId;
+        $request->validate([
+            'userId' => 'nullable|integer',
+        ]);
         // ユーザID　※未ログイン時は空
         $userId = $request->userId;
 
@@ -190,10 +190,9 @@ class CompanyController extends Controller
         );
     }
 
-
-    public function getMenusById($id): JsonResponse
+    public function getMenusById($companyId): JsonResponse
     {
-        $company = Company::with('menus')->find($id);
+        $company = Company::with('menus')->find($companyId);
         return response()->json(
             (object)
             [
@@ -207,45 +206,6 @@ class CompanyController extends Controller
                     , 'price' => $menu->price
                 ])
             ]
-        );
-    }
-
-    public function getLikeCompanies(GetLikeCompaniesRequest $request): JsonResponse
-    {
-        $companyIds = DB::table('company_likes')->select('company_id')
-            ->where('user_id', $request->userId)
-            ->get()
-            ->map(fn($companyId) => $companyId->company_id);
-
-        $companies = Company::with(['logo', 'holidays', 'sellingPoints', 'likes'])
-            ->whereIn('id', $companyIds)
-            ->get();
-
-        return response()->json($companies
-            ->map(fn($company) => [
-                'id' => $company->id
-                , 'name' => $company->name
-                , 'tel' => $company->tel
-                , 'prefecture' => $company->prefecture
-                , 'city' => $company->city
-                , 'restAddress' => $company->rest_address
-                , 'nearestStation' => $company->nearest_station
-                , 'businessHoursFrom' => $company->business_hours_from
-                , 'businessHoursTo' => $company->business_hours_to
-                , 'comment' => $company->comment
-                , 'logo' => !empty($company->logo) ? $company->logo->file_name : null
-                , 'sellingPoints' => $company->sellingPoints
-                    ->map(fn($sellingPoint) => [
-                        'id' => $sellingPoint->id
-                        , 'name' => $sellingPoint->name
-                    ])
-                , 'holidays' => $company->holidays
-                    ->map(fn($holiday) => [
-                        'id' => $holiday->id
-                        , 'name' => $holiday->name
-                    ])
-                , 'userLike' => true
-            ])
         );
     }
 }

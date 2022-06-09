@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\GetCitiesRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
-class CityController extends Controller
+class PrefectureController extends Controller
 {
-
-    public function getByConditions(GetCitiesRequest $request): JsonResponse
+    public function getCitiesByPrefectureId($prefectureId): JsonResponse
     {
-        $prefectureId = $request->prefectureId;
-
         return response()->json(
             DB::table('cities')
                 ->select(

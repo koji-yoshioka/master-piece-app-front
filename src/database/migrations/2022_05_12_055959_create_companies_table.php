@@ -16,10 +16,10 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->nullable();
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+//            $table->string('email')->unique();
+//            $table->timestamp('email_verified_at')->nullable();
+//            $table->string('password');
+//            $table->rememberToken();
             $table->string('tel')->nullable();
             $table->string('zip_code')->nullable();
             $table->string('prefecture')->nullable();
@@ -31,7 +31,6 @@ class CreateCompaniesTable extends Migration
             $table->text('comment')->nullable();
             $table->string('note')->nullable();
             $table->timestamps();
-
             $table->softDeletes();
         });
     }

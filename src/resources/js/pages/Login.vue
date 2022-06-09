@@ -164,6 +164,10 @@ const submit = async () => {
   text-align: right;
   text-decoration: underline;
 
+  &:hover {
+    cursor: pointer;
+  }
+
   @include mixins.mq(sp) {
     width: 100%;
   }

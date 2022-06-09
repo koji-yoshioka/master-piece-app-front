@@ -43,15 +43,15 @@ const toMenuList = (companyId: number) => {
 }
 
 // 企業を検索する
-const getLikeCompanies = async () => {
+const getLikes = async () => {
   companiesLoaded.value = false
-  const resCompanies = await httpService.getLikeCompanies(loginUserId())
+  const resCompanies = await httpService.getLikes(loginUserId())
   companiesLoaded.value = true
   companies.value = resCompanies
 }
 
 onMounted(async () => {
-  getLikeCompanies()
+  getLikes()
 })
 </script>
 

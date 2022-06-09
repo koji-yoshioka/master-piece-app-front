@@ -7,8 +7,15 @@ import { flashMessage } from '@smartweb/vue-flash-message'
 const getLoginUser = async () => {
   try {
     const response = await axios.get('/api/user')
-    console.log('complete')
     return response.data
+      ? {
+        id: response.data.id,
+        name: response.data.name,
+        email: response.data.email,
+        isGuest: response.data.is_guest,
+        imageFileName: response.data.image_file_name,
+      }
+      : null
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       httpErrorHandler(e)
@@ -25,7 +32,13 @@ const signUp = async (data: SignUpReq) => {
       type: 'success',
       text: 'ユーザ登録が完了しました。',
     })
-    return response.data
+    return {
+      id: response.data.id,
+      name: response.data.name,
+      email: response.data.email,
+      isGuest: false,
+      imageFileName: null,
+    }
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       httpErrorHandler(e)
@@ -42,7 +55,36 @@ const login = async (data: LoginReq) => {
       type: 'success',
       text: 'ログインに成功しました。',
     })
-    return response.data
+    return {
+      id: response.data.id,
+      name: response.data.name,
+      email: response.data.email,
+      isGuest: response.data.is_guest,
+      imageFileName: response.data.image_file_name,
+    }
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      httpErrorHandler(e)
+    }
+    return null
+  }
+}
+
+// ゲストログイン
+const guestLogin = async () => {
+  try {
+    const response = await axios.post('/api/login/guest')
+    flashMessage.show({
+      type: 'success',
+      text: 'ログインに成功しました。',
+    })
+    return {
+      id: response.data.id,
+      name: response.data.name,
+      email: response.data.email,
+      isGuest: response.data.is_guest,
+      imageFileName: response.data.image_file_name,
+    }
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       httpErrorHandler(e)
@@ -68,6 +110,24 @@ const logout = async () => {
   return null
 }
 
+// ユーザ情報更新 ※成否の真偽値を返す
+const updateUser = async (formData: FormData) => {
+  try {
+    await axios.post(`/api/user`, formData, {
+      headers: {
+        'X-HTTP-Method-Override': 'PUT',
+        'content-type': 'multipart/form-data',
+      }
+    })
+    return true
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      httpErrorHandler(e)
+    }
+    return false
+  }
+}
+
 // パスワード変更 ※成否の真偽値を返す
 const changePassword = async (data: ChangePasswordReq) => {
   try {
@@ -85,14 +145,27 @@ const changePassword = async (data: ChangePasswordReq) => {
   }
 }
 
+// 退会 ※成否の真偽値を返す
+const withdraw = async (userId: number) => {
+  try {
+    await axios.delete(`/api/user/${userId}`)
+    flashMessage.show({
+      type: 'success',
+      text: '退会処理が完了しました。',
+    })
+    return true
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      httpErrorHandler(e)
+    }
+    return false
+  }
+}
+
 // 市区町村を取得
 const findCities = async (prefectureId: number) => {
   try {
-    const response = await axios.get<ResCity[], AxiosResponse<ResCity[]>>('api/cities', {
-      params: {
-        prefectureId,
-      }
-    })
+    const response = await axios.get<ResCity[], AxiosResponse<ResCity[]>>(`/api/prefecture/city/${prefectureId}`)
     return response.data
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
@@ -118,7 +191,7 @@ const findSellingPoints = async () => {
 // 企業情報を取得(複数)
 const findCompanies = async (data: FindCompanyReq) => {
   try {
-    const response = await axios.get<ResCompany[], AxiosResponse<ResCompany[]>>('/api/companies', {
+    const response = await axios.get<ResCompany[], AxiosResponse<ResCompany[]>>('/api/company', {
       params: {
         ...data
       }
@@ -135,9 +208,8 @@ const findCompanies = async (data: FindCompanyReq) => {
 // 企業情報を取得(1件)
 const findCompanyById = async (companyId: number, userId: number | null) => {
   try {
-    const response = await axios.get<ResCompany, AxiosResponse<ResCompany>>('/api/company', {
+    const response = await axios.get<ResCompany, AxiosResponse<ResCompany>>(`/api/company/${companyId}`, {
       params: {
-        companyId,
         userId
       }
     })
@@ -166,11 +238,7 @@ const toggleLike = async (data: ToggleLikeReq) => {
 // 予約履歴を取得
 const getReserveHistory = async (userId: number) => {
   try {
-    const response = await axios.get<ResReserve[], AxiosResponse<ResReserve[]>>('/api/user-reserves', {
-      params: {
-        userId
-      }
-    })
+    const response = await axios.get<ResReserve[], AxiosResponse<ResReserve[]>>(`/api/reserve/${userId}`)
     return response.data
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
@@ -181,13 +249,9 @@ const getReserveHistory = async (userId: number) => {
 }
 
 // お気に入り一覧を取得
-const getLikeCompanies = async (userId: number) => {
+const getLikes = async (userId: number) => {
   try {
-    const response = await axios.get<ResCompany[], AxiosResponse<ResCompany[]>>('/api/like/companies', {
-      params: {
-        userId
-      }
-    })
+    const response = await axios.get<ResCompany[], AxiosResponse<ResCompany[]>>(`/api/like/${userId}`)
     return response.data
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
@@ -301,7 +365,14 @@ const httpErrorHandler = (e: AxiosError) => {
     case 400:
       flashMessage.show({
         type: 'error',
-        text: '無効な送信内容です。',
+        text: '送信内容に不備があります。',
+      })
+      break
+    case 401:
+      const message = e.response.data.message;
+      flashMessage.show({
+        type: 'error',
+        text: message,
       })
       break
     case 403:
@@ -313,7 +384,13 @@ const httpErrorHandler = (e: AxiosError) => {
     case 404:
       flashMessage.show({
         type: 'error',
-        text: '要求された情報が見つかりません。',
+        text: '該当する情報が見つかりません。',
+      })
+      break
+    case 413:
+      flashMessage.show({
+        type: 'error',
+        text: '1MB以上のファイルは登録できません。',
       })
       break
     case 422:
@@ -335,13 +412,13 @@ const httpErrorHandler = (e: AxiosError) => {
     case 503:
       flashMessage.show({
         type: 'error',
-        text: 'エラーが発生しました。大変お手数ですが運営にお問い合わせください。',
+        text: 'エラーが発生しました。お手数ですが運営にお問い合わせください。',
       })
       break
     default:
       flashMessage.show({
         type: 'error',
-        text: 'エラーが発生しました。大変お手数ですが再度実行してください。',
+        text: 'エラーが発生しました。お手数ですが再度実行してください。',
       })
       break
   }
@@ -351,15 +428,18 @@ export const httpService = {
   getLoginUser,
   signUp,
   login,
+  guestLogin,
   logout,
+  updateUser,
   changePassword,
+  withdraw,
   findCities,
   findSellingPoints,
   findCompanies,
   findCompanyById,
   toggleLike,
   getReserveHistory,
-  getLikeCompanies,
+  getLikes,
   getMenus,
   getReserveInfo,
   getDaysOfWeek,

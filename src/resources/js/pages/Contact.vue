@@ -51,7 +51,7 @@ const submit = async () => {
           <font-awesome-icon class="page-contact__tel-label-icon" :icon="['fas', 'square-caret-down']" size="2x" />
           <h3 class="page-contact__tel-label">お電話でのお問い合わせはコチラ</h3>
         </div>
-        <p class="page-contact__tel-number">0120-999-9999</p>
+        <p class="page-contact__tel-number">0123-456-789</p>
       </div>
       <div class="page-contact__mail-area">
         <div class="page-contact__mail-label-area">
