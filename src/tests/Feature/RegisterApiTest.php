@@ -21,7 +21,7 @@ class RegisterApiTest extends TestCase
             'password_confirmation' => 'test12345',
         ];
 
-        $response = $this->json('POST', route('sign-up'), $data);
+        $response = $this->json('POST', 'api/sign-up', $data);
 
         $user = User::first();
         $this->assertEquals($data['name'], $user->name);
