@@ -12,9 +12,11 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $param = [
-            'name' => 'テスト一郎',
-            'email'      => 'test-ichiro@test.com',
-            'password'   => Hash::make('password123'),
+            'name' => 'ゲスト太郎',
+            'email' => 'guest-taro@test.com',
+            'password' => Hash::make('password'),
+            'is_guest' => true,
+            'image_file_name' => 'guest.jpeg',
             'created_at' => now(),
             'updated_at' => now(),
         ];

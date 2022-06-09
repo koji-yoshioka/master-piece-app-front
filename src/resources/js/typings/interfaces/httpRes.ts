@@ -1,3 +1,9 @@
+export interface ResUser {
+  id: number
+  name: string
+  is_guest: boolean
+}
+
 export interface ResCity {
   id: number
   name: string

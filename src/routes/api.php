@@ -17,47 +17,62 @@ Route::middleware('auth:api')->get('/user', fn(Request $request) => $request->us
 );
 
 // ユーザ登録
-Route::post('/sign-up', 'Auth\RegisterController@register')->name('sign-up');
+Route::post('/sign-up', 'Auth\RegisterController@register');
 // ログイン
-Route::post('/login', 'Auth\LoginController@login')->name('login');
+Route::post('/login', 'Auth\LoginController@login');
+// ゲストログイン
+Route::post('/login/guest', 'Auth\LoginController@guestLogin');
 // ログアウト
-Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
+Route::post('/logout', 'Auth\LoginController@logout');
 // ログインユーザー取得
-Route::get('/user', fn() => Auth::user())->name('user');
+Route::get('/user', fn() => Auth::user());
 // パスワード変更
-Route::post('/password-change', 'Auth\ChangePasswordController@changePassword')->name('change-password');
+Route::post('/password-change', 'Auth\ChangePasswordController@changePassword');
+// ユーザ更新
+Route::put('/user', 'UserController@update');
+// 退会
+Route::delete('/user/{id}', 'UserController@delete')
+    ->where('id', '[0-9]+');
 
 // 市区町村取得
-Route::get('/cities', 'CityController@getByConditions')->name('city.get-by-conditions');
+Route::get('/prefecture/city/{prefectureId}', 'PrefectureController@getCitiesByPrefectureId')
+    ->where('prefectureId', '[0-9]+');
 
 // 企業情報一覧取得
-Route::get('/companies', 'CompanyController@getByConditions')->name('company.get-by-conditions');
+Route::get('/company', 'CompanyController@getByConditions');
 // 企業情報取得
-Route::get('/company', 'CompanyController@getById')->name('company.get-by-id');
-// お気に入り企業情報取得
-Route::get('/like/companies', 'CompanyController@getLikeCompanies')->name('company.get-like-companies');
-
+Route::get('/company/{companyId}', 'CompanyController@getById')
+    ->where('companyId', '[0-9]+');
 
 // メニュー取得
-Route::get('/company/menu/{companyId}', 'CompanyController@getMenusById')->name('company.get-menus-by-id');
+Route::get('/company/menu/{companyId}', 'CompanyController@getMenusById')
+    ->where('companyId', '[0-9]+');
 
 // 予約に必要な諸々の情報を取得
-Route::get('/reserve/reserve-info', 'ReserveController@getReserveInfo')->name('reserve.get-reserve-info');
+Route::get('/reserve/reserve-info', 'ReserveController@getReserveInfo');
 // 予約
-Route::post('/reserve', 'ReserveController@reserve')->name('reserve.reserve');
-// ユーザの予約履歴
-Route::get('/user-reserves', 'ReserveController@getUserReserves')->name('reserve.get-user-reserves');
+Route::post('/reserve', 'ReserveController@store');
+// 予約取得
+Route::get('/reserve/{userId}', 'ReserveController@getReservesByUserId')
+    ->where('userId', '[0-9]+');
 // 予約キャンセル
-Route::delete('/reserve/{reserveId}', 'ReserveController@delete')->name('reserve.delete')
-->where('reserveId', '[0-9]+');
+Route::delete('/reserve/{reserveId}', 'ReserveController@delete')
+    ->where('reserveId', '[0-9]+');
 
 // 曜日マスタ取得
-Route::get('/day-of-week', 'DayOfWeekController@getAll')->name('day-of-week.get-all');
+Route::get('/day-of-week', 'DayOfWeekController@getAll');
 // セールスポイントマスタ取得
-Route::get('/selling-point', 'SellingPointController@getAll')->name('selling-point.get-all');
+Route::get('/selling-point', 'SellingPointController@getAll');
 
 // 問い合わせ登録
-Route::post('/contact', 'ContactController@register')->name('contact.register');
+Route::post('/contact', 'ContactController@store');
 
+// お気に入り企業情報取得
+Route::get('/like/{userId}', 'LikeController@getLikes')
+    ->where('userId', '[0-9]+');
 // お気に入り
-Route::post('/like', 'LikeController@toggleLike')->name('toggle-like');
+Route::post('/like', 'LikeController@toggleLike');
+
+// テストデータ登録：企業情報
+Route::post('/test/company', 'TestDataController@storeCompany');
+

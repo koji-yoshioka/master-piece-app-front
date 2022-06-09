@@ -79,7 +79,7 @@ const submit = async () => {
 <template>
   <div class="page-sign-up">
     <Section class="page-sign-up__form">
-      <h2 class="page-sign-up__form-title">ユーザ登録</h2>
+      <h2 class="page-sign-up__form-title">会員登録</h2>
 
       <div class="page-sign-up__input-area">
         <TitleLabel class="page-sign-up__input-label" :required="true">ユーザ名</TitleLabel>

@@ -5,6 +5,9 @@ type State = {
   loginUser: {
     id: number
     name: string
+    email: string
+    isGuest: boolean
+    imageFileName: string | null
   } | null
 }
 

@@ -13,6 +13,9 @@ import Profile from '@/pages/Profile.vue'
 import PasswordChange from '@/pages/PasswordChange.vue'
 import ReserveHistory from '@/pages/ReserveHistory.vue'
 import LikeCompanyList from '@/pages/LikeCompanyList.vue'
+import PrivacyPolicy from '@/pages/PrivacyPolicy.vue'
+import Security from '@/pages/Security.vue'
+import Term from '@/pages/Term.vue'
 import Error from '@/pages/Error.vue'
 
 const routes = [
@@ -20,11 +23,6 @@ const routes = [
     path: '/',
     name: 'top',
     component: Top
-  },
-  {
-    path: '/contact',
-    name: 'contact',
-    component: Contact
   },
   {
     path: '/login',
@@ -89,6 +87,26 @@ const routes = [
     name: 'like-company-list',
     component: LikeCompanyList,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/privacy-policy',
+    name: 'privacy-policy',
+    component: PrivacyPolicy,
+  },
+  {
+    path: '/security',
+    name: 'security',
+    component: Security,
+  },
+  {
+    path: '/contact',
+    name: 'contact',
+    component: Contact
+  },
+  {
+    path: '/term',
+    name: 'term',
+    component: Term
   },
   {
     path: '/:catchAll(.*)',

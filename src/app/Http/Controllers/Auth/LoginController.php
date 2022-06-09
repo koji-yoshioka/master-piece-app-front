@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -30,6 +31,8 @@ class LoginController extends Controller
      */
     protected $redirectTo = RouteServiceProvider::HOME;
 
+    private const GUEST_USER_ID = 1;
+
     /**
      * Create a new controller instance.
      *
@@ -44,7 +47,7 @@ class LoginController extends Controller
      * Override authenticated of AuthenticatesUsers Class.
      *
      * @param Request $request
-     * @param  mixed  $user
+     * @param mixed $user
      * @return mixed
      */
     protected function authenticated(Request $request, $user): mixed
@@ -64,5 +67,17 @@ class LoginController extends Controller
         $request->session()->regenerate();
 
         return response()->json();
+    }
+
+    /**
+     * Auth as guest.
+     *
+     */
+    public function guestLogin()
+    {
+        if (Auth::loginUsingId(self::GUEST_USER_ID)) {
+            return Auth::user();
+        }
+        return response()->json(['message' => 'ゲストユーザは存在しません。'], 401);
     }
 }
