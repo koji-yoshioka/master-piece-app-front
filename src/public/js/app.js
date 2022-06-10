@@ -46496,12 +46496,10 @@ var appInitialize = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            console.log('start'); // ログイン済みの状態でページリロードした場合、ログイン情報をサーバから取得
-
-            _context.next = 3;
+            _context.next = 2;
             return _services_httpService__WEBPACK_IMPORTED_MODULE_13__.httpService.getLoginUser();
 
-          case 3:
+          case 2:
             loginUser = _context.sent;
             _store_auth__WEBPACK_IMPORTED_MODULE_5__.auth.dispatch('setUser', loginUser);
             app = (0,vue__WEBPACK_IMPORTED_MODULE_2__.createApp)(_App_vue__WEBPACK_IMPORTED_MODULE_7__["default"]);
@@ -46517,7 +46515,7 @@ var appInitialize = /*#__PURE__*/function () {
             app.use(_smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_6__["default"]);
             app.mount("#app");
 
-          case 13:
+          case 12:
           case "end":
             return _context.stop();
         }

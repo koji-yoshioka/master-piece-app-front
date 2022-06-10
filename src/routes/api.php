@@ -21,7 +21,7 @@ Route::post('/sign-up', 'Auth\RegisterController@register');
 // ログイン
 Route::post('/login', 'Auth\LoginController@login');
 // ゲストログイン
-Route::post('/login/guest', 'Auth\LoginController@guestLogin    ');
+Route::post('/login/guest', 'Auth\LoginController@guestLogin');
 // ログアウト
 Route::post('/logout', 'Auth\LoginController@logout');
 // ログインユーザー取得

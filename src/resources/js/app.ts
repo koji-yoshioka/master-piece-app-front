@@ -32,7 +32,6 @@ declare module '@vue/runtime-core' {
 library.add(far, fas)
 
 const appInitialize = async () => {
-  console.log('start')
   // ログイン済みの状態でページリロードした場合、ログイン情報をサーバから取得
   const loginUser = await httpService.getLoginUser()
   auth.dispatch('setUser', loginUser)
