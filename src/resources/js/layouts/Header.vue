@@ -36,8 +36,6 @@ const loginUserImage = computed(() => {
 // ログインユーザ名
 const loginUserName = computed(() => (!!authStore.getters.loginUser) ? authStore.getters.loginUser.name : '')
 
-
-
 // ログアウト確認モーダルを閉じる
 const closeLogoutConfirmModal = () => {
   showLogoutConfirmModal.value = false
