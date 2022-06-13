@@ -19,7 +19,6 @@ export const getFullHeight = () => {
 
   // bodyの高さ
   const bodyHeight = document.body.offsetHeight
-  console.log('body-height', bodyHeight)
 
   // header+main+footerの高さ
   const contentHeight = (headerHeight ? headerHeight : 0)

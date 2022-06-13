@@ -28,7 +28,13 @@ const getCompanies = computed(() => {
 const updateHandler = (pageNumber: number) => {
   currentPageNumber.value = pageNumber
 }
-const getTotalPageCount = computed(() => Math.ceil(companies.value.length) / perPage.value)
+const getTotalPageCount = computed(() => {
+  if (companies.value.length > 0) {
+    return Math.ceil(companies.value.length / perPage.value)
+  } else {
+    return 1
+  }
+})
 // --end
 
 // ログインユーザID取得
@@ -68,11 +74,10 @@ onMounted(async () => {
           <SearchResult v-for="company in getCompanies" :company="company" :executing="false" :show-like="false"
             @reserve="toMenuList">
           </SearchResult>
-          <v-pagination class="page-like-company__pagination" v-show="getCompanies.length > 0"
-            v-model="currentPageNumber" :pages="getTotalPageCount" :range-size="3" active-color="#dcc090"
-            @update:modelValue="updateHandler" />
+          <v-pagination class="page-like-company__pagination" v-show="companies.length > 0" v-model="currentPageNumber"
+            :pages="getTotalPageCount" :range-size="3" active-color="#dcc090" @update:modelValue="updateHandler" />
         </template>
-        <div v-if="companiesLoaded && getCompanies.length === 0" class="ppage-like-company__empty">
+        <div v-if="companiesLoaded && companies.length === 0" class="page-like-company__empty">
           お気に入りはありません
         </div>
       </div>
@@ -165,7 +170,7 @@ onMounted(async () => {
   justify-content: end;
 }
 
-.ppage-like-company__empty {
+.page-like-company__empty {
   background-color: #edeae2;
   color: #1c1c1c;
   height: 300px;

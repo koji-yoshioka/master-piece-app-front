@@ -42,13 +42,18 @@ onMounted(async () => {
         <vue-element-loading class="page-menu-list__loading" :active="true" :background-color="'#1c1c1c'"
           :color="'#fff'" :spinner="'spinner'" :text="'メニューを読み込んでいます'" />
       </div>
-      <div v-for="menu in companyMenus?.menus" :key="menu.id" v-show="menusLoaded" class="page-menu-list__menu">
+      <div v-for="menu in companyMenus ? companyMenus.menus : [] " :key="menu.id" v-show="menusLoaded"
+        class="page-menu-list__menu">
         <h3 class="page-menu-list__menu-title">{{ menu.name }}</h3>
         <div class="page-menu-list__menu-detail">
           <p class="page-menu-list__menu-detail-comment">{{ menu.comment }}</p>
           <p class="page-menu-list__menu-detail-price">{{ `¥${menu.price.toLocaleString()}` }}</p>
           <button class="page-menu-list__menu-detail-forward" @click="toReserve(menu.id)">日程を選択</button>
         </div>
+      </div>
+      <div v-if="menusLoaded && (!companyMenus || !companyMenus.menus || companyMenus.menus.length === 0)"
+        class="page-menu-list__empty">
+        ご利用可能なメニューはありません
       </div>
     </Section>
   </div>
@@ -183,5 +188,13 @@ onMounted(async () => {
   &:focus {
     border: #1967d2 1px solid;
   }
+}
+
+.page-menu-list__empty {
+  background-color: #edeae2;
+  color: #1c1c1c;
+  height: 300px;
+  line-height: 300px;
+  text-align: center;
 }
 </style>

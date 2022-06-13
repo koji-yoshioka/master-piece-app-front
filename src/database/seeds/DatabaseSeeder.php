@@ -13,17 +13,17 @@ class DatabaseSeeder extends Seeder
     {
          $this->call([
              UsersTableSeeder::class,
-             CompaniesTableSeeder::class,
+//             CompaniesTableSeeder::class,
              RegionsTableSeeder::class,
              PrefecturesTableSeeder::class,
              CitiesTableSeeder::class,
              SellingPointsTableSeeder::class,
              PaymentMethodsTableSeeder::class,
              DaysOfWeekTableSeeder::class,
-             CompanySellingPointTableSeeder::class,
-             CompanyPaymentMethodTableSeeder::class,
-             CompanyHolidayTableSeeder::class,
-             CompanyMenuTableSeeder::class,
+//             CompanySellingPointTableSeeder::class,
+//             CompanyPaymentMethodTableSeeder::class,
+//             CompanyHolidayTableSeeder::class,
+//             CompanyMenuTableSeeder::class,
          ]);
     }
 }

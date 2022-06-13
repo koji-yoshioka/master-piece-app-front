@@ -42,7 +42,7 @@ const review = (event: Event) => {
 const getLogo = computed(() =>
   props.company.logo
     ? `https://static.master-piece.site/companies/${props.company.id}/logo/${props.company.logo}`
-    : `https://static.master-piece.site/common/no-image.jpeg`
+    : 'https://static.master-piece.site/common/no-image.jpeg'
 )
 
 const getAddress = computed(() => {
@@ -184,7 +184,7 @@ const getHolidays = computed(() => {
   border: #dcc090 2px solid;
   height: 100%;
   position: relative;
-  width: 200px;
+  min-width: 200px;
 
   @include mixins.mq(sp) {
     width: 100%;
@@ -205,6 +205,7 @@ const getHolidays = computed(() => {
 }
 
 .c-search-result__logo {
+  height: 100%;
   left: 0;
   position: absolute;
   top: 0;

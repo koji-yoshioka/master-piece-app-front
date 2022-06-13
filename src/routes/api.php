@@ -71,7 +71,3 @@ Route::get('/like/{userId}', 'LikeController@getLikes')
     ->where('userId', '[0-9]+');
 // お気に入り
 Route::post('/like', 'LikeController@toggleLike');
-
-// テストデータ登録：企業情報
-Route::post('/test/company', 'TestDataController@storeCompany');
-

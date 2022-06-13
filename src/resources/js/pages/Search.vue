@@ -98,8 +98,19 @@ const getCompanies = computed(() => {
 const updateHandler = (pageNumber: number) => {
   currentPageNumber.value = pageNumber
 }
-const getTotalPageCount = computed(() => Math.ceil(companies.value.length) / perPage.value)
+const getTotalPageCount = computed(() => {
+  if (companies.value.length > 0) {
+    return Math.ceil(companies.value.length / perPage.value)
+  } else {
+    return 1
+  }
+})
 // --end
+
+// 検索ボタンの活性制御
+const isDisabled = computed(() =>
+  v$.value.$invalid
+)
 
 // 市区町村モーダルを閉じる
 const closeCitiesModal = () => {
@@ -203,6 +214,7 @@ const search = async () => {
     sellingPointIds: selectedSellingPointIds.value,
   })
   companiesLoaded.value = true
+  currentPageNumber.value = 1
   companies.value = resResCompanies
 }
 
@@ -280,7 +292,7 @@ onMounted(
         </template>
       </VerticalTable>
       <div class="page-search__search-button-area">
-        <PrimaryButton class="page-search__search-button" @click="search">検索する</PrimaryButton>
+        <PrimaryButton class="page-search__search-button" :disabled="isDisabled" @click="search">検索する</PrimaryButton>
       </div>
     </Section>
 
@@ -291,14 +303,14 @@ onMounted(
       </div>
       <template v-if="companiesLoaded">
         <h2 class="page-search__result-title">
-          <span class="page-search__result-title--strong">{{ getCompanies.length }}件</span>の検索結果があります
+          <span class="page-search__result-title--strong">{{ companies.length }}件</span>の検索結果があります
         </h2>
         <div class="page-search__result">
           <SearchResult v-for="company in getCompanies" :company="company"
             :executing="executingCompanyIds.indexOf(company.id) > -1" @toggleLike="toggleLike"
             @review="openStarRatingModal" @reserve="toMenuListPage"></SearchResult>
         </div>
-        <v-pagination class="page-search__pagination" v-show="getCompanies.length > 0" v-model="currentPageNumber"
+        <v-pagination class="page-search__pagination" v-show="companies.length" v-model="currentPageNumber"
           :pages="getTotalPageCount" :range-size="3" active-color="#dcc090" @update:modelValue="updateHandler" />
       </template>
     </Section>

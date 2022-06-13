@@ -50,14 +50,14 @@ class UserController extends Controller
             $user->email = $request->email;
             $user->image_file_name = $imageFileName;
             $user->save();
+            if ($request->has('image')) {
+                Storage::cloud()->deleteDirectory("users/{$request->user()->id}");
+            }
+            if ($request->has('image') && $imageFileName) {
+                Storage::cloud()
+                    ->putFileAs("users/{$request->user()->id}", $request->file('image'), $imageFileName, 'public');
+            }
         });
-        if ($request->has('image')) {
-            Storage::cloud()->deleteDirectory("users/{$request->user()->id}");
-        }
-        if ($request->has('image') && $imageFileName) {
-            Storage::cloud()
-                ->putFileAs("users/{$request->user()->id}", $request->file('image'), $imageFileName, 'public');
-        }
     }
 
     public function delete(Request $request)
@@ -66,8 +66,8 @@ class UserController extends Controller
         // テーブル削除
         DB::transaction(function () use ($userId) {
             User::find($userId)->delete();
+            // イメージ画像削除
+            Storage::cloud()->deleteDirectory("users/{$userId}");
         });
-        // イメージ画像削除
-        Storage::cloud()->deleteDirectory("users/{$userId}");
     }
 }

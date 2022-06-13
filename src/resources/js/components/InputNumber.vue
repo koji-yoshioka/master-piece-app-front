@@ -58,6 +58,8 @@ const blur = (event: Event) => {
   background-color: #eee;
   border: #dcc090 2px solid;
   border-radius: 3px;
+  // 16pxより小さいとiOSで自動でズームされてしまうので16pxで固定
+  font-size: 16px;
   height: 50px;
   padding: 10px;
   width: 100%;

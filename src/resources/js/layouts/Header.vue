@@ -319,6 +319,7 @@ const logout = async () => {
 
 .l-header__avatar-image {
   border-radius: 50%;
+  height: 100%;
   left: 0;
   position: absolute;
   top: 0;
