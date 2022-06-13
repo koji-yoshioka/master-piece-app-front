@@ -30,7 +30,7 @@ import Section from '@/components/Section.vue'
       <div class="page-security__item--sign">
         <p>制定・施行 : 2022年 6月 1日</p>
         <p>株式会社 MASTER PIECE</p>
-        <p>代表取締役 三角 四角</p>
+        <p>代表取締役 芳岡 浩司</p>
       </div>
 
     </Section>

@@ -51,7 +51,6 @@ const blur = (event: Event) => {
   font: small-caption;
   font-size: 1.5em;
   height: 50px;
-  letter-spacing: 0.25em;
   padding: 10px;
   width: 100%;
 

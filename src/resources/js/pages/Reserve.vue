@@ -130,6 +130,7 @@ onMounted(
     }
     await getReserveInfo(Number(companyId.value), Number(menuId.value))
     if (!reserveInfo.value) {
+      contentLoaded.value = true
       // 取得できない=異常
       return
     }
@@ -197,7 +198,7 @@ onMounted(
           :spinner="'spinner'" :text="'日程情報を読み込んでいます'" />
       </div>
 
-      <div v-show="contentLoaded" class="page-reserve__content">
+      <div v-show="contentLoaded && reserveInfo" class="page-reserve__content">
         <table class="page-reserve__table">
           <thead class="page-reserve__table-header">
             <tr class="page-reserve__table-header-row">
@@ -219,8 +220,10 @@ onMounted(
               </div>
             </th>
             <template v-for="(day, index) in allDays">
-              <td v-if="isHoliday(day.dayOfWeek.id) && rowIndex === 0" class="page-reserve__table-data is-holiday"
-                :rowspan="timetableCells.length">定休日</td>
+              <td v-if="isHoliday(day.dayOfWeek.id) && rowIndex === 0" class="page-reserve__table-data"
+                :rowspan="timetableCells.length">
+                <p class="page-reserve__table-data is-holiday">定休日</p>
+              </td>
               <td v-if="!isHoliday(day.dayOfWeek.id)" class="page-reserve__table-data">
                 <div class="page-reserve__table-data-col-inner">
                   <template v-if="isReserved(day.ymd, timetableCell.from, timetableCell.to)">
@@ -237,6 +240,11 @@ onMounted(
           </tr>
         </table>
       </div>
+
+      <div v-if="contentLoaded && !reserveInfo" class="page-reserve__empty">
+        日程情報はありません
+      </div>
+
     </Section>
 
     <ConfirmModal :title="'予約確認'" :show="showModal" :loading-label="'予約しています'" :executing="reserving"
@@ -246,7 +254,6 @@ onMounted(
           `${selectedTime?.day.month}/${selectedTime?.day.date}(${selectedTime?.day.dayOfWeek.abbreviation})：${selectedTime?.time.from}〜${selectedTime?.time.to}で予約しますか？`
       }}
     </ConfirmModal>
-
 
   </div>
 </template>
@@ -386,10 +393,13 @@ onMounted(
 }
 
 .page-reserve__table-data.is-holiday {
+  border: none;
   letter-spacing: 1em;
-  text-align: center;
+  margin: 0 auto;
+  white-space: nowrap;
   writing-mode: vertical-rl;
 }
+
 
 .page-reserve__table-data-col-inner {
   display: flex;
@@ -411,5 +421,13 @@ onMounted(
   &:focus {
     border: #1967d2 1px solid;
   }
+}
+
+.page-reserve__empty {
+  background-color: #edeae2;
+  color: #1c1c1c;
+  height: 300px;
+  line-height: 300px;
+  text-align: center;
 }
 </style>

@@ -37,7 +37,13 @@ const getReserves = computed(() => {
 const updateHandler = (pageNumber: number) => {
   currentPageNumber.value = pageNumber
 }
-const getTotalPageCount = computed(() => Math.ceil(reserves.value.length) / perPage.value)
+const getTotalPageCount = computed(() => {
+  if (reserves.value.length > 0) {
+    return Math.ceil(reserves.value.length / perPage.value)
+  } else {
+    return 1
+  }
+})
 // --end
 
 // ログインユーザID取得
@@ -119,11 +125,11 @@ onMounted(async () => {
                 @click="selectMenu(reserve.id)">キャンセル</button>
             </div>
           </div>
-          <v-pagination class="page-reserve-history__pagination" v-show="getReserves.length > 0"
-            v-model="currentPageNumber" :pages="getTotalPageCount" :range-size="3" active-color="#dcc090"
-            @update:modelValue="updateHandler" />
+          <v-pagination class="page-reserve-history__pagination"
+            v-show="reserves.length > 0 && reserves.length > perPage" v-model="currentPageNumber"
+            :pages="getTotalPageCount" :range-size="3" active-color="#dcc090" @update:modelValue="updateHandler" />
         </template>
-        <div v-if="reservesLoaded && getReserves.length === 0" class="page-reserve-history__empty">
+        <div v-if="reservesLoaded && reserves.length === 0" class="page-reserve-history__empty">
           予約はありません
         </div>
       </div>

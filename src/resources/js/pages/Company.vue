@@ -37,22 +37,33 @@ const toLogin = () => {
 }
 // ロゴ取得
 const getLogo = computed(() =>
-  `https://static.master-piece.site/common/no-image.jpeg`
+  company.value?.logo
+    ? `https://static.master-piece.site/companies/${company.value.id}/logo/${company.value.logo}`
+    : 'https://static.master-piece.site/common/no-image.jpeg'
 )
+
 // 営業時間取得
 const getBusinessHours = computed(() => {
-  const businessHoursFrom = company?.value?.businessHoursFrom
+  const businessHoursFrom = company.value?.businessHoursFrom
     ? company.value.businessHoursFrom.substring(0, 2) + ':' + company.value.businessHoursFrom.substring(2)
     : '-'
-  const businessHoursTo = company?.value?.businessHoursTo
+  const businessHoursTo = company.value?.businessHoursTo
     ? company.value.businessHoursTo.substring(0, 2) + ':' + company.value.businessHoursTo.substring(2)
     : '-'
   return [businessHoursFrom, businessHoursTo].join(' 〜 ')
 })
 
 // 休業日取得
-const getHolidays = computed(() => {
-  return company?.value?.holidays.map(holiday => holiday.name).join(' ')
+const getHolidays = computed(() =>
+  company.value?.holidays.map(holiday => holiday.name).join(' ')
+)
+
+const getZipCode = computed(() => {
+  if (company.value?.zipCode) {
+    return '〒'.concat(company.value.zipCode.substring(0, 3)).concat('-').concat(company.value.zipCode.substring(3, 7))
+  } else {
+    return ''
+  }
 })
 
 // 住所取得
@@ -67,6 +78,19 @@ const getAddress = computed(() => {
 const loginUserId = () => {
   const loginUser = authStore.getters.loginUser
   return loginUser ? loginUser.id : null
+}
+
+// イメージ画像取得
+const getImage = (displayNo: number) => {
+  const defaultImage = 'https://static.master-piece.site/common/no-image.jpeg'
+  if (company.value?.images) {
+    const targetImage = company.value.images.find(image => image.displayNo === displayNo)
+    return targetImage
+      ? `https://static.master-piece.site/companies/${company.value.id}/images/${targetImage.fileName}`
+      : defaultImage
+  } else {
+    return defaultImage
+  }
 }
 
 // お気に入りに登録/削除する
@@ -152,7 +176,7 @@ onMounted(async () => {
               <div class="page-company__overview-item">
                 <label class="page-company__overview-item-label">所在地</label>
                 <p class="page-company__overview-item-text">
-                  <span v-if="company?.zipCode">{{ `〒${company.zipCode}` }}<br></span>
+                  <span v-if="company?.zipCode">{{ getZipCode }}<br></span>
                   <span>{{ getAddress }}</span>
                 </p>
               </div>
@@ -187,17 +211,17 @@ onMounted(async () => {
         <div class="page-company__content-area">
           <div class="page-company__image-area">
             <figure class="page-company__main-image-area">
-              <img class="page-company__main-image" :src="getLogo" alt="main-image">
+              <img class="page-company__main-image" :src="getImage(1)" alt="main-image">
             </figure>
             <div class="page-company__sub-image-group">
               <figure class="page-company__sub-image-area">
-                <img class="page-company__sub-image" :src="getLogo" alt="sub-image-1">
+                <img class="page-company__sub-image" :src="getImage(2)" alt="sub-image-1">
               </figure>
               <figure class="page-company__sub-image-area">
-                <img class="page-company__sub-image" :src="getLogo" alt="sub-image-2">
+                <img class="page-company__sub-image" :src="getImage(3)" alt="sub-image-2">
               </figure>
               <figure class="page-company__sub-image-area">
-                <img class="page-company__sub-image" :src="getLogo" alt="sub-image-3">
+                <img class="page-company__sub-image" :src="getImage(4)" alt="sub-image-3">
               </figure>
             </div>
           </div>
@@ -353,6 +377,7 @@ onMounted(async () => {
 }
 
 .page-company__logo {
+  height: 100%;
   left: 0;
   position: absolute;
   top: 0;
