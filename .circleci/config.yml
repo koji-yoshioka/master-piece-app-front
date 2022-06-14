@@ -43,6 +43,7 @@ jobs:
             name: deploy
             command: |
               ssh -o StrictHostKeyChecking=no -t webapp@${HOST_NAME} "cd master-piece-app-front/src && \
+                git clean -df . && \
                 git pull origin main && \
                 composer install -n --no-dev --prefer-dist && \
                 npm ci && \
