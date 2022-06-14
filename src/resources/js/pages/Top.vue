@@ -90,7 +90,7 @@ import Section from '@/components/Section.vue'
           <img class="page-home__merit-card-image" src="/images/reasonable.jpg" alt="reasonable">
           <p class="page-home__merit-card-title">4．安定したご利用料金</p>
           <p class="page-home__merit-card-text">
-            平均として、ご利用頂くメニューの基本料金＋店頭での購入代金の５％〜１５％を利用料金として頂戴しております。<br>
+            ご利用料金は平均１〜５万円となっております。(企業によって差がございます。)<br>
             また、規定により返品が発生した場合はそのぶんの料金をお返しさせて頂きます。<br>
           </p>
         </div>

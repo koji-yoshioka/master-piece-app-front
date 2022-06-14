@@ -46335,7 +46335,7 @@ var _hoisted_18 = /*#__PURE__*/_withScopeId(function () {
     "class": "page-home__merit-card-title"
   }, "4．安定したご利用料金"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
     "class": "page-home__merit-card-text"
-  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 平均として、ご利用頂くメニューの基本料金＋店頭での購入代金の５％〜１５％を利用料金として頂戴しております。"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" また、規定により返品が発生した場合はそのぶんの料金をお返しさせて頂きます。"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br")])])], -1
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ご利用料金は平均１〜５万円となっております。(企業によって差がございます。)"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" また、規定により返品が発生した場合はそのぶんの料金をお返しさせて頂きます。"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br")])])], -1
   /* HOISTED */
   );
 });
