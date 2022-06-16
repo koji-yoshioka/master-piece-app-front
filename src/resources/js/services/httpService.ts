@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
-import { ChangePasswordReq, FindCompanyReq, LoginReq, ReserveReq, SignUpReq, ToggleLikeReq } from '@/typings/interfaces/httpReq'
-import { ResReserveInfo, ResCity, ResCompany, ResCompanyMenus, ResDayOfWeek, ResReserve, ResSellingPoint } from '@/typings/interfaces/httpRes'
+import { ChangePasswordReq, FindCompanyReq, LoginReq, ReserveReq, ResetPasswordReq, SignUpReq, ToggleLikeReq } from '@/typings/interfaces/httpReq'
+import { ResCity, ResCompany, ResCompanyMenus, ResDayOfWeek, ResPasswordReset, ResReserveInfo, ResReserve, ResSellingPoint } from '@/typings/interfaces/httpRes'
 import { flashMessage } from '@smartweb/vue-flash-message'
 
 // ログイン情報取得
@@ -24,13 +24,13 @@ const getLoginUser = async () => {
   }
 }
 
-// ユーザ登録
+// 会員登録
 const signUp = async (data: SignUpReq) => {
   try {
     const response = await axios.post('/api/sign-up', data)
     flashMessage.show({
       type: 'success',
-      text: 'ユーザ登録が完了しました。',
+      text: '会員登録が完了しました。',
     })
     return {
       id: response.data.id,
@@ -67,6 +67,59 @@ const login = async (data: LoginReq) => {
       httpErrorHandler(e)
     }
     return null
+  }
+}
+
+// パスワードリセットメール送信 ※成否の真偽値を返す
+const sendPasswordResetMail = async (email: string) => {
+  try {
+    await axios.post('/api/forgot', {
+      email
+    })
+    flashMessage.show({
+      type: 'success',
+      text: 'メールが送信されました。',
+    })
+    return true
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      httpErrorHandler(e)
+    }
+    return false
+  }
+}
+
+// リセット対象を取得
+const getPasswordReset = async (token: string) => {
+  try {
+    const response = await axios.get<ResPasswordReset, AxiosResponse<ResPasswordReset>>('/api/password-reset', {
+      params: {
+        token
+      }
+    })
+    return response.data
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      httpErrorHandler(e)
+    }
+    return null
+  }
+}
+
+// パスワードリセット ※成否の真偽値を返す
+const resetPassword = async (data: ResetPasswordReq) => {
+  try {
+    await axios.post('/api/password-reset', data)
+    flashMessage.show({
+      type: 'success',
+      text: 'パスワードリセットが完了しました。',
+    })
+    return true
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      httpErrorHandler(e)
+    }
+    return false
   }
 }
 
@@ -428,6 +481,9 @@ export const httpService = {
   getLoginUser,
   signUp,
   login,
+  sendPasswordResetMail,
+  getPasswordReset,
+  resetPassword,
   guestLogin,
   logout,
   updateUser,

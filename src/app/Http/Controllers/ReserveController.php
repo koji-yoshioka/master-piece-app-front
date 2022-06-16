@@ -9,6 +9,7 @@ use App\Models\CompanyReserve;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ReserveController extends Controller
 {
@@ -36,6 +37,13 @@ class ReserveController extends Controller
                 $query->where('date', '>=', date('Ymd'));
             }
             , 'holidays'])->find($companyId);
+
+        if (!$company) {
+            abort(404);
+        } else if (sizeof($company->menus) == 0) {
+            abort(404);
+        }
+
         return response()->json(
             (object)
             [

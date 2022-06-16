@@ -39578,13 +39578,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
-/* harmony import */ var _services_httpService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/services/httpService */ "./resources/js/services/httpService.ts");
-/* harmony import */ var _store_auth__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/store/auth */ "./resources/js/store/auth.ts");
-/* harmony import */ var _components_Section_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/components/Section.vue */ "./resources/js/components/Section.vue");
-/* harmony import */ var _components_VerticalTable_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/components/VerticalTable.vue */ "./resources/js/components/VerticalTable.vue");
-/* harmony import */ var _components_PrimaryButton_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/components/PrimaryButton.vue */ "./resources/js/components/PrimaryButton.vue");
-/* harmony import */ var _components_ConfirmModal_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/components/ConfirmModal.vue */ "./resources/js/components/ConfirmModal.vue");
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
+/* harmony import */ var _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @smartweb/vue-flash-message */ "./node_modules/@smartweb/vue-flash-message/build/vue-flash-message.esm.js");
+/* harmony import */ var _services_httpService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/services/httpService */ "./resources/js/services/httpService.ts");
+/* harmony import */ var _store_auth__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/store/auth */ "./resources/js/store/auth.ts");
+/* harmony import */ var _components_Section_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/components/Section.vue */ "./resources/js/components/Section.vue");
+/* harmony import */ var _components_VerticalTable_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/components/VerticalTable.vue */ "./resources/js/components/VerticalTable.vue");
+/* harmony import */ var _components_PrimaryButton_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/components/PrimaryButton.vue */ "./resources/js/components/PrimaryButton.vue");
+/* harmony import */ var _components_ConfirmModal_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/components/ConfirmModal.vue */ "./resources/js/components/ConfirmModal.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -39599,19 +39600,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
- // 認証情報
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_1__.defineComponent)({
+  props: {
+    companyId: {
+      type: String,
+      required: true
+    }
+  },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
     expose();
-    var authStore = (0,_store_auth__WEBPACK_IMPORTED_MODULE_3__.useStore)(); // ルーティング情報
+    var props = __props; // 認証情報
 
-    var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_8__.useRouter)(); // ログイン済フラグ
+    var authStore = (0,_store_auth__WEBPACK_IMPORTED_MODULE_4__.useStore)(); // ルーティング情報
 
-    var isLoggingIn = !!authStore.getters.loginUser; // 企業ID
+    var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_9__.useRouter)(); // ログイン済フラグ
 
-    var companyId = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(''); // 企業情報取得済フラグ
+    var isLoggingIn = !!authStore.getters.loginUser; // 企業情報存在フラグ
+
+    var companyExists = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(false); // 企業情報取得済フラグ
 
     var companyLoaded = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(false); // お気に入り更新フラグ
 
@@ -39717,8 +39726,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 3:
                 toggleLikeExecuting.value = true;
                 _context.next = 6;
-                return _services_httpService__WEBPACK_IMPORTED_MODULE_2__.httpService.toggleLike({
-                  companyId: Number(companyId.value),
+                return _services_httpService__WEBPACK_IMPORTED_MODULE_3__.httpService.toggleLike({
+                  companyId: Number(props.companyId),
                   userId: loginUserId()
                 });
 
@@ -39754,8 +39763,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (isLoggingIn) {
         router.push({
           name: 'menu-list',
-          query: {
-            companyId: companyId.value
+          params: {
+            companyId: props.companyId
           }
         });
       } else {
@@ -39769,35 +39778,39 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              companyId.value = function () {
-                var companyId = (0,vue_router__WEBPACK_IMPORTED_MODULE_8__.useRoute)().query.companyId;
-                return companyId ? companyId.toString() : '';
-              }();
-
-              if (!companyId) {
-                router.push({
-                  name: 'error'
-                });
-              }
-
-              _context2.next = 4;
-              return _services_httpService__WEBPACK_IMPORTED_MODULE_2__.httpService.findCompanyById(Number(companyId.value), loginUserId());
-
-            case 4:
-              resCompany = _context2.sent;
-
-              if (resCompany) {
-                _context2.next = 7;
+              if (/^\d+$/.test(props.companyId)) {
+                _context2.next = 4;
                 break;
               }
 
+              companyLoaded.value = true;
+              _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
+                type: 'error',
+                text: 'URLのパラメータが不正です。'
+              });
               return _context2.abrupt("return");
 
-            case 7:
-              company.value = resCompany;
+            case 4:
+              _context2.next = 6;
+              return _services_httpService__WEBPACK_IMPORTED_MODULE_3__.httpService.findCompanyById(Number(props.companyId), loginUserId());
+
+            case 6:
+              resCompany = _context2.sent;
               companyLoaded.value = true;
 
-            case 9:
+              if (resCompany) {
+                _context2.next = 11;
+                break;
+              }
+
+              companyExists.value = false;
+              return _context2.abrupt("return");
+
+            case 11:
+              company.value = resCompany;
+              companyExists.value = true;
+
+            case 13:
             case "end":
               return _context2.stop();
           }
@@ -39805,10 +39818,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee2);
     })));
     var __returned__ = {
+      props: props,
       authStore: authStore,
       router: router,
       isLoggingIn: isLoggingIn,
-      companyId: companyId,
+      companyExists: companyExists,
       companyLoaded: companyLoaded,
       toggleLikeExecuting: toggleLikeExecuting,
       showLoginConfirmModal: showLoginConfirmModal,
@@ -39824,10 +39838,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       getImage: getImage,
       toggleLike: toggleLike,
       toMenuListPage: toMenuListPage,
-      Section: _components_Section_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
-      VerticalTable: _components_VerticalTable_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
-      PrimaryButton: _components_PrimaryButton_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
-      ConfirmModal: _components_ConfirmModal_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
+      Section: _components_Section_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+      VerticalTable: _components_VerticalTable_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+      PrimaryButton: _components_PrimaryButton_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+      ConfirmModal: _components_ConfirmModal_vue__WEBPACK_IMPORTED_MODULE_8__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -40071,7 +40085,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var toMenuList = function toMenuList(companyId) {
       router.push({
         name: 'menu-list',
-        query: {
+        params: {
           companyId: companyId
         }
       });
@@ -40310,9 +40324,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
-/* harmony import */ var _services_httpService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/services/httpService */ "./resources/js/services/httpService.ts");
-/* harmony import */ var _components_Section_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/components/Section.vue */ "./resources/js/components/Section.vue");
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
+/* harmony import */ var _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @smartweb/vue-flash-message */ "./node_modules/@smartweb/vue-flash-message/build/vue-flash-message.esm.js");
+/* harmony import */ var _services_httpService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/services/httpService */ "./resources/js/services/httpService.ts");
+/* harmony import */ var _components_Section_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/components/Section.vue */ "./resources/js/components/Section.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -40323,15 +40338,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
- // ルーティング情報
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_1__.defineComponent)({
+  props: {
+    companyId: {
+      type: String,
+      required: true
+    }
+  },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
     expose();
-    var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_4__.useRouter)(); // 企業ID
+    var props = __props; // ルーティング情報
 
-    var companyId = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(''); // メニューリスト
+    var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_5__.useRouter)(); // メニューリスト
 
     var companyMenus = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(null); // メニュー取得済フラグ
 
@@ -40340,8 +40361,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var toReserve = function toReserve(menuId) {
       router.push({
         name: 'reserve',
-        query: {
-          companyId: companyId.value,
+        params: {
+          companyId: props.companyId,
           menuId: menuId
         }
       });
@@ -40353,27 +40374,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              companyId.value = function () {
-                var companyId = (0,vue_router__WEBPACK_IMPORTED_MODULE_4__.useRoute)().query.companyId;
-                return companyId ? companyId.toString() : '';
-              }();
+              if (/^\d+$/.test(props.companyId)) {
+                _context.next = 4;
+                break;
+              }
 
-              if (!companyId) {
-                router.push({
-                  name: 'error'
-                });
-              } // メニュー取得
-
-
-              _context.next = 4;
-              return _services_httpService__WEBPACK_IMPORTED_MODULE_2__.httpService.getMenus(Number(companyId.value));
+              menusLoaded.value = true;
+              _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
+                type: 'error',
+                text: 'URLのパラメータが不正です。'
+              });
+              return _context.abrupt("return");
 
             case 4:
+              _context.next = 6;
+              return _services_httpService__WEBPACK_IMPORTED_MODULE_3__.httpService.getMenus(Number(props.companyId));
+
+            case 6:
               menus = _context.sent;
               menusLoaded.value = true;
               companyMenus.value = menus;
 
-            case 7:
+            case 9:
             case "end":
               return _context.stop();
           }
@@ -40381,12 +40403,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee);
     })));
     var __returned__ = {
+      props: props,
       router: router,
-      companyId: companyId,
       companyMenus: companyMenus,
       menusLoaded: menusLoaded,
       toReserve: toReserve,
-      Section: _components_Section_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
+      Section: _components_Section_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -40723,6 +40745,335 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordReset.vue?vue&type=script&setup=true&lang=ts":
+/*!****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordReset.vue?vue&type=script&setup=true&lang=ts ***!
+  \****************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var _store_auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/store/auth */ "./resources/js/store/auth.ts");
+/* harmony import */ var _services_httpService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/services/httpService */ "./resources/js/services/httpService.ts");
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
+/* harmony import */ var _vuelidate_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @vuelidate/core */ "./node_modules/@vuelidate/core/dist/index.esm.js");
+/* harmony import */ var _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @vuelidate/validators */ "./node_modules/@vuelidate/validators/dist/index.esm.js");
+/* harmony import */ var _components_Section_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/components/Section.vue */ "./resources/js/components/Section.vue");
+/* harmony import */ var _components_TitleLabel_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/components/TitleLabel.vue */ "./resources/js/components/TitleLabel.vue");
+/* harmony import */ var _components_InputPassword_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/components/InputPassword.vue */ "./resources/js/components/InputPassword.vue");
+/* harmony import */ var _components_PrimaryButton_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/components/PrimaryButton.vue */ "./resources/js/components/PrimaryButton.vue");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+
+
+
+
+
+
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_1__.defineComponent)({
+  props: {
+    token: {
+      type: String,
+      required: true
+    }
+  },
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var props = __props; // 認証情報
+
+    var authStore = (0,_store_auth__WEBPACK_IMPORTED_MODULE_2__.useStore)(); // ルーティング情報
+
+    var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_9__.useRouter)(); // パスワードリセット取得済フラグ
+
+    var passwordResetLoaded = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(false); // パスワードリセット有効フラグ
+
+    var isValidPasswordResetToken = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(false); // パスワード更新フラグ
+
+    var isUpdating = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(false); // アドレス
+
+    var email = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(''); // トークン
+
+    var token = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(''); // 入力した新パスワード
+
+    var inputNewPassword = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(''); // --start バリデーション関連
+
+    var fields = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)({
+      password: '',
+      confirmPassword: ''
+    });
+    var rules = {
+      password: {
+        required: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.helpers.withMessage('パスワードを入力してください。', _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.required),
+        minLength: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.helpers.withMessage('パスワードは8文字以上の半角英数字で入力してください。', (0,_vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.minLength)(8)),
+        alphaNum: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.helpers.withMessage('パスワードは8文字以上の半角英数字で入力してください。', _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.alphaNum)
+      },
+      confirmPassword: {
+        required: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.helpers.withMessage('パスワードを入力してください。', _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.required),
+        sameAsPassword: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.helpers.withMessage('同じパスワードを入力してください。', (0,_vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.sameAs)(inputNewPassword))
+      }
+    };
+    var v$ = (0,_vuelidate_core__WEBPACK_IMPORTED_MODULE_4__.useVuelidate)(rules, fields); // --end
+    // 送信ボタンの活性制御
+
+    var isDisabled = (0,vue__WEBPACK_IMPORTED_MODULE_1__.computed)(function () {
+      return !v$.value.password.$model || !v$.value.confirmPassword.$model || v$.value.$invalid;
+    });
+
+    var submit = /*#__PURE__*/function () {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var isSuccess;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (!v$.value.$invalid) {
+                  _context.next = 2;
+                  break;
+                }
+
+                return _context.abrupt("return");
+
+              case 2:
+                isUpdating.value = true;
+                _context.next = 5;
+                return _services_httpService__WEBPACK_IMPORTED_MODULE_3__.httpService.resetPassword({
+                  email: email.value,
+                  password: v$.value.password.$model,
+                  password_confirmation: v$.value.confirmPassword.$model,
+                  token: token.value
+                });
+
+              case 5:
+                isSuccess = _context.sent;
+                isUpdating.value = false;
+
+                if (isSuccess) {
+                  router.push({
+                    name: 'login'
+                  });
+                }
+
+              case 8:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      return function submit() {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+
+    (0,vue__WEBPACK_IMPORTED_MODULE_1__.onMounted)( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+      var resPasswordReset;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return _services_httpService__WEBPACK_IMPORTED_MODULE_3__.httpService.getPasswordReset(props.token);
+
+            case 2:
+              resPasswordReset = _context2.sent;
+              passwordResetLoaded.value = true;
+
+              if (resPasswordReset) {
+                _context2.next = 6;
+                break;
+              }
+
+              return _context2.abrupt("return");
+
+            case 6:
+              isValidPasswordResetToken.value = true;
+              email.value = resPasswordReset.email;
+              token.value = resPasswordReset.token;
+
+            case 9:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    })));
+    var __returned__ = {
+      props: props,
+      authStore: authStore,
+      router: router,
+      passwordResetLoaded: passwordResetLoaded,
+      isValidPasswordResetToken: isValidPasswordResetToken,
+      isUpdating: isUpdating,
+      email: email,
+      token: token,
+      inputNewPassword: inputNewPassword,
+      fields: fields,
+      rules: rules,
+      v$: v$,
+      isDisabled: isDisabled,
+      submit: submit,
+      Section: _components_Section_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+      TitleLabel: _components_TitleLabel_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+      InputPassword: _components_InputPassword_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+      PrimaryButton: _components_PrimaryButton_vue__WEBPACK_IMPORTED_MODULE_8__["default"]
+    };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
+  }
+}));
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordResetRequest.vue?vue&type=script&setup=true&lang=ts":
+/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordResetRequest.vue?vue&type=script&setup=true&lang=ts ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var _store_auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/store/auth */ "./resources/js/store/auth.ts");
+/* harmony import */ var _services_httpService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/services/httpService */ "./resources/js/services/httpService.ts");
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
+/* harmony import */ var _vuelidate_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @vuelidate/core */ "./node_modules/@vuelidate/core/dist/index.esm.js");
+/* harmony import */ var _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @vuelidate/validators */ "./node_modules/@vuelidate/validators/dist/index.esm.js");
+/* harmony import */ var _components_Section_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/components/Section.vue */ "./resources/js/components/Section.vue");
+/* harmony import */ var _components_TitleLabel_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/components/TitleLabel.vue */ "./resources/js/components/TitleLabel.vue");
+/* harmony import */ var _components_InputEMail_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/components/InputEMail.vue */ "./resources/js/components/InputEMail.vue");
+/* harmony import */ var _components_PrimaryButton_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/components/PrimaryButton.vue */ "./resources/js/components/PrimaryButton.vue");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+
+
+
+
+
+
+
+
+
+ // 送信中フラグ
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_1__.defineComponent)({
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var sendIng = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(false); // 認証情報
+
+    var authStore = (0,_store_auth__WEBPACK_IMPORTED_MODULE_2__.useStore)(); // ルーティング情報
+
+    var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_9__.useRouter)(); // --start バリデーション関連
+
+    var fields = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)({
+      email: ''
+    });
+    var rules = {
+      email: {
+        required: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.helpers.withMessage('メールアドレスを入力してください。', _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.required),
+        email: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.helpers.withMessage('メールアドレスの形式が不正です。', _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.email)
+      }
+    };
+    var v$ = (0,_vuelidate_core__WEBPACK_IMPORTED_MODULE_4__.useVuelidate)(rules, fields); // --end
+    // 送信ボタンの活性制御
+
+    var isDisabled = (0,vue__WEBPACK_IMPORTED_MODULE_1__.computed)(function () {
+      return !v$.value.email.$model || v$.value.$invalid;
+    });
+
+    var submit = /*#__PURE__*/function () {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var isSuccess;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (!v$.value.$invalid) {
+                  _context.next = 2;
+                  break;
+                }
+
+                return _context.abrupt("return");
+
+              case 2:
+                sendIng.value = true;
+                _context.next = 5;
+                return _services_httpService__WEBPACK_IMPORTED_MODULE_3__.httpService.sendPasswordResetMail(v$.value.email.$model);
+
+              case 5:
+                isSuccess = _context.sent;
+                sendIng.value = false; // if (isSuccess) {
+                //   router.push({ name: 'my-page' })
+                // }
+
+              case 7:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      return function submit() {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+
+    var __returned__ = {
+      sendIng: sendIng,
+      authStore: authStore,
+      router: router,
+      fields: fields,
+      rules: rules,
+      v$: v$,
+      isDisabled: isDisabled,
+      submit: submit,
+      email: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.email,
+      Section: _components_Section_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+      TitleLabel: _components_TitleLabel_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+      InputEMail: _components_InputEMail_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+      PrimaryButton: _components_PrimaryButton_vue__WEBPACK_IMPORTED_MODULE_8__["default"]
+    };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
+  }
+}));
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PrivacyPolicy.vue?vue&type=script&setup=true&lang=ts":
 /*!****************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PrivacyPolicy.vue?vue&type=script&setup=true&lang=ts ***!
@@ -40994,11 +41345,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
-/* harmony import */ var _store_auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/store/auth */ "./resources/js/store/auth.ts");
-/* harmony import */ var _services_httpService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/services/httpService */ "./resources/js/services/httpService.ts");
-/* harmony import */ var _components_Section_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/components/Section.vue */ "./resources/js/components/Section.vue");
-/* harmony import */ var _components_ConfirmModal_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/components/ConfirmModal.vue */ "./resources/js/components/ConfirmModal.vue");
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
+/* harmony import */ var _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @smartweb/vue-flash-message */ "./node_modules/@smartweb/vue-flash-message/build/vue-flash-message.esm.js");
+/* harmony import */ var _store_auth__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/store/auth */ "./resources/js/store/auth.ts");
+/* harmony import */ var _services_httpService__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/services/httpService */ "./resources/js/services/httpService.ts");
+/* harmony import */ var _components_Section_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/components/Section.vue */ "./resources/js/components/Section.vue");
+/* harmony import */ var _components_ConfirmModal_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/components/ConfirmModal.vue */ "./resources/js/components/ConfirmModal.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -41011,23 +41363,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
- // 認証情報
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_1__.defineComponent)({
+  props: {
+    companyId: {
+      type: String,
+      required: true
+    },
+    menuId: {
+      type: String,
+      required: true
+    }
+  },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
     expose();
-    var authStore = (0,_store_auth__WEBPACK_IMPORTED_MODULE_2__.useStore)(); // ルーティング情報
+    var props = __props; // 認証情報
 
-    var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_6__.useRouter)(); // 予約状況
+    var authStore = (0,_store_auth__WEBPACK_IMPORTED_MODULE_3__.useStore)(); // ルーティング情報
+
+    var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_7__.useRouter)(); // 予約状況
 
     var reserveInfo = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(null); // 選択した時間帯
 
     var selectedTime = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(); // 企業ID
-
-    var companyId = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(''); // メニューID
-
-    var menuId = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(''); // メニュー情報
+    // const companyId = ref<string>('')
+    // // メニューID
+    // const menuId = ref<string>('')
+    // メニュー情報
 
     var menu = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(); // 表示する全ての日付(横軸)
 
@@ -41069,10 +41433,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 2:
                 reserving.value = true;
                 _context.next = 5;
-                return _services_httpService__WEBPACK_IMPORTED_MODULE_3__.httpService.reserve({
-                  companyId: Number(companyId.value),
+                return _services_httpService__WEBPACK_IMPORTED_MODULE_4__.httpService.reserve({
+                  companyId: Number(props.companyId),
                   userId: loginUserId(),
-                  menuId: Number(menuId.value),
+                  menuId: Number(props.menuId),
                   date: targetDay.ymd,
                   from: time.from,
                   to: time.to
@@ -41131,7 +41495,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return _services_httpService__WEBPACK_IMPORTED_MODULE_3__.httpService.getReserveInfo(companyId, menuId);
+                return _services_httpService__WEBPACK_IMPORTED_MODULE_4__.httpService.getReserveInfo(companyId, menuId);
 
               case 2:
                 resReserveInfo = _context2.sent;
@@ -41183,29 +41547,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              // パラメータ取得
-              companyId.value = function () {
-                var companyId = (0,vue_router__WEBPACK_IMPORTED_MODULE_6__.useRoute)().query.companyId;
-                return companyId ? companyId.toString() : '';
-              }();
-
-              menuId.value = function () {
-                var menuId = (0,vue_router__WEBPACK_IMPORTED_MODULE_6__.useRoute)().query.menuId;
-                return menuId ? menuId.toString() : '';
-              }();
-
-              if (!companyId.value || !menuId.value) {
-                router.push({
-                  name: 'error'
-                });
+              if (!(!/^\d+$/.test(props.companyId) || !/^\d+$/.test(props.menuId))) {
+                _context3.next = 4;
+                break;
               }
 
-              _context3.next = 5;
-              return getReserveInfo(Number(companyId.value), Number(menuId.value));
+              contentLoaded.value = true;
+              _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
+                type: 'error',
+                text: 'URLのパラメータが不正です。'
+              });
+              return _context3.abrupt("return");
 
-            case 5:
+            case 4:
+              _context3.next = 6;
+              return getReserveInfo(Number(props.companyId), Number(props.menuId));
+
+            case 6:
               if (reserveInfo.value) {
-                _context3.next = 8;
+                _context3.next = 9;
                 break;
               }
 
@@ -41213,7 +41573,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               return _context3.abrupt("return");
 
-            case 8:
+            case 9:
               // 今日の日付〜1ヶ月後の日付までの日数
               locale = new Date().toLocaleString('ja-JP', {
                 timeZone: 'Asia/Tokyo'
@@ -41227,10 +41587,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               }(); // 曜日マスタを取得
 
 
-              _context3.next = 12;
-              return _services_httpService__WEBPACK_IMPORTED_MODULE_3__.httpService.getDaysOfWeek();
+              _context3.next = 13;
+              return _services_httpService__WEBPACK_IMPORTED_MODULE_4__.httpService.getDaysOfWeek();
 
-            case 12:
+            case 13:
               daysOfWeek = _context3.sent;
 
               for (i = 0; i < diffDays; i++) {
@@ -41276,7 +41636,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               contentLoaded.value = true;
 
-            case 20:
+            case 21:
             case "end":
               return _context3.stop();
           }
@@ -41284,12 +41644,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee3);
     })));
     var __returned__ = {
+      props: props,
       authStore: authStore,
       router: router,
       reserveInfo: reserveInfo,
       selectedTime: selectedTime,
-      companyId: companyId,
-      menuId: menuId,
       menu: menu,
       allDays: allDays,
       timetableCells: timetableCells,
@@ -41303,8 +41662,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       getReserveInfo: getReserveInfo,
       isHoliday: isHoliday,
       isReserved: isReserved,
-      Section: _components_Section_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
-      ConfirmModal: _components_ConfirmModal_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
+      Section: _components_Section_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+      ConfirmModal: _components_ConfirmModal_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -41928,7 +42287,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (isLoggingIn) {
         router.push({
           name: 'menu-list',
-          query: {
+          params: {
             companyId: companyId
           }
         });
@@ -42996,12 +43355,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* UNKEYED_FRAGMENT */
   ))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
     "class": "c-search-result__logo-link",
-    to: {
-      path: '/company',
-      query: {
-        companyId: $props.company.id
-      }
-    }
+    to: "/company/".concat($props.company.id)
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
@@ -43546,7 +43900,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     text: '企業情報を読み込んでいます'
   })], 512
   /* NEED_PATCH */
-  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, !$setup.companyLoaded]]), $setup.companyLoaded ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, !$setup.companyLoaded]]), $setup.companyLoaded && $setup.companyExists ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     key: 0
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Section"], {
     "class": "page-company__section"
@@ -44078,7 +44432,11 @@ var _hoisted_7 = {
 
 var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("送信");
 
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("パスワードを忘れた場合");
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_router_link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("router-link");
+
   var _component_vue_element_loading = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("vue-element-loading");
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Section"], {
@@ -44138,7 +44496,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
       }, 8
       /* PROPS */
-      , ["disabled"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <router-link class=\"page-login__to-password-reset\" to=\"/password-reset\" exact>パスワードを忘れた場合</router-link> ")])];
+      , ["disabled"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
+        "class": "page-login__to-password-reset",
+        to: "/password-reset-request",
+        exact: ""
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [_hoisted_9];
+        }),
+        _: 1
+        /* STABLE */
+
+      })])];
     }),
     _: 1
     /* STABLE */
@@ -44577,6 +44946,251 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "is-full-screen": true,
     spinner: 'spinner',
     text: 'パスワードを変更しています'
+  }, null, 8
+  /* PROPS */
+  , ["active"])]);
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordReset.vue?vue&type=template&id=8bccaa8a&scoped=true&ts=true":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordReset.vue?vue&type=template&id=8bccaa8a&scoped=true&ts=true ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+
+var _withScopeId = function _withScopeId(n) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.pushScopeId)("data-v-8bccaa8a"), n = n(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.popScopeId)(), n;
+};
+
+var _hoisted_1 = {
+  "class": "page-password-reset"
+};
+
+var _hoisted_2 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
+    "class": "page-password-reset__form-title"
+  }, "パスワードリセット", -1
+  /* HOISTED */
+  );
+});
+
+var _hoisted_3 = {
+  "class": "page-password-reset__loading-area"
+};
+var _hoisted_4 = {
+  "class": "page-password-reset__input-area"
+};
+
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("パスワード");
+
+var _hoisted_6 = {
+  "class": "page-password-reset__input-area"
+};
+
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("パスワード（確認用）");
+
+var _hoisted_8 = {
+  "class": "page-password-reset__submit-area"
+};
+
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("送信");
+
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_vue_element_loading = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("vue-element-loading");
+
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Section"], {
+    "class": "page-password-reset__form"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_vue_element_loading, {
+        "class": "page-password-reset__loading",
+        active: true,
+        "background-color": '#1c1c1c',
+        color: '#fff',
+        spinner: 'spinner',
+        text: 'トークンをチェックしています。'
+      })], 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, !$setup.passwordResetLoaded]]), $setup.isValidPasswordResetToken ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+        key: 0
+      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["TitleLabel"], {
+        "class": "page-password-reset__input-label",
+        required: true
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [_hoisted_5];
+        }),
+        _: 1
+        /* STABLE */
+
+      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["InputPassword"], {
+        "class": "page-password-reset__input-input",
+        errors: $setup.v$.password.$errors,
+        "onUpdate:modelValue": [_cache[0] || (_cache[0] = function ($event) {
+          return $setup.inputNewPassword = $event;
+        }), _cache[1] || (_cache[1] = function ($event) {
+          return $setup.v$.password.$model = $event;
+        })],
+        modelValue: $setup.v$.password.$model
+      }, null, 8
+      /* PROPS */
+      , ["errors", "modelValue"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["TitleLabel"], {
+        "class": "page-password-reset__input-label",
+        required: true
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [_hoisted_7];
+        }),
+        _: 1
+        /* STABLE */
+
+      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["InputPassword"], {
+        "class": "page-password-reset__input-input",
+        errors: $setup.v$.confirmPassword.$errors,
+        modelValue: $setup.v$.confirmPassword.$model,
+        "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+          return $setup.v$.confirmPassword.$model = $event;
+        })
+      }, null, 8
+      /* PROPS */
+      , ["errors", "modelValue"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["PrimaryButton"], {
+        "class": "page-password-reset__submit",
+        disabled: $setup.isDisabled,
+        onClick: $setup.submit
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [_hoisted_9];
+        }),
+        _: 1
+        /* STABLE */
+
+      }, 8
+      /* PROPS */
+      , ["disabled"])])], 64
+      /* STABLE_FRAGMENT */
+      )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
+    }),
+    _: 1
+    /* STABLE */
+
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_vue_element_loading, {
+    "class": "page-password-reset__loading",
+    active: $setup.isUpdating,
+    "background-color": '#1c1c1c',
+    color: '#fff',
+    "is-full-screen": true,
+    spinner: 'spinner',
+    text: 'パスワードを変更しています'
+  }, null, 8
+  /* PROPS */
+  , ["active"])]);
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordResetRequest.vue?vue&type=template&id=5ee49804&scoped=true&ts=true":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordResetRequest.vue?vue&type=template&id=5ee49804&scoped=true&ts=true ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+
+var _withScopeId = function _withScopeId(n) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.pushScopeId)("data-v-5ee49804"), n = n(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.popScopeId)(), n;
+};
+
+var _hoisted_1 = {
+  "class": "page-password-reset-request"
+};
+
+var _hoisted_2 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
+    "class": "page-password-reset-request__form-title"
+  }, "パスワードリセット", -1
+  /* HOISTED */
+  );
+});
+
+var _hoisted_3 = {
+  "class": "page-password-reset-request__input-area"
+};
+
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("メールアドレス");
+
+var _hoisted_5 = {
+  "class": "page-password-reset-request__submit-area"
+};
+
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("リセットメール送信 ");
+
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_vue_element_loading = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("vue-element-loading");
+
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Section"], {
+    "class": "page-password-reset-request__form"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["TitleLabel"], {
+        "class": "page-password-reset-request__input-label",
+        required: true
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [_hoisted_4];
+        }),
+        _: 1
+        /* STABLE */
+
+      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["InputEMail"], {
+        "class": "page-password-reset-request__input-input",
+        errors: $setup.v$.email.$errors,
+        modelValue: $setup.v$.email.$model,
+        "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
+          return $setup.v$.email.$model = $event;
+        })
+      }, null, 8
+      /* PROPS */
+      , ["errors", "modelValue"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["PrimaryButton"], {
+        "class": "page-password-reset-request__submit",
+        disabled: $setup.isDisabled,
+        onClick: $setup.submit
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [_hoisted_6];
+        }),
+        _: 1
+        /* STABLE */
+
+      }, 8
+      /* PROPS */
+      , ["disabled"])])];
+    }),
+    _: 1
+    /* STABLE */
+
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_vue_element_loading, {
+    "class": "page-password-reset-request__loading",
+    active: $setup.sendIng,
+    "background-color": '#1c1c1c',
+    color: '#fff',
+    "is-full-screen": true,
+    spinner: 'spinner',
+    text: '送信中です'
   }, null, 8
   /* PROPS */
   , ["active"])]);
@@ -46650,25 +47264,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "router": () => (/* binding */ router)
 /* harmony export */ });
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
 /* harmony import */ var _store_auth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/store/auth */ "./resources/js/store/auth.ts");
 /* harmony import */ var _pages_Top_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/pages/Top.vue */ "./resources/js/pages/Top.vue");
 /* harmony import */ var _pages_Contact_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/pages/Contact.vue */ "./resources/js/pages/Contact.vue");
 /* harmony import */ var _pages_SignUp_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/pages/SignUp.vue */ "./resources/js/pages/SignUp.vue");
 /* harmony import */ var _pages_Login_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/pages/Login.vue */ "./resources/js/pages/Login.vue");
-/* harmony import */ var _pages_Search_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/pages/Search.vue */ "./resources/js/pages/Search.vue");
-/* harmony import */ var _pages_Company_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/pages/Company.vue */ "./resources/js/pages/Company.vue");
-/* harmony import */ var _pages_MenuList_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/pages/MenuList.vue */ "./resources/js/pages/MenuList.vue");
-/* harmony import */ var _pages_Reserve_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/pages/Reserve.vue */ "./resources/js/pages/Reserve.vue");
-/* harmony import */ var _pages_MyPage_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/pages/MyPage.vue */ "./resources/js/pages/MyPage.vue");
-/* harmony import */ var _pages_Profile_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/pages/Profile.vue */ "./resources/js/pages/Profile.vue");
-/* harmony import */ var _pages_PasswordChange_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @/pages/PasswordChange.vue */ "./resources/js/pages/PasswordChange.vue");
-/* harmony import */ var _pages_ReserveHistory_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @/pages/ReserveHistory.vue */ "./resources/js/pages/ReserveHistory.vue");
-/* harmony import */ var _pages_LikeCompanyList_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @/pages/LikeCompanyList.vue */ "./resources/js/pages/LikeCompanyList.vue");
-/* harmony import */ var _pages_PrivacyPolicy_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @/pages/PrivacyPolicy.vue */ "./resources/js/pages/PrivacyPolicy.vue");
-/* harmony import */ var _pages_Security_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @/pages/Security.vue */ "./resources/js/pages/Security.vue");
-/* harmony import */ var _pages_Term_vue__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @/pages/Term.vue */ "./resources/js/pages/Term.vue");
-/* harmony import */ var _pages_Error_vue__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @/pages/Error.vue */ "./resources/js/pages/Error.vue");
+/* harmony import */ var _pages_PasswordResetRequest_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/pages/PasswordResetRequest.vue */ "./resources/js/pages/PasswordResetRequest.vue");
+/* harmony import */ var _pages_PasswordReset_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/pages/PasswordReset.vue */ "./resources/js/pages/PasswordReset.vue");
+/* harmony import */ var _pages_Search_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/pages/Search.vue */ "./resources/js/pages/Search.vue");
+/* harmony import */ var _pages_Company_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/pages/Company.vue */ "./resources/js/pages/Company.vue");
+/* harmony import */ var _pages_MenuList_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/pages/MenuList.vue */ "./resources/js/pages/MenuList.vue");
+/* harmony import */ var _pages_Reserve_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/pages/Reserve.vue */ "./resources/js/pages/Reserve.vue");
+/* harmony import */ var _pages_MyPage_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @/pages/MyPage.vue */ "./resources/js/pages/MyPage.vue");
+/* harmony import */ var _pages_Profile_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @/pages/Profile.vue */ "./resources/js/pages/Profile.vue");
+/* harmony import */ var _pages_PasswordChange_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @/pages/PasswordChange.vue */ "./resources/js/pages/PasswordChange.vue");
+/* harmony import */ var _pages_ReserveHistory_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @/pages/ReserveHistory.vue */ "./resources/js/pages/ReserveHistory.vue");
+/* harmony import */ var _pages_LikeCompanyList_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @/pages/LikeCompanyList.vue */ "./resources/js/pages/LikeCompanyList.vue");
+/* harmony import */ var _pages_PrivacyPolicy_vue__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @/pages/PrivacyPolicy.vue */ "./resources/js/pages/PrivacyPolicy.vue");
+/* harmony import */ var _pages_Security_vue__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @/pages/Security.vue */ "./resources/js/pages/Security.vue");
+/* harmony import */ var _pages_Term_vue__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @/pages/Term.vue */ "./resources/js/pages/Term.vue");
+/* harmony import */ var _pages_Error_vue__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @/pages/Error.vue */ "./resources/js/pages/Error.vue");
+
+
 
 
 
@@ -46700,6 +47318,21 @@ var routes = [{
     requiresNotAuth: true
   }
 }, {
+  path: '/password-reset-request',
+  name: 'password-reset-request',
+  component: _pages_PasswordResetRequest_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+  meta: {
+    requiresNotAuth: true
+  }
+}, {
+  path: '/password-reset/:token',
+  name: 'password-reset',
+  component: _pages_PasswordReset_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+  props: true,
+  meta: {
+    requiresNotAuth: true
+  }
+}, {
   path: '/sign-up',
   name: 'sign-up',
   component: _pages_SignUp_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
@@ -46709,68 +47342,71 @@ var routes = [{
 }, {
   path: '/search',
   name: 'search',
-  component: _pages_Search_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
+  component: _pages_Search_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
 }, {
-  path: '/company',
+  path: '/company/:companyId',
   name: 'company',
-  component: _pages_Company_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
+  component: _pages_Company_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
+  props: true
 }, {
-  path: '/menu-list',
+  path: '/menu-list/:companyId',
   name: 'menu-list',
-  component: _pages_MenuList_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+  component: _pages_MenuList_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
+  props: true,
   meta: {
     requiresAuth: true
   }
 }, {
-  path: '/reserve',
+  path: '/reserve/:companyId/:menuId',
   name: 'reserve',
-  component: _pages_Reserve_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
+  component: _pages_Reserve_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
+  props: true,
   meta: {
     requiresAuth: true
   }
 }, {
   path: '/my-page',
   name: 'my-page',
-  component: _pages_MyPage_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
+  component: _pages_MyPage_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
   meta: {
     requiresAuth: true
   }
 }, {
   path: '/profile',
   name: 'profile',
-  component: _pages_Profile_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
+  component: _pages_Profile_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
   meta: {
     requiresAuth: true
   }
 }, {
   path: '/password-change',
   name: 'password-change',
-  component: _pages_PasswordChange_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
+  component: _pages_PasswordChange_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
   meta: {
     requiresAuth: true
   }
 }, {
   path: '/reserve-history',
   name: 'reserve-history',
-  component: _pages_ReserveHistory_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
+  component: _pages_ReserveHistory_vue__WEBPACK_IMPORTED_MODULE_14__["default"],
   meta: {
     requiresAuth: true
   }
 }, {
   path: '/like-company-list',
   name: 'like-company-list',
-  component: _pages_LikeCompanyList_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
+  component: _pages_LikeCompanyList_vue__WEBPACK_IMPORTED_MODULE_15__["default"],
   meta: {
     requiresAuth: true
   }
 }, {
   path: '/privacy-policy',
   name: 'privacy-policy',
-  component: _pages_PrivacyPolicy_vue__WEBPACK_IMPORTED_MODULE_14__["default"]
+  component: _pages_PrivacyPolicy_vue__WEBPACK_IMPORTED_MODULE_16__["default"]
 }, {
   path: '/security',
   name: 'security',
-  component: _pages_Security_vue__WEBPACK_IMPORTED_MODULE_15__["default"]
+  component: _pages_Security_vue__WEBPACK_IMPORTED_MODULE_17__["default"]
 }, {
   path: '/contact',
   name: 'contact',
@@ -46778,11 +47414,11 @@ var routes = [{
 }, {
   path: '/term',
   name: 'term',
-  component: _pages_Term_vue__WEBPACK_IMPORTED_MODULE_16__["default"]
+  component: _pages_Term_vue__WEBPACK_IMPORTED_MODULE_18__["default"]
 }, {
   path: '/:catchAll(.*)',
   name: 'error',
-  component: _pages_Error_vue__WEBPACK_IMPORTED_MODULE_17__["default"]
+  component: _pages_Error_vue__WEBPACK_IMPORTED_MODULE_19__["default"]
 }];
 
 var scrollBehavior = function scrollBehavior(to, from, savedPosition) {
@@ -46792,8 +47428,8 @@ var scrollBehavior = function scrollBehavior(to, from, savedPosition) {
   };
 };
 
-var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_18__.createRouter)({
-  history: (0,vue_router__WEBPACK_IMPORTED_MODULE_18__.createWebHistory)(),
+var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_20__.createRouter)({
+  history: (0,vue_router__WEBPACK_IMPORTED_MODULE_20__.createWebHistory)(),
   scrollBehavior: scrollBehavior,
   routes: routes
 });
@@ -46912,7 +47548,7 @@ var getLoginUser = /*#__PURE__*/function () {
   return function getLoginUser() {
     return _ref.apply(this, arguments);
   };
-}(); // ユーザ登録
+}(); // 会員登録
 
 
 var signUp = /*#__PURE__*/function () {
@@ -46930,7 +47566,7 @@ var signUp = /*#__PURE__*/function () {
             response = _context2.sent;
             _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
               type: 'success',
-              text: 'ユーザ登録が完了しました。'
+              text: '会員登録が完了しました。'
             });
             return _context2.abrupt("return", {
               id: response.data.id,
@@ -47010,121 +47646,114 @@ var login = /*#__PURE__*/function () {
   return function login(_x2) {
     return _ref3.apply(this, arguments);
   };
-}(); // ゲストログイン
+}(); // パスワードリセットメール送信 ※成否の真偽値を返す
 
 
-var guestLogin = /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
-    var response;
+var sendPasswordResetMail = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4(email) {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
             _context4.prev = 0;
             _context4.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/login/guest');
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/forgot', {
+              email: email
+            });
 
           case 3:
-            response = _context4.sent;
             _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
               type: 'success',
-              text: 'ログインに成功しました。'
+              text: 'メールが送信されました。'
             });
-            return _context4.abrupt("return", {
-              id: response.data.id,
-              name: response.data.name,
-              email: response.data.email,
-              isGuest: response.data.is_guest,
-              imageFileName: response.data.image_file_name
-            });
+            return _context4.abrupt("return", true);
 
-          case 8:
-            _context4.prev = 8;
+          case 7:
+            _context4.prev = 7;
             _context4.t0 = _context4["catch"](0);
 
             if (axios__WEBPACK_IMPORTED_MODULE_1___default().isAxiosError(_context4.t0) && _context4.t0.response) {
               httpErrorHandler(_context4.t0);
             }
 
-            return _context4.abrupt("return", null);
+            return _context4.abrupt("return", false);
 
-          case 12:
+          case 11:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, null, [[0, 8]]);
+    }, _callee4, null, [[0, 7]]);
   }));
 
-  return function guestLogin() {
+  return function sendPasswordResetMail(_x3) {
     return _ref4.apply(this, arguments);
   };
-}(); // ログアウト
+}(); // リセット対象を取得
 
 
-var logout = /*#__PURE__*/function () {
-  var _ref5 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
+var getPasswordReset = /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5(token) {
+    var response;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
             _context5.prev = 0;
             _context5.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/logout');
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/password-reset', {
+              params: {
+                token: token
+              }
+            });
 
           case 3:
-            _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
-              type: 'success',
-              text: 'ログアウトしました。'
-            });
-            _context5.next = 9;
-            break;
+            response = _context5.sent;
+            return _context5.abrupt("return", response.data);
 
-          case 6:
-            _context5.prev = 6;
+          case 7:
+            _context5.prev = 7;
             _context5.t0 = _context5["catch"](0);
 
             if (axios__WEBPACK_IMPORTED_MODULE_1___default().isAxiosError(_context5.t0) && _context5.t0.response) {
               httpErrorHandler(_context5.t0);
             }
 
-          case 9:
             return _context5.abrupt("return", null);
 
-          case 10:
+          case 11:
           case "end":
             return _context5.stop();
         }
       }
-    }, _callee5, null, [[0, 6]]);
+    }, _callee5, null, [[0, 7]]);
   }));
 
-  return function logout() {
+  return function getPasswordReset(_x4) {
     return _ref5.apply(this, arguments);
   };
-}(); // ユーザ情報更新 ※成否の真偽値を返す
+}(); // パスワードリセット ※成否の真偽値を返す
 
 
-var updateUser = /*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6(formData) {
+var resetPassword = /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6(data) {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
       while (1) {
         switch (_context6.prev = _context6.next) {
           case 0:
             _context6.prev = 0;
             _context6.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/user", formData, {
-              headers: {
-                'X-HTTP-Method-Override': 'PUT',
-                'content-type': 'multipart/form-data'
-              }
-            });
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/password-reset', data);
 
           case 3:
+            _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
+              type: 'success',
+              text: 'パスワードリセットが完了しました。'
+            });
             return _context6.abrupt("return", true);
 
-          case 6:
-            _context6.prev = 6;
+          case 7:
+            _context6.prev = 7;
             _context6.t0 = _context6["catch"](0);
 
             if (axios__WEBPACK_IMPORTED_MODULE_1___default().isAxiosError(_context6.t0) && _context6.t0.response) {
@@ -47133,22 +47762,22 @@ var updateUser = /*#__PURE__*/function () {
 
             return _context6.abrupt("return", false);
 
-          case 10:
+          case 11:
           case "end":
             return _context6.stop();
         }
       }
-    }, _callee6, null, [[0, 6]]);
+    }, _callee6, null, [[0, 7]]);
   }));
 
-  return function updateUser(_x3) {
+  return function resetPassword(_x5) {
     return _ref6.apply(this, arguments);
   };
-}(); // パスワード変更 ※成否の真偽値を返す
+}(); // ゲストログイン
 
 
-var changePassword = /*#__PURE__*/function () {
-  var _ref7 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee7(data) {
+var guestLogin = /*#__PURE__*/function () {
+  var _ref7 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee7() {
     var response;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee7$(_context7) {
       while (1) {
@@ -47156,15 +47785,21 @@ var changePassword = /*#__PURE__*/function () {
           case 0:
             _context7.prev = 0;
             _context7.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/password-change', data);
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/login/guest');
 
           case 3:
             response = _context7.sent;
             _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
               type: 'success',
-              text: 'パスワードが変更されました。'
+              text: 'ログインに成功しました。'
             });
-            return _context7.abrupt("return", true);
+            return _context7.abrupt("return", {
+              id: response.data.id,
+              name: response.data.name,
+              email: response.data.email,
+              isGuest: response.data.is_guest,
+              imageFileName: response.data.image_file_name
+            });
 
           case 8:
             _context7.prev = 8;
@@ -47174,7 +47809,7 @@ var changePassword = /*#__PURE__*/function () {
               httpErrorHandler(_context7.t0);
             }
 
-            return _context7.abrupt("return", false);
+            return _context7.abrupt("return", null);
 
           case 12:
           case "end":
@@ -47184,13 +47819,13 @@ var changePassword = /*#__PURE__*/function () {
     }, _callee7, null, [[0, 8]]);
   }));
 
-  return function changePassword(_x4) {
+  return function guestLogin() {
     return _ref7.apply(this, arguments);
   };
-}(); // 退会 ※成否の真偽値を返す
+}(); // ログアウト
 
 
-var withdraw = /*#__PURE__*/function () {
+var logout = /*#__PURE__*/function () {
   var _ref8 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee8() {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee8$(_context8) {
       while (1) {
@@ -47198,80 +47833,85 @@ var withdraw = /*#__PURE__*/function () {
           case 0:
             _context8.prev = 0;
             _context8.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default()["delete"]('/api/user');
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/logout');
 
           case 3:
             _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
               type: 'success',
-              text: '退会処理が完了しました。'
+              text: 'ログアウトしました。'
             });
-            return _context8.abrupt("return", true);
+            _context8.next = 9;
+            break;
 
-          case 7:
-            _context8.prev = 7;
+          case 6:
+            _context8.prev = 6;
             _context8.t0 = _context8["catch"](0);
 
             if (axios__WEBPACK_IMPORTED_MODULE_1___default().isAxiosError(_context8.t0) && _context8.t0.response) {
               httpErrorHandler(_context8.t0);
             }
 
-            return _context8.abrupt("return", false);
+          case 9:
+            return _context8.abrupt("return", null);
 
-          case 11:
+          case 10:
           case "end":
             return _context8.stop();
         }
       }
-    }, _callee8, null, [[0, 7]]);
+    }, _callee8, null, [[0, 6]]);
   }));
 
-  return function withdraw() {
+  return function logout() {
     return _ref8.apply(this, arguments);
   };
-}(); // 市区町村を取得
+}(); // ユーザ情報更新 ※成否の真偽値を返す
 
 
-var findCities = /*#__PURE__*/function () {
-  var _ref9 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee9(prefectureId) {
-    var response;
+var updateUser = /*#__PURE__*/function () {
+  var _ref9 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee9(formData) {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee9$(_context9) {
       while (1) {
         switch (_context9.prev = _context9.next) {
           case 0:
             _context9.prev = 0;
             _context9.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/prefecture/city/".concat(prefectureId));
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/user", formData, {
+              headers: {
+                'X-HTTP-Method-Override': 'PUT',
+                'content-type': 'multipart/form-data'
+              }
+            });
 
           case 3:
-            response = _context9.sent;
-            return _context9.abrupt("return", response.data);
+            return _context9.abrupt("return", true);
 
-          case 7:
-            _context9.prev = 7;
+          case 6:
+            _context9.prev = 6;
             _context9.t0 = _context9["catch"](0);
 
             if (axios__WEBPACK_IMPORTED_MODULE_1___default().isAxiosError(_context9.t0) && _context9.t0.response) {
               httpErrorHandler(_context9.t0);
             }
 
-            return _context9.abrupt("return", []);
+            return _context9.abrupt("return", false);
 
-          case 11:
+          case 10:
           case "end":
             return _context9.stop();
         }
       }
-    }, _callee9, null, [[0, 7]]);
+    }, _callee9, null, [[0, 6]]);
   }));
 
-  return function findCities(_x5) {
+  return function updateUser(_x6) {
     return _ref9.apply(this, arguments);
   };
-}(); // こだわり条件を取得
+}(); // パスワード変更 ※成否の真偽値を返す
 
 
-var findSellingPoints = /*#__PURE__*/function () {
-  var _ref10 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee10() {
+var changePassword = /*#__PURE__*/function () {
+  var _ref10 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee10(data) {
     var response;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee10$(_context10) {
       while (1) {
@@ -47279,52 +47919,56 @@ var findSellingPoints = /*#__PURE__*/function () {
           case 0:
             _context10.prev = 0;
             _context10.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/selling-point');
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/password-change', data);
 
           case 3:
             response = _context10.sent;
-            return _context10.abrupt("return", response.data);
+            _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
+              type: 'success',
+              text: 'パスワードが変更されました。'
+            });
+            return _context10.abrupt("return", true);
 
-          case 7:
-            _context10.prev = 7;
+          case 8:
+            _context10.prev = 8;
             _context10.t0 = _context10["catch"](0);
 
             if (axios__WEBPACK_IMPORTED_MODULE_1___default().isAxiosError(_context10.t0) && _context10.t0.response) {
               httpErrorHandler(_context10.t0);
             }
 
-            return _context10.abrupt("return", []);
+            return _context10.abrupt("return", false);
 
-          case 11:
+          case 12:
           case "end":
             return _context10.stop();
         }
       }
-    }, _callee10, null, [[0, 7]]);
+    }, _callee10, null, [[0, 8]]);
   }));
 
-  return function findSellingPoints() {
+  return function changePassword(_x7) {
     return _ref10.apply(this, arguments);
   };
-}(); // 企業情報を取得(複数)
+}(); // 退会 ※成否の真偽値を返す
 
 
-var findCompanies = /*#__PURE__*/function () {
-  var _ref11 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee11(data) {
-    var response;
+var withdraw = /*#__PURE__*/function () {
+  var _ref11 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee11() {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee11$(_context11) {
       while (1) {
         switch (_context11.prev = _context11.next) {
           case 0:
             _context11.prev = 0;
             _context11.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/company', {
-              params: _objectSpread({}, data)
-            });
+            return axios__WEBPACK_IMPORTED_MODULE_1___default()["delete"]('/api/user');
 
           case 3:
-            response = _context11.sent;
-            return _context11.abrupt("return", response.data);
+            _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
+              type: 'success',
+              text: '退会処理が完了しました。'
+            });
+            return _context11.abrupt("return", true);
 
           case 7:
             _context11.prev = 7;
@@ -47334,7 +47978,7 @@ var findCompanies = /*#__PURE__*/function () {
               httpErrorHandler(_context11.t0);
             }
 
-            return _context11.abrupt("return", []);
+            return _context11.abrupt("return", false);
 
           case 11:
           case "end":
@@ -47344,14 +47988,14 @@ var findCompanies = /*#__PURE__*/function () {
     }, _callee11, null, [[0, 7]]);
   }));
 
-  return function findCompanies(_x6) {
+  return function withdraw() {
     return _ref11.apply(this, arguments);
   };
-}(); // 企業情報を取得(1件)
+}(); // 市区町村を取得
 
 
-var findCompanyById = /*#__PURE__*/function () {
-  var _ref12 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee12(companyId, userId) {
+var findCities = /*#__PURE__*/function () {
+  var _ref12 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee12(prefectureId) {
     var response;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee12$(_context12) {
       while (1) {
@@ -47359,11 +48003,7 @@ var findCompanyById = /*#__PURE__*/function () {
           case 0:
             _context12.prev = 0;
             _context12.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/company/".concat(companyId), {
-              params: {
-                userId: userId
-              }
-            });
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/prefecture/city/".concat(prefectureId));
 
           case 3:
             response = _context12.sent;
@@ -47377,7 +48017,7 @@ var findCompanyById = /*#__PURE__*/function () {
               httpErrorHandler(_context12.t0);
             }
 
-            return _context12.abrupt("return", null);
+            return _context12.abrupt("return", []);
 
           case 11:
           case "end":
@@ -47387,14 +48027,14 @@ var findCompanyById = /*#__PURE__*/function () {
     }, _callee12, null, [[0, 7]]);
   }));
 
-  return function findCompanyById(_x7, _x8) {
+  return function findCities(_x8) {
     return _ref12.apply(this, arguments);
   };
-}(); // お気に入りに登録/削除 ※成否の真偽値を返す
+}(); // こだわり条件を取得
 
 
-var toggleLike = /*#__PURE__*/function () {
-  var _ref13 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee13(data) {
+var findSellingPoints = /*#__PURE__*/function () {
+  var _ref13 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee13() {
     var response;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee13$(_context13) {
       while (1) {
@@ -47402,11 +48042,11 @@ var toggleLike = /*#__PURE__*/function () {
           case 0:
             _context13.prev = 0;
             _context13.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/like', data);
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/selling-point');
 
           case 3:
             response = _context13.sent;
-            return _context13.abrupt("return", true);
+            return _context13.abrupt("return", response.data);
 
           case 7:
             _context13.prev = 7;
@@ -47416,7 +48056,7 @@ var toggleLike = /*#__PURE__*/function () {
               httpErrorHandler(_context13.t0);
             }
 
-            return _context13.abrupt("return", false);
+            return _context13.abrupt("return", []);
 
           case 11:
           case "end":
@@ -47426,14 +48066,14 @@ var toggleLike = /*#__PURE__*/function () {
     }, _callee13, null, [[0, 7]]);
   }));
 
-  return function toggleLike(_x9) {
+  return function findSellingPoints() {
     return _ref13.apply(this, arguments);
   };
-}(); // 予約履歴を取得
+}(); // 企業情報を取得(複数)
 
 
-var getReserveHistory = /*#__PURE__*/function () {
-  var _ref14 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee14(userId) {
+var findCompanies = /*#__PURE__*/function () {
+  var _ref14 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee14(data) {
     var response;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee14$(_context14) {
       while (1) {
@@ -47441,7 +48081,9 @@ var getReserveHistory = /*#__PURE__*/function () {
           case 0:
             _context14.prev = 0;
             _context14.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/reserve/".concat(userId));
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/company', {
+              params: _objectSpread({}, data)
+            });
 
           case 3:
             response = _context14.sent;
@@ -47465,14 +48107,14 @@ var getReserveHistory = /*#__PURE__*/function () {
     }, _callee14, null, [[0, 7]]);
   }));
 
-  return function getReserveHistory(_x10) {
+  return function findCompanies(_x9) {
     return _ref14.apply(this, arguments);
   };
-}(); // お気に入り一覧を取得
+}(); // 企業情報を取得(1件)
 
 
-var getLikes = /*#__PURE__*/function () {
-  var _ref15 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee15(userId) {
+var findCompanyById = /*#__PURE__*/function () {
+  var _ref15 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee15(companyId, userId) {
     var response;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee15$(_context15) {
       while (1) {
@@ -47480,7 +48122,11 @@ var getLikes = /*#__PURE__*/function () {
           case 0:
             _context15.prev = 0;
             _context15.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/like/".concat(userId));
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/company/".concat(companyId), {
+              params: {
+                userId: userId
+              }
+            });
 
           case 3:
             response = _context15.sent;
@@ -47494,7 +48140,7 @@ var getLikes = /*#__PURE__*/function () {
               httpErrorHandler(_context15.t0);
             }
 
-            return _context15.abrupt("return", []);
+            return _context15.abrupt("return", null);
 
           case 11:
           case "end":
@@ -47504,14 +48150,14 @@ var getLikes = /*#__PURE__*/function () {
     }, _callee15, null, [[0, 7]]);
   }));
 
-  return function getLikes(_x11) {
+  return function findCompanyById(_x10, _x11) {
     return _ref15.apply(this, arguments);
   };
-}(); // メニューリストを取得
+}(); // お気に入りに登録/削除 ※成否の真偽値を返す
 
 
-var getMenus = /*#__PURE__*/function () {
-  var _ref16 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee16(companyId) {
+var toggleLike = /*#__PURE__*/function () {
+  var _ref16 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee16(data) {
     var response;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee16$(_context16) {
       while (1) {
@@ -47519,11 +48165,11 @@ var getMenus = /*#__PURE__*/function () {
           case 0:
             _context16.prev = 0;
             _context16.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/company/menu/".concat(companyId));
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/like', data);
 
           case 3:
             response = _context16.sent;
-            return _context16.abrupt("return", response.data);
+            return _context16.abrupt("return", true);
 
           case 7:
             _context16.prev = 7;
@@ -47533,7 +48179,7 @@ var getMenus = /*#__PURE__*/function () {
               httpErrorHandler(_context16.t0);
             }
 
-            return _context16.abrupt("return", null);
+            return _context16.abrupt("return", false);
 
           case 11:
           case "end":
@@ -47543,14 +48189,14 @@ var getMenus = /*#__PURE__*/function () {
     }, _callee16, null, [[0, 7]]);
   }));
 
-  return function getMenus(_x12) {
+  return function toggleLike(_x12) {
     return _ref16.apply(this, arguments);
   };
-}(); // 予約状況を取得
+}(); // 予約履歴を取得
 
 
-var getReserveInfo = /*#__PURE__*/function () {
-  var _ref17 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee17(companyId, menuId) {
+var getReserveHistory = /*#__PURE__*/function () {
+  var _ref17 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee17(userId) {
     var response;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee17$(_context17) {
       while (1) {
@@ -47558,12 +48204,7 @@ var getReserveInfo = /*#__PURE__*/function () {
           case 0:
             _context17.prev = 0;
             _context17.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/reserve/reserve-info', {
-              params: {
-                companyId: companyId,
-                menuId: menuId
-              }
-            });
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/reserve/".concat(userId));
 
           case 3:
             response = _context17.sent;
@@ -47577,7 +48218,7 @@ var getReserveInfo = /*#__PURE__*/function () {
               httpErrorHandler(_context17.t0);
             }
 
-            return _context17.abrupt("return", null);
+            return _context17.abrupt("return", []);
 
           case 11:
           case "end":
@@ -47587,14 +48228,14 @@ var getReserveInfo = /*#__PURE__*/function () {
     }, _callee17, null, [[0, 7]]);
   }));
 
-  return function getReserveInfo(_x13, _x14) {
+  return function getReserveHistory(_x13) {
     return _ref17.apply(this, arguments);
   };
-}(); // 曜日マスタを取得
+}(); // お気に入り一覧を取得
 
 
-var getDaysOfWeek = /*#__PURE__*/function () {
-  var _ref18 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee18() {
+var getLikes = /*#__PURE__*/function () {
+  var _ref18 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee18(userId) {
     var response;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee18$(_context18) {
       while (1) {
@@ -47602,7 +48243,7 @@ var getDaysOfWeek = /*#__PURE__*/function () {
           case 0:
             _context18.prev = 0;
             _context18.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/day-of-week');
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/like/".concat(userId));
 
           case 3:
             response = _context18.sent;
@@ -47626,28 +48267,26 @@ var getDaysOfWeek = /*#__PURE__*/function () {
     }, _callee18, null, [[0, 7]]);
   }));
 
-  return function getDaysOfWeek() {
+  return function getLikes(_x14) {
     return _ref18.apply(this, arguments);
   };
-}(); // 予約 ※成否の真偽値を返す
+}(); // メニューリストを取得
 
 
-var reserve = /*#__PURE__*/function () {
-  var _ref19 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee19(data) {
+var getMenus = /*#__PURE__*/function () {
+  var _ref19 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee19(companyId) {
+    var response;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee19$(_context19) {
       while (1) {
         switch (_context19.prev = _context19.next) {
           case 0:
             _context19.prev = 0;
             _context19.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/reserve', data);
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/company/menu/".concat(companyId));
 
           case 3:
-            _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
-              type: 'success',
-              text: '予約が完了しました。'
-            });
-            return _context19.abrupt("return", true);
+            response = _context19.sent;
+            return _context19.abrupt("return", response.data);
 
           case 7:
             _context19.prev = 7;
@@ -47657,7 +48296,7 @@ var reserve = /*#__PURE__*/function () {
               httpErrorHandler(_context19.t0);
             }
 
-            return _context19.abrupt("return", false);
+            return _context19.abrupt("return", null);
 
           case 11:
           case "end":
@@ -47667,28 +48306,31 @@ var reserve = /*#__PURE__*/function () {
     }, _callee19, null, [[0, 7]]);
   }));
 
-  return function reserve(_x15) {
+  return function getMenus(_x15) {
     return _ref19.apply(this, arguments);
   };
-}(); // 予約キャンセル ※成否の真偽値を返す
+}(); // 予約状況を取得
 
 
-var cancelReserve = /*#__PURE__*/function () {
-  var _ref20 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee20(reserveId) {
+var getReserveInfo = /*#__PURE__*/function () {
+  var _ref20 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee20(companyId, menuId) {
+    var response;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee20$(_context20) {
       while (1) {
         switch (_context20.prev = _context20.next) {
           case 0:
             _context20.prev = 0;
             _context20.next = 3;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default()["delete"]("/api/reserve/".concat(reserveId));
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/reserve/reserve-info', {
+              params: {
+                companyId: companyId,
+                menuId: menuId
+              }
+            });
 
           case 3:
-            _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
-              type: 'success',
-              text: '予約をキャンセルしました。'
-            });
-            return _context20.abrupt("return", true);
+            response = _context20.sent;
+            return _context20.abrupt("return", response.data);
 
           case 7:
             _context20.prev = 7;
@@ -47698,7 +48340,7 @@ var cancelReserve = /*#__PURE__*/function () {
               httpErrorHandler(_context20.t0);
             }
 
-            return _context20.abrupt("return", false);
+            return _context20.abrupt("return", null);
 
           case 11:
           case "end":
@@ -47708,20 +48350,141 @@ var cancelReserve = /*#__PURE__*/function () {
     }, _callee20, null, [[0, 7]]);
   }));
 
-  return function cancelReserve(_x16) {
+  return function getReserveInfo(_x16, _x17) {
     return _ref20.apply(this, arguments);
   };
-}(); // お問い合わせ ※成否の真偽値を返す
+}(); // 曜日マスタを取得
 
 
-var postContact = /*#__PURE__*/function () {
-  var _ref21 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee21(customerEmail, comment) {
+var getDaysOfWeek = /*#__PURE__*/function () {
+  var _ref21 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee21() {
+    var response;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee21$(_context21) {
       while (1) {
         switch (_context21.prev = _context21.next) {
           case 0:
             _context21.prev = 0;
             _context21.next = 3;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/day-of-week');
+
+          case 3:
+            response = _context21.sent;
+            return _context21.abrupt("return", response.data);
+
+          case 7:
+            _context21.prev = 7;
+            _context21.t0 = _context21["catch"](0);
+
+            if (axios__WEBPACK_IMPORTED_MODULE_1___default().isAxiosError(_context21.t0) && _context21.t0.response) {
+              httpErrorHandler(_context21.t0);
+            }
+
+            return _context21.abrupt("return", []);
+
+          case 11:
+          case "end":
+            return _context21.stop();
+        }
+      }
+    }, _callee21, null, [[0, 7]]);
+  }));
+
+  return function getDaysOfWeek() {
+    return _ref21.apply(this, arguments);
+  };
+}(); // 予約 ※成否の真偽値を返す
+
+
+var reserve = /*#__PURE__*/function () {
+  var _ref22 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee22(data) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee22$(_context22) {
+      while (1) {
+        switch (_context22.prev = _context22.next) {
+          case 0:
+            _context22.prev = 0;
+            _context22.next = 3;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/reserve', data);
+
+          case 3:
+            _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
+              type: 'success',
+              text: '予約が完了しました。'
+            });
+            return _context22.abrupt("return", true);
+
+          case 7:
+            _context22.prev = 7;
+            _context22.t0 = _context22["catch"](0);
+
+            if (axios__WEBPACK_IMPORTED_MODULE_1___default().isAxiosError(_context22.t0) && _context22.t0.response) {
+              httpErrorHandler(_context22.t0);
+            }
+
+            return _context22.abrupt("return", false);
+
+          case 11:
+          case "end":
+            return _context22.stop();
+        }
+      }
+    }, _callee22, null, [[0, 7]]);
+  }));
+
+  return function reserve(_x18) {
+    return _ref22.apply(this, arguments);
+  };
+}(); // 予約キャンセル ※成否の真偽値を返す
+
+
+var cancelReserve = /*#__PURE__*/function () {
+  var _ref23 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee23(reserveId) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee23$(_context23) {
+      while (1) {
+        switch (_context23.prev = _context23.next) {
+          case 0:
+            _context23.prev = 0;
+            _context23.next = 3;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default()["delete"]("/api/reserve/".concat(reserveId));
+
+          case 3:
+            _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
+              type: 'success',
+              text: '予約をキャンセルしました。'
+            });
+            return _context23.abrupt("return", true);
+
+          case 7:
+            _context23.prev = 7;
+            _context23.t0 = _context23["catch"](0);
+
+            if (axios__WEBPACK_IMPORTED_MODULE_1___default().isAxiosError(_context23.t0) && _context23.t0.response) {
+              httpErrorHandler(_context23.t0);
+            }
+
+            return _context23.abrupt("return", false);
+
+          case 11:
+          case "end":
+            return _context23.stop();
+        }
+      }
+    }, _callee23, null, [[0, 7]]);
+  }));
+
+  return function cancelReserve(_x19) {
+    return _ref23.apply(this, arguments);
+  };
+}(); // お問い合わせ ※成否の真偽値を返す
+
+
+var postContact = /*#__PURE__*/function () {
+  var _ref24 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee24(customerEmail, comment) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee24$(_context24) {
+      while (1) {
+        switch (_context24.prev = _context24.next) {
+          case 0:
+            _context24.prev = 0;
+            _context24.next = 3;
             return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/contact', {
               customerEmail: customerEmail,
               comment: comment
@@ -47732,28 +48495,28 @@ var postContact = /*#__PURE__*/function () {
               type: 'info',
               text: 'お問い合わせ内容が送信されました。'
             });
-            return _context21.abrupt("return", true);
+            return _context24.abrupt("return", true);
 
           case 7:
-            _context21.prev = 7;
-            _context21.t0 = _context21["catch"](0);
+            _context24.prev = 7;
+            _context24.t0 = _context24["catch"](0);
 
-            if (axios__WEBPACK_IMPORTED_MODULE_1___default().isAxiosError(_context21.t0) && _context21.t0.response) {
-              httpErrorHandler(_context21.t0);
+            if (axios__WEBPACK_IMPORTED_MODULE_1___default().isAxiosError(_context24.t0) && _context24.t0.response) {
+              httpErrorHandler(_context24.t0);
             }
 
-            return _context21.abrupt("return", false);
+            return _context24.abrupt("return", false);
 
           case 11:
           case "end":
-            return _context21.stop();
+            return _context24.stop();
         }
       }
-    }, _callee21, null, [[0, 7]]);
+    }, _callee24, null, [[0, 7]]);
   }));
 
-  return function postContact(_x17, _x18) {
-    return _ref21.apply(this, arguments);
+  return function postContact(_x20, _x21) {
+    return _ref24.apply(this, arguments);
   };
 }(); // 共通処理：エラーハンドリング
 
@@ -47845,6 +48608,9 @@ var httpService = {
   getLoginUser: getLoginUser,
   signUp: signUp,
   login: login,
+  sendPasswordResetMail: sendPasswordResetMail,
+  getPasswordReset: getPasswordReset,
+  resetPassword: resetPassword,
   guestLogin: guestLogin,
   logout: logout,
   updateUser: updateUser,
@@ -48813,6 +49579,54 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ".page-password-change[data-v-70959e74] .velmld-overlay {\n  z-index: 9999;\n}\n@media screen and (max-width: 600px) {\n.page-password-change[data-v-70959e74] {\n    padding-left: 20px;\n    padding-right: 20px;\n}\n}\n@media screen and (min-width: 601px) and (max-width:999px) {\n.page-password-change[data-v-70959e74] {\n    padding-left: 60px;\n    padding-right: 60px;\n}\n}\n@media screen and (min-width: 1000px) {\n.page-password-change[data-v-70959e74] {\n    padding-left: 80px;\n    padding-right: 80px;\n}\n}\n.page-password-change__form[data-v-70959e74] {\n  align-items: center;\n  display: flex;\n  flex-direction: column;\n  margin: 0 auto;\n  width: clamp(200px, 80%, 500px);\n}\n@media screen and (max-width: 600px) {\n.page-password-change__form[data-v-70959e74] {\n    row-gap: 30px;\n}\n}\n@media screen and (min-width: 601px) and (max-width:999px) {\n.page-password-change__form[data-v-70959e74] {\n    row-gap: 40px;\n}\n}\n@media screen and (min-width: 1000px) {\n.page-password-change__form[data-v-70959e74] {\n    row-gap: 50px;\n}\n}\n.page-password-change__form-title[data-v-70959e74] {\n  color: #dcc090;\n  font-size: 1.5em;\n  text-align: center;\n}\n.page-password-change__input-area[data-v-70959e74] {\n  width: 100%;\n}\n.page-password-change__submit-area[data-v-70959e74] {\n  display: flex;\n  justify-content: flex-end;\n  width: 100%;\n}\n@media screen and (max-width: 600px) {\n.page-password-change__submit[data-v-70959e74] {\n    width: 100%;\n}\n}\n@media screen and (min-width: 601px) and (max-width:999px) {\n.page-password-change__submit[data-v-70959e74] {\n    width: 50%;\n}\n}\n@media screen and (min-width: 1000px) {\n.page-password-change__submit[data-v-70959e74] {\n    width: 50%;\n}\n}\n.page-password-change__submit-area[data-v-70959e74] {\n  display: flex;\n  justify-content: flex-end;\n  width: 100%;\n}\n@media screen and (max-width: 600px) {\n.page-password-change__submit[data-v-70959e74] {\n    width: 100%;\n}\n}\n@media screen and (min-width: 601px) and (max-width:999px) {\n.page-password-change__submit[data-v-70959e74] {\n    width: 50%;\n}\n}\n@media screen and (min-width: 1000px) {\n.page-password-change__submit[data-v-70959e74] {\n    width: 50%;\n}\n}\n.page-password-change__loading[data-v-70959e74] {\n  opacity: 0.8;\n}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordReset.vue?vue&type=style&index=0&id=8bccaa8a&lang=scss&scoped=true":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordReset.vue?vue&type=style&index=0&id=8bccaa8a&lang=scss&scoped=true ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ".page-password-reset[data-v-8bccaa8a] .velmld-overlay {\n  z-index: 9999;\n}\n@media screen and (max-width: 600px) {\n.page-password-reset[data-v-8bccaa8a] {\n    padding-left: 20px;\n    padding-right: 20px;\n}\n}\n@media screen and (min-width: 601px) and (max-width:999px) {\n.page-password-reset[data-v-8bccaa8a] {\n    padding-left: 60px;\n    padding-right: 60px;\n}\n}\n@media screen and (min-width: 1000px) {\n.page-password-reset[data-v-8bccaa8a] {\n    padding-left: 80px;\n    padding-right: 80px;\n}\n}\n.page-password-reset__form[data-v-8bccaa8a] {\n  align-items: center;\n  display: flex;\n  flex-direction: column;\n  margin: 0 auto;\n  width: clamp(200px, 80%, 500px);\n}\n@media screen and (max-width: 600px) {\n.page-password-reset__form[data-v-8bccaa8a] {\n    row-gap: 30px;\n}\n}\n@media screen and (min-width: 601px) and (max-width:999px) {\n.page-password-reset__form[data-v-8bccaa8a] {\n    row-gap: 40px;\n}\n}\n@media screen and (min-width: 1000px) {\n.page-password-reset__form[data-v-8bccaa8a] {\n    row-gap: 50px;\n}\n}\n.page-password-reset__form-title[data-v-8bccaa8a] {\n  color: #dcc090;\n  font-size: 1.5em;\n  text-align: center;\n}\n.page-password-reset__loading-area[data-v-8bccaa8a] {\n  width: 100%;\n}\n@media screen and (max-width: 600px) {\n.page-password-reset__loading-area[data-v-8bccaa8a] {\n    height: 100px;\n}\n}\n@media screen and (min-width: 601px) and (max-width:999px) {\n.page-password-reset__loading-area[data-v-8bccaa8a] {\n    height: 150px;\n}\n}\n@media screen and (min-width: 1000px) {\n.page-password-reset__loading-area[data-v-8bccaa8a] {\n    height: 200px;\n}\n}\n.page-password-reset__input-area[data-v-8bccaa8a] {\n  width: 100%;\n}\n.page-password-reset__submit-area[data-v-8bccaa8a] {\n  display: flex;\n  justify-content: flex-end;\n  width: 100%;\n}\n@media screen and (max-width: 600px) {\n.page-password-reset__submit[data-v-8bccaa8a] {\n    width: 100%;\n}\n}\n@media screen and (min-width: 601px) and (max-width:999px) {\n.page-password-reset__submit[data-v-8bccaa8a] {\n    width: 50%;\n}\n}\n@media screen and (min-width: 1000px) {\n.page-password-reset__submit[data-v-8bccaa8a] {\n    width: 50%;\n}\n}\n.page-password-reset__submit-area[data-v-8bccaa8a] {\n  display: flex;\n  justify-content: flex-end;\n  width: 100%;\n}\n@media screen and (max-width: 600px) {\n.page-password-reset__submit[data-v-8bccaa8a] {\n    width: 100%;\n}\n}\n@media screen and (min-width: 601px) and (max-width:999px) {\n.page-password-reset__submit[data-v-8bccaa8a] {\n    width: 50%;\n}\n}\n@media screen and (min-width: 1000px) {\n.page-password-reset__submit[data-v-8bccaa8a] {\n    width: 50%;\n}\n}\n.page-password-reset__loading[data-v-8bccaa8a] {\n  opacity: 0.8;\n}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordResetRequest.vue?vue&type=style&index=0&id=5ee49804&lang=scss&scoped=true":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordResetRequest.vue?vue&type=style&index=0&id=5ee49804&lang=scss&scoped=true ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ".page-password-reset-request[data-v-5ee49804] .velmld-overlay {\n  z-index: 9999;\n}\n@media screen and (max-width: 600px) {\n.page-password-reset-request[data-v-5ee49804] {\n    padding-left: 20px;\n    padding-right: 20px;\n}\n}\n@media screen and (min-width: 601px) and (max-width:999px) {\n.page-password-reset-request[data-v-5ee49804] {\n    padding-left: 60px;\n    padding-right: 60px;\n}\n}\n@media screen and (min-width: 1000px) {\n.page-password-reset-request[data-v-5ee49804] {\n    padding-left: 80px;\n    padding-right: 80px;\n}\n}\n.page-password-reset-request__form[data-v-5ee49804] {\n  align-items: center;\n  display: flex;\n  flex-direction: column;\n  margin: 0 auto;\n  width: clamp(200px, 80%, 500px);\n}\n@media screen and (max-width: 600px) {\n.page-password-reset-request__form[data-v-5ee49804] {\n    row-gap: 30px;\n}\n}\n@media screen and (min-width: 601px) and (max-width:999px) {\n.page-password-reset-request__form[data-v-5ee49804] {\n    row-gap: 40px;\n}\n}\n@media screen and (min-width: 1000px) {\n.page-password-reset-request__form[data-v-5ee49804] {\n    row-gap: 50px;\n}\n}\n.page-password-reset-request__form-title[data-v-5ee49804] {\n  color: #dcc090;\n  font-size: 1.5em;\n  text-align: center;\n}\n.page-password-reset-request__input-area[data-v-5ee49804] {\n  width: 100%;\n}\n.page-password-reset-request__submit-area[data-v-5ee49804] {\n  display: flex;\n  justify-content: flex-end;\n  width: 100%;\n}\n@media screen and (max-width: 600px) {\n.page-password-reset-request__submit[data-v-5ee49804] {\n    width: 100%;\n}\n}\n@media screen and (min-width: 601px) and (max-width:999px) {\n.page-password-reset-request__submit[data-v-5ee49804] {\n    width: 50%;\n}\n}\n@media screen and (min-width: 1000px) {\n.page-password-reset-request__submit[data-v-5ee49804] {\n    width: 50%;\n}\n}\n.page-password-reset-request__submit-area[data-v-5ee49804] {\n  display: flex;\n  justify-content: flex-end;\n  width: 100%;\n}\n@media screen and (max-width: 600px) {\n.page-password-reset-request__submit[data-v-5ee49804] {\n    width: 100%;\n}\n}\n@media screen and (min-width: 601px) and (max-width:999px) {\n.page-password-reset-request__submit[data-v-5ee49804] {\n    width: 50%;\n}\n}\n@media screen and (min-width: 1000px) {\n.page-password-reset-request__submit[data-v-5ee49804] {\n    width: 50%;\n}\n}\n.page-password-reset-request__loading[data-v-5ee49804] {\n  opacity: 0.8;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -50889,6 +51703,66 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_13_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_13_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_13_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordChange_vue_vue_type_style_index_0_id_70959e74_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordReset.vue?vue&type=style&index=0&id=8bccaa8a&lang=scss&scoped=true":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordReset.vue?vue&type=style&index=0&id=8bccaa8a&lang=scss&scoped=true ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_13_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_13_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_13_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordReset_vue_vue_type_style_index_0_id_8bccaa8a_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PasswordReset.vue?vue&type=style&index=0&id=8bccaa8a&lang=scss&scoped=true */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordReset.vue?vue&type=style&index=0&id=8bccaa8a&lang=scss&scoped=true");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_13_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_13_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_13_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordReset_vue_vue_type_style_index_0_id_8bccaa8a_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_13_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_13_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_13_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordReset_vue_vue_type_style_index_0_id_8bccaa8a_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordResetRequest.vue?vue&type=style&index=0&id=5ee49804&lang=scss&scoped=true":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordResetRequest.vue?vue&type=style&index=0&id=5ee49804&lang=scss&scoped=true ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_13_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_13_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_13_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordResetRequest_vue_vue_type_style_index_0_id_5ee49804_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PasswordResetRequest.vue?vue&type=style&index=0&id=5ee49804&lang=scss&scoped=true */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordResetRequest.vue?vue&type=style&index=0&id=5ee49804&lang=scss&scoped=true");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_13_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_13_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_13_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordResetRequest_vue_vue_type_style_index_0_id_5ee49804_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_13_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_13_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_13_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordResetRequest_vue_vue_type_style_index_0_id_5ee49804_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
@@ -53918,6 +54792,68 @@ if (false) {}
 
 /***/ }),
 
+/***/ "./resources/js/pages/PasswordReset.vue":
+/*!**********************************************!*\
+  !*** ./resources/js/pages/PasswordReset.vue ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _PasswordReset_vue_vue_type_template_id_8bccaa8a_scoped_true_ts_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PasswordReset.vue?vue&type=template&id=8bccaa8a&scoped=true&ts=true */ "./resources/js/pages/PasswordReset.vue?vue&type=template&id=8bccaa8a&scoped=true&ts=true");
+/* harmony import */ var _PasswordReset_vue_vue_type_script_setup_true_lang_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PasswordReset.vue?vue&type=script&setup=true&lang=ts */ "./resources/js/pages/PasswordReset.vue?vue&type=script&setup=true&lang=ts");
+/* harmony import */ var _PasswordReset_vue_vue_type_style_index_0_id_8bccaa8a_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PasswordReset.vue?vue&type=style&index=0&id=8bccaa8a&lang=scss&scoped=true */ "./resources/js/pages/PasswordReset.vue?vue&type=style&index=0&id=8bccaa8a&lang=scss&scoped=true");
+/* harmony import */ var _var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+
+
+const __exports__ = /*#__PURE__*/(0,_var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_PasswordReset_vue_vue_type_script_setup_true_lang_ts__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PasswordReset_vue_vue_type_template_id_8bccaa8a_scoped_true_ts_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-8bccaa8a"],['__file',"resources/js/pages/PasswordReset.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/pages/PasswordResetRequest.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/pages/PasswordResetRequest.vue ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _PasswordResetRequest_vue_vue_type_template_id_5ee49804_scoped_true_ts_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PasswordResetRequest.vue?vue&type=template&id=5ee49804&scoped=true&ts=true */ "./resources/js/pages/PasswordResetRequest.vue?vue&type=template&id=5ee49804&scoped=true&ts=true");
+/* harmony import */ var _PasswordResetRequest_vue_vue_type_script_setup_true_lang_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PasswordResetRequest.vue?vue&type=script&setup=true&lang=ts */ "./resources/js/pages/PasswordResetRequest.vue?vue&type=script&setup=true&lang=ts");
+/* harmony import */ var _PasswordResetRequest_vue_vue_type_style_index_0_id_5ee49804_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PasswordResetRequest.vue?vue&type=style&index=0&id=5ee49804&lang=scss&scoped=true */ "./resources/js/pages/PasswordResetRequest.vue?vue&type=style&index=0&id=5ee49804&lang=scss&scoped=true");
+/* harmony import */ var _var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+
+
+const __exports__ = /*#__PURE__*/(0,_var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_PasswordResetRequest_vue_vue_type_script_setup_true_lang_ts__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PasswordResetRequest_vue_vue_type_template_id_5ee49804_scoped_true_ts_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-5ee49804"],['__file',"resources/js/pages/PasswordResetRequest.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
 /***/ "./resources/js/pages/PrivacyPolicy.vue":
 /*!**********************************************!*\
   !*** ./resources/js/pages/PrivacyPolicy.vue ***!
@@ -54565,6 +55501,38 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/pages/PasswordReset.vue?vue&type=script&setup=true&lang=ts":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/pages/PasswordReset.vue?vue&type=script&setup=true&lang=ts ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordReset_vue_vue_type_script_setup_true_lang_ts__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordReset_vue_vue_type_script_setup_true_lang_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PasswordReset.vue?vue&type=script&setup=true&lang=ts */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordReset.vue?vue&type=script&setup=true&lang=ts");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/pages/PasswordResetRequest.vue?vue&type=script&setup=true&lang=ts":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/pages/PasswordResetRequest.vue?vue&type=script&setup=true&lang=ts ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordResetRequest_vue_vue_type_script_setup_true_lang_ts__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordResetRequest_vue_vue_type_script_setup_true_lang_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PasswordResetRequest.vue?vue&type=script&setup=true&lang=ts */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordResetRequest.vue?vue&type=script&setup=true&lang=ts");
+ 
+
+/***/ }),
+
 /***/ "./resources/js/pages/PrivacyPolicy.vue?vue&type=script&setup=true&lang=ts":
 /*!*********************************************************************************!*\
   !*** ./resources/js/pages/PrivacyPolicy.vue?vue&type=script&setup=true&lang=ts ***!
@@ -55073,6 +56041,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordChange_vue_vue_type_template_id_70959e74_scoped_true_ts_true__WEBPACK_IMPORTED_MODULE_0__.render)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordChange_vue_vue_type_template_id_70959e74_scoped_true_ts_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PasswordChange.vue?vue&type=template&id=70959e74&scoped=true&ts=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordChange.vue?vue&type=template&id=70959e74&scoped=true&ts=true");
+
+
+/***/ }),
+
+/***/ "./resources/js/pages/PasswordReset.vue?vue&type=template&id=8bccaa8a&scoped=true&ts=true":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/pages/PasswordReset.vue?vue&type=template&id=8bccaa8a&scoped=true&ts=true ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordReset_vue_vue_type_template_id_8bccaa8a_scoped_true_ts_true__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordReset_vue_vue_type_template_id_8bccaa8a_scoped_true_ts_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PasswordReset.vue?vue&type=template&id=8bccaa8a&scoped=true&ts=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordReset.vue?vue&type=template&id=8bccaa8a&scoped=true&ts=true");
+
+
+/***/ }),
+
+/***/ "./resources/js/pages/PasswordResetRequest.vue?vue&type=template&id=5ee49804&scoped=true&ts=true":
+/*!*******************************************************************************************************!*\
+  !*** ./resources/js/pages/PasswordResetRequest.vue?vue&type=template&id=5ee49804&scoped=true&ts=true ***!
+  \*******************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordResetRequest_vue_vue_type_template_id_5ee49804_scoped_true_ts_true__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_ts_loader_index_js_clonedRuleSet_6_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordResetRequest_vue_vue_type_template_id_5ee49804_scoped_true_ts_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/ts-loader/index.js??clonedRuleSet-6!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PasswordResetRequest.vue?vue&type=template&id=5ee49804&scoped=true&ts=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/ts-loader/index.js??clonedRuleSet-6!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordResetRequest.vue?vue&type=template&id=5ee49804&scoped=true&ts=true");
 
 
 /***/ }),
@@ -55603,6 +56603,32 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_13_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_13_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_13_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordChange_vue_vue_type_style_index_0_id_70959e74_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PasswordChange.vue?vue&type=style&index=0&id=70959e74&lang=scss&scoped=true */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordChange.vue?vue&type=style&index=0&id=70959e74&lang=scss&scoped=true");
+
+
+/***/ }),
+
+/***/ "./resources/js/pages/PasswordReset.vue?vue&type=style&index=0&id=8bccaa8a&lang=scss&scoped=true":
+/*!*******************************************************************************************************!*\
+  !*** ./resources/js/pages/PasswordReset.vue?vue&type=style&index=0&id=8bccaa8a&lang=scss&scoped=true ***!
+  \*******************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_13_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_13_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_13_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordReset_vue_vue_type_style_index_0_id_8bccaa8a_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PasswordReset.vue?vue&type=style&index=0&id=8bccaa8a&lang=scss&scoped=true */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordReset.vue?vue&type=style&index=0&id=8bccaa8a&lang=scss&scoped=true");
+
+
+/***/ }),
+
+/***/ "./resources/js/pages/PasswordResetRequest.vue?vue&type=style&index=0&id=5ee49804&lang=scss&scoped=true":
+/*!**************************************************************************************************************!*\
+  !*** ./resources/js/pages/PasswordResetRequest.vue?vue&type=style&index=0&id=5ee49804&lang=scss&scoped=true ***!
+  \**************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_13_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_13_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_13_use_3_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_PasswordResetRequest_vue_vue_type_style_index_0_id_5ee49804_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./PasswordResetRequest.vue?vue&type=style&index=0&id=5ee49804&lang=scss&scoped=true */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-13.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-13.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-13.use[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/pages/PasswordResetRequest.vue?vue&type=style&index=0&id=5ee49804&lang=scss&scoped=true");
 
 
 /***/ }),

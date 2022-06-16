@@ -1,34 +1,41 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { flashMessage } from '@smartweb/vue-flash-message'
 import { httpService } from '@/services/httpService'
 import { CompanyMenus } from '@/typings/interfaces/menuList'
 import Section from '@/components/Section.vue'
 
+const props = defineProps({
+  companyId: {
+    type: String,
+    required: true,
+  },
+})
+
 // ルーティング情報
 const router = useRouter()
 
-// 企業ID
-const companyId = ref<string>('')
 // メニューリスト
 const companyMenus = ref<CompanyMenus | null>(null)
 // メニュー取得済フラグ
 const menusLoaded = ref<boolean>(false)
 
 const toReserve = (menuId: number) => {
-  router.push({ name: 'reserve', query: { companyId: companyId.value, menuId } });
+  router.push({ name: 'reserve', params: { companyId: props.companyId, menuId } });
 }
 
 onMounted(async () => {
-  companyId.value = (() => {
-    const { companyId } = useRoute().query
-    return companyId ? companyId.toString() : ''
-  })()
-  if (!companyId) {
-    router.push({ name: 'error' })
+  if (!/^\d+$/.test(props.companyId)) {
+    menusLoaded.value = true
+    flashMessage.show({
+      type: 'error',
+      text: 'URLのパラメータが不正です。',
+    })
+    return
   }
   // メニュー取得
-  const menus = await httpService.getMenus(Number(companyId.value))
+  const menus = await httpService.getMenus(Number(props.companyId))
   menusLoaded.value = true
   companyMenus.value = menus
 })

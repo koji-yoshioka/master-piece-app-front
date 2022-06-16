@@ -13,12 +13,12 @@
   <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
-  <link href="css/app.css" rel="stylesheet">
+  <link href="/css/app.css" rel="stylesheet">
 </head>
 
 <body>
   <div id="app"></div>
-  <script src="js/app.js"></script>
+  <script src="/js/app.js"></script>
 </body>
 
 </html>

@@ -80,7 +80,7 @@ const submit = async () => {
       </div>
       <div class="page-login__submit-area">
         <PrimaryButton class="page-login__submit" :disabled="isDisabled" @click="submit">送信</PrimaryButton>
-        <!-- <router-link class="page-login__to-password-reset" to="/password-reset" exact>パスワードを忘れた場合</router-link> -->
+        <router-link class="page-login__to-password-reset" to="/password-reset-request" exact>パスワードを忘れた場合</router-link>
       </div>
     </Section>
 

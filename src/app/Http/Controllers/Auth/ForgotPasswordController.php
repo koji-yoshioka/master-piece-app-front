@@ -3,7 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PasswordResetMail;
+use App\Models\PasswordReset;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class ForgotPasswordController extends Controller
 {
@@ -19,4 +25,33 @@ class ForgotPasswordController extends Controller
     */
 
     use SendsPasswordResetEmails;
+
+    public function forgot(Request $request)
+    {
+        $this->validateEmail($request);
+
+        DB::transaction(function () use($request) {
+            $token = $this->createToken();
+
+            PasswordReset::destroy($request->email);
+            $passwordReset = new PasswordReset($request->all());
+            $passwordReset->token = $token;
+            $passwordReset->save();
+
+            $this->sendPasswordResetMail($request->email, $token);
+
+            return $passwordReset;
+        });
+    }
+
+    private function createToken()
+    {
+        return hash_hmac('sha256', Str::random(40), config('app.key'));
+    }
+
+    private function sendPasswordResetMail($email, $token)
+    {
+        Mail::to($email)
+            ->send(new PasswordResetMail($token));
+    }
 }

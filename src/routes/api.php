@@ -32,6 +32,12 @@ Route::post('/password-change', 'Auth\ChangePasswordController@changePassword');
 Route::put('/user', 'UserController@update');
 // 退会
 Route::delete('/user', 'UserController@delete');
+// パスワードリセットメール送信
+Route::post('/forgot', 'Auth\ForgotPasswordController@forgot');
+// パスワードリセット取得
+Route::get('/password-reset', 'Auth\ResetPasswordController@getByToken');
+// パスワードリセット
+Route::post('/password-reset', 'Auth\ResetPasswordController@reset');
 
 // 市区町村取得
 Route::get('/prefecture/city/{prefectureId}', 'PrefectureController@getCitiesByPrefectureId')

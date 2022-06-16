@@ -22,5 +22,5 @@ mix.ts('resources/js/app.ts', 'public/js').vue()
                     path.resolve('resources/js')
                 ],
             }
-        }
+        },
     })
