@@ -76,7 +76,7 @@ const getHolidays = computed(() => {
       </div>
     </div>
     <div class="c-search-result__content">
-      <router-link class="c-search-result__logo-link" :to="{ path: '/company', query: { companyId: company.id } }">
+      <router-link class="c-search-result__logo-link" :to="`/company/${company.id}`">
         <img class="c-search-result__logo" :src="getLogo" alt="COMPANY LOGO" />
       </router-link>
 

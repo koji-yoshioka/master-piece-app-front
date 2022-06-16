@@ -253,7 +253,7 @@ const toggleLike = async (companyId: number) => {
 // メニューリストページへ遷移する
 const toMenuListPage = (companyId: number) => {
   if (isLoggingIn) {
-    router.push({ name: 'menu-list', query: { companyId } })
+    router.push({ name: 'menu-list', params: { companyId } })
   } else {
     showLoginConfirmModal.value = true
   }

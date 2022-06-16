@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { flashMessage } from '@smartweb/vue-flash-message'
 import { httpService } from '@/services/httpService'
 import { useStore as useAuthStore } from '@/store/auth'
 import { Company } from '@/typings/interfaces/company'
@@ -9,6 +10,13 @@ import VerticalTable from '@/components/VerticalTable.vue'
 import PrimaryButton from '@/components/PrimaryButton.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 
+const props = defineProps({
+  companyId: {
+    type: String,
+    required: true,
+  },
+})
+
 // 認証情報
 const authStore = useAuthStore()
 // ルーティング情報
@@ -16,8 +24,8 @@ const router = useRouter()
 // ログイン済フラグ
 const isLoggingIn = !!authStore.getters.loginUser
 
-// 企業ID
-const companyId = ref<string>('')
+// 企業情報存在フラグ
+const companyExists = ref<boolean>(false)
 // 企業情報取得済フラグ
 const companyLoaded = ref<boolean>(false)
 // お気に入り更新フラグ
@@ -102,7 +110,7 @@ const toggleLike = async () => {
     toggleLikeExecuting.value = true
 
     const isSuccess = await httpService.toggleLike({
-      companyId: Number(companyId.value),
+      companyId: Number(props.companyId),
       userId: loginUserId(),
     })
     if (isSuccess && company.value) {
@@ -117,27 +125,29 @@ const toggleLike = async () => {
 // メニューリストページへ遷移する
 const toMenuListPage = () => {
   if (isLoggingIn) {
-    router.push({ name: 'menu-list', query: { companyId: companyId.value } })
+    router.push({ name: 'menu-list', params: { companyId: props.companyId } })
   } else {
     showLoginConfirmModal.value = true
   }
 }
 
 onMounted(async () => {
-  companyId.value = (() => {
-    const { companyId } = useRoute().query
-    return companyId ? companyId.toString() : ''
-  })()
-  if (!companyId) {
-    router.push({ name: 'error' })
+  if (!/^\d+$/.test(props.companyId)) {
+    companyLoaded.value = true
+    flashMessage.show({
+      type: 'error',
+      text: 'URLのパラメータが不正です。',
+    })
+    return
   }
-  const resCompany = await httpService.findCompanyById(Number(companyId.value), loginUserId())
+  const resCompany = await httpService.findCompanyById(Number(props.companyId), loginUserId())
+  companyLoaded.value = true
   if (!resCompany) {
-    // nullは異常
+    companyExists.value = false
     return
   }
   company.value = resCompany
-  companyLoaded.value = true
+  companyExists.value = true
 })
 </script>
 
@@ -147,7 +157,7 @@ onMounted(async () => {
       <vue-element-loading class="page-company__loading" :active="true" :background-color="'#1c1c1c'" :color="'#fff'"
         :spinner="'spinner'" :text="'企業情報を読み込んでいます'" />
     </div>
-    <template v-if="companyLoaded">
+    <template v-if="companyLoaded && companyExists">
       <Section class="page-company__section">
         <div class="page-company__top-area">
           <h3 class="page-company__top-title">{{ company?.name }}</h3>

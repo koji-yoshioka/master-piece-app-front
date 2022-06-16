@@ -4,6 +4,8 @@ import Top from '@/pages/Top.vue'
 import Contact from '@/pages/Contact.vue'
 import SignUp from '@/pages/SignUp.vue'
 import Login from '@/pages/Login.vue'
+import PasswordResetRequest from '@/pages/PasswordResetRequest.vue'
+import PasswordReset from '@/pages/PasswordReset.vue'
 import Search from '@/pages/Search.vue'
 import Company from '@/pages/Company.vue'
 import MenuList from '@/pages/MenuList.vue'
@@ -31,6 +33,19 @@ const routes = [
     meta: { requiresNotAuth: true }
   },
   {
+    path: '/password-reset-request',
+    name: 'password-reset-request',
+    component: PasswordResetRequest,
+    meta: { requiresNotAuth: true }
+  },
+  {
+    path: '/password-reset/:token',
+    name: 'password-reset',
+    component: PasswordReset,
+    props: true,
+    meta: { requiresNotAuth: true }
+  },
+  {
     path: '/sign-up',
     name: 'sign-up',
     component: SignUp,
@@ -42,20 +57,23 @@ const routes = [
     component: Search,
   },
   {
-    path: '/company',
+    path: '/company/:companyId',
     name: 'company',
     component: Company,
+    props: true,
   },
   {
-    path: '/menu-list',
+    path: '/menu-list/:companyId',
     name: 'menu-list',
     component: MenuList,
+    props: true,
     meta: { requiresAuth: true }
   },
   {
-    path: '/reserve',
+    path: '/reserve/:companyId/:menuId',
     name: 'reserve',
     component: Reserve,
+    props: true,
     meta: { requiresAuth: true }
   },
   {

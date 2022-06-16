@@ -1,11 +1,23 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { flashMessage } from '@smartweb/vue-flash-message'
 import { useStore as useAuthStore } from '@/store/auth'
 import { httpService } from '@/services/httpService'
 import { Menu, Day, ReserveInfo, TimetableCell } from '@/typings/interfaces/reserve'
 import Section from '@/components/Section.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+
+const props = defineProps({
+  companyId: {
+    type: String,
+    required: true,
+  },
+  menuId: {
+    type: String,
+    required: true,
+  },
+})
 
 // 認証情報
 const authStore = useAuthStore()
@@ -20,9 +32,9 @@ const selectedTime = ref<{
   time: TimetableCell
 }>()
 // 企業ID
-const companyId = ref<string>('')
-// メニューID
-const menuId = ref<string>('')
+// const companyId = ref<string>('')
+// // メニューID
+// const menuId = ref<string>('')
 // メニュー情報
 const menu = ref<Menu>()
 // 表示する全ての日付(横軸)
@@ -56,9 +68,9 @@ const reserve = async (targetDay: Day | undefined, time: TimetableCell | undefin
   reserving.value = true
 
   const isSuccess = await httpService.reserve({
-    companyId: Number(companyId.value),
+    companyId: Number(props.companyId),
     userId: loginUserId(),
-    menuId: Number(menuId.value),
+    menuId: Number(props.menuId),
     date: targetDay.ymd,
     from: time.from,
     to: time.to,
@@ -116,19 +128,15 @@ const isReserved = (targetYmd: string, from: string, to: string) => {
 }
 onMounted(
   async () => {
-    // パラメータ取得
-    companyId.value = (() => {
-      const { companyId } = useRoute().query
-      return companyId ? companyId.toString() : ''
-    })()
-    menuId.value = (() => {
-      const { menuId } = useRoute().query
-      return menuId ? menuId.toString() : ''
-    })()
-    if (!companyId.value || !menuId.value) {
-      router.push({ name: 'error' })
+    if (!/^\d+$/.test(props.companyId) || !/^\d+$/.test(props.menuId)) {
+      contentLoaded.value = true
+      flashMessage.show({
+        type: 'error',
+        text: 'URLのパラメータが不正です。',
+      })
+      return
     }
-    await getReserveInfo(Number(companyId.value), Number(menuId.value))
+    await getReserveInfo(Number(props.companyId), Number(props.menuId))
     if (!reserveInfo.value) {
       contentLoaded.value = true
       // 取得できない=異常

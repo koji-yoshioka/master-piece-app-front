@@ -45,7 +45,7 @@ const loginUserId = () => {
 
 // メニューリストページへ遷移する
 const toMenuList = (companyId: number) => {
-  router.push({ name: 'menu-list', query: { companyId } })
+  router.push({ name: 'menu-list', params: { companyId } })
 }
 
 // 企業を検索する

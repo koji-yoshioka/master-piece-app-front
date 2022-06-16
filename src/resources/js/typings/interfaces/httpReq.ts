@@ -10,6 +10,13 @@ export interface LoginReq {
   password: string
 }
 
+export interface ResetPasswordReq {
+  email: string
+  password: string
+  password_confirmation: string
+  token: string
+}
+
 export interface ChangePasswordReq {
   currentPassword: string
   newPassword: string

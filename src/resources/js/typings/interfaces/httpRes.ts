@@ -4,6 +4,11 @@ export interface ResUser {
   is_guest: boolean
 }
 
+export interface ResPasswordReset {
+  email: string
+  token: string
+}
+
 export interface ResCity {
   id: number
   name: string
