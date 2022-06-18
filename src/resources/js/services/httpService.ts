@@ -48,13 +48,15 @@ const signUp = async (data: SignUpReq) => {
 }
 
 // ログイン
-const login = async (data: LoginReq) => {
+const login = async (data: LoginReq, showMessage: boolean = true) => {
   try {
     const response = await axios.post('/api/login', data)
-    flashMessage.show({
-      type: 'success',
-      text: 'ログインに成功しました。',
-    })
+    if (showMessage) {
+      flashMessage.show({
+        type: 'success',
+        text: 'ログインに成功しました。',
+      })
+    }
     return {
       id: response.data.id,
       name: response.data.name,
@@ -110,10 +112,6 @@ const getPasswordReset = async (token: string) => {
 const resetPassword = async (data: ResetPasswordReq) => {
   try {
     await axios.post('/api/password-reset', data)
-    flashMessage.show({
-      type: 'success',
-      text: 'パスワードリセットが完了しました。',
-    })
     return true
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
@@ -278,7 +276,7 @@ const findCompanyById = async (companyId: number, userId: number | null) => {
 // お気に入りに登録/削除 ※成否の真偽値を返す
 const toggleLike = async (data: ToggleLikeReq) => {
   try {
-    const response = await axios.post('/api/like', data)
+    await axios.post('/api/like', data)
     return true
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {

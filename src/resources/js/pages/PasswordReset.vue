@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useStore as useAuthStore } from '@/store/auth'
+import { flashMessage } from '@smartweb/vue-flash-message'
 import { httpService } from '@/services/httpService'
 import { useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
@@ -74,9 +75,22 @@ const submit = async () => {
     password_confirmation: v$.value.confirmPassword.$model,
     token: token.value,
   })
-  isUpdating.value = false
   if (isSuccess) {
-    router.push({ name: 'login' })
+    const userInfo = await httpService.login({
+      email: email.value,
+      password: v$.value.password.$model,
+    }, false)
+    isUpdating.value = false
+    authStore.dispatch('setUser', userInfo)
+    if (userInfo) {
+      flashMessage.show({
+        type: 'success',
+        text: 'パスワードリセットが完了しました。',
+      })
+      router.push({ name: 'top' })
+    }
+  } else {
+    isUpdating.value = false
   }
 }
 

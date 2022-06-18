@@ -40760,19 +40760,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 /* harmony import */ var _store_auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/store/auth */ "./resources/js/store/auth.ts");
-/* harmony import */ var _services_httpService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/services/httpService */ "./resources/js/services/httpService.ts");
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
-/* harmony import */ var _vuelidate_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @vuelidate/core */ "./node_modules/@vuelidate/core/dist/index.esm.js");
-/* harmony import */ var _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @vuelidate/validators */ "./node_modules/@vuelidate/validators/dist/index.esm.js");
-/* harmony import */ var _components_Section_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/components/Section.vue */ "./resources/js/components/Section.vue");
-/* harmony import */ var _components_TitleLabel_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/components/TitleLabel.vue */ "./resources/js/components/TitleLabel.vue");
-/* harmony import */ var _components_InputPassword_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/components/InputPassword.vue */ "./resources/js/components/InputPassword.vue");
-/* harmony import */ var _components_PrimaryButton_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/components/PrimaryButton.vue */ "./resources/js/components/PrimaryButton.vue");
+/* harmony import */ var _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @smartweb/vue-flash-message */ "./node_modules/@smartweb/vue-flash-message/build/vue-flash-message.esm.js");
+/* harmony import */ var _services_httpService__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/services/httpService */ "./resources/js/services/httpService.ts");
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm-bundler.js");
+/* harmony import */ var _vuelidate_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @vuelidate/core */ "./node_modules/@vuelidate/core/dist/index.esm.js");
+/* harmony import */ var _vuelidate_validators__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @vuelidate/validators */ "./node_modules/@vuelidate/validators/dist/index.esm.js");
+/* harmony import */ var _components_Section_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/components/Section.vue */ "./resources/js/components/Section.vue");
+/* harmony import */ var _components_TitleLabel_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/components/TitleLabel.vue */ "./resources/js/components/TitleLabel.vue");
+/* harmony import */ var _components_InputPassword_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/components/InputPassword.vue */ "./resources/js/components/InputPassword.vue");
+/* harmony import */ var _components_PrimaryButton_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/components/PrimaryButton.vue */ "./resources/js/components/PrimaryButton.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 
 
@@ -40799,7 +40801,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
     var authStore = (0,_store_auth__WEBPACK_IMPORTED_MODULE_2__.useStore)(); // ルーティング情報
 
-    var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_9__.useRouter)(); // パスワードリセット取得済フラグ
+    var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_10__.useRouter)(); // パスワードリセット取得済フラグ
 
     var passwordResetLoaded = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(false); // パスワードリセット有効フラグ
 
@@ -40819,16 +40821,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     });
     var rules = {
       password: {
-        required: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.helpers.withMessage('パスワードを入力してください。', _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.required),
-        minLength: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.helpers.withMessage('パスワードは8文字以上の半角英数字で入力してください。', (0,_vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.minLength)(8)),
-        alphaNum: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.helpers.withMessage('パスワードは8文字以上の半角英数字で入力してください。', _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.alphaNum)
+        required: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_11__.helpers.withMessage('パスワードを入力してください。', _vuelidate_validators__WEBPACK_IMPORTED_MODULE_11__.required),
+        minLength: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_11__.helpers.withMessage('パスワードは8文字以上の半角英数字で入力してください。', (0,_vuelidate_validators__WEBPACK_IMPORTED_MODULE_11__.minLength)(8)),
+        alphaNum: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_11__.helpers.withMessage('パスワードは8文字以上の半角英数字で入力してください。', _vuelidate_validators__WEBPACK_IMPORTED_MODULE_11__.alphaNum)
       },
       confirmPassword: {
-        required: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.helpers.withMessage('パスワードを入力してください。', _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.required),
-        sameAsPassword: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.helpers.withMessage('同じパスワードを入力してください。', (0,_vuelidate_validators__WEBPACK_IMPORTED_MODULE_10__.sameAs)(inputNewPassword))
+        required: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_11__.helpers.withMessage('パスワードを入力してください。', _vuelidate_validators__WEBPACK_IMPORTED_MODULE_11__.required),
+        sameAsPassword: _vuelidate_validators__WEBPACK_IMPORTED_MODULE_11__.helpers.withMessage('同じパスワードを入力してください。', (0,_vuelidate_validators__WEBPACK_IMPORTED_MODULE_11__.sameAs)(inputNewPassword))
       }
     };
-    var v$ = (0,_vuelidate_core__WEBPACK_IMPORTED_MODULE_4__.useVuelidate)(rules, fields); // --end
+    var v$ = (0,_vuelidate_core__WEBPACK_IMPORTED_MODULE_5__.useVuelidate)(rules, fields); // --end
     // 送信ボタンの活性制御
 
     var isDisabled = (0,vue__WEBPACK_IMPORTED_MODULE_1__.computed)(function () {
@@ -40837,7 +40839,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
     var submit = /*#__PURE__*/function () {
       var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var isSuccess;
+        var isSuccess, userInfo;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -40852,7 +40854,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 2:
                 isUpdating.value = true;
                 _context.next = 5;
-                return _services_httpService__WEBPACK_IMPORTED_MODULE_3__.httpService.resetPassword({
+                return _services_httpService__WEBPACK_IMPORTED_MODULE_4__.httpService.resetPassword({
                   email: email.value,
                   password: v$.value.password.$model,
                   password_confirmation: v$.value.confirmPassword.$model,
@@ -40861,15 +40863,40 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 5:
                 isSuccess = _context.sent;
-                isUpdating.value = false;
 
-                if (isSuccess) {
+                if (!isSuccess) {
+                  _context.next = 15;
+                  break;
+                }
+
+                _context.next = 9;
+                return _services_httpService__WEBPACK_IMPORTED_MODULE_4__.httpService.login({
+                  email: email.value,
+                  password: v$.value.password.$model
+                }, false);
+
+              case 9:
+                userInfo = _context.sent;
+                isUpdating.value = false;
+                authStore.dispatch('setUser', userInfo);
+
+                if (userInfo) {
+                  _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_3__.flashMessage.show({
+                    type: 'success',
+                    text: 'パスワードリセットが完了しました。'
+                  });
                   router.push({
-                    name: 'login'
+                    name: 'top'
                   });
                 }
 
-              case 8:
+                _context.next = 16;
+                break;
+
+              case 15:
+                isUpdating.value = false;
+
+              case 16:
               case "end":
                 return _context.stop();
             }
@@ -40889,7 +40916,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return _services_httpService__WEBPACK_IMPORTED_MODULE_3__.httpService.getPasswordReset(props.token);
+              return _services_httpService__WEBPACK_IMPORTED_MODULE_4__.httpService.getPasswordReset(props.token);
 
             case 2:
               resPasswordReset = _context2.sent;
@@ -40929,10 +40956,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       v$: v$,
       isDisabled: isDisabled,
       submit: submit,
-      Section: _components_Section_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
-      TitleLabel: _components_TitleLabel_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
-      InputPassword: _components_InputPassword_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
-      PrimaryButton: _components_PrimaryButton_vue__WEBPACK_IMPORTED_MODULE_8__["default"]
+      Section: _components_Section_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+      TitleLabel: _components_TitleLabel_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+      InputPassword: _components_InputPassword_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
+      PrimaryButton: _components_PrimaryButton_vue__WEBPACK_IMPORTED_MODULE_9__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -47602,21 +47629,28 @@ var signUp = /*#__PURE__*/function () {
 
 var login = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3(data) {
-    var response;
+    var showMessage,
+        response,
+        _args3 = arguments;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            _context3.prev = 0;
-            _context3.next = 3;
+            showMessage = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : true;
+            _context3.prev = 1;
+            _context3.next = 4;
             return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/login', data);
 
-          case 3:
+          case 4:
             response = _context3.sent;
-            _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
-              type: 'success',
-              text: 'ログインに成功しました。'
-            });
+
+            if (showMessage) {
+              _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
+                type: 'success',
+                text: 'ログインに成功しました。'
+              });
+            }
+
             return _context3.abrupt("return", {
               id: response.data.id,
               name: response.data.name,
@@ -47625,9 +47659,9 @@ var login = /*#__PURE__*/function () {
               imageFileName: response.data.image_file_name
             });
 
-          case 8:
-            _context3.prev = 8;
-            _context3.t0 = _context3["catch"](0);
+          case 9:
+            _context3.prev = 9;
+            _context3.t0 = _context3["catch"](1);
 
             if (axios__WEBPACK_IMPORTED_MODULE_1___default().isAxiosError(_context3.t0) && _context3.t0.response) {
               httpErrorHandler(_context3.t0);
@@ -47635,12 +47669,12 @@ var login = /*#__PURE__*/function () {
 
             return _context3.abrupt("return", null);
 
-          case 12:
+          case 13:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, null, [[0, 8]]);
+    }, _callee3, null, [[1, 9]]);
   }));
 
   return function login(_x2) {
@@ -47746,14 +47780,10 @@ var resetPassword = /*#__PURE__*/function () {
             return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/password-reset', data);
 
           case 3:
-            _smartweb_vue_flash_message__WEBPACK_IMPORTED_MODULE_2__.flashMessage.show({
-              type: 'success',
-              text: 'パスワードリセットが完了しました。'
-            });
             return _context6.abrupt("return", true);
 
-          case 7:
-            _context6.prev = 7;
+          case 6:
+            _context6.prev = 6;
             _context6.t0 = _context6["catch"](0);
 
             if (axios__WEBPACK_IMPORTED_MODULE_1___default().isAxiosError(_context6.t0) && _context6.t0.response) {
@@ -47762,12 +47792,12 @@ var resetPassword = /*#__PURE__*/function () {
 
             return _context6.abrupt("return", false);
 
-          case 11:
+          case 10:
           case "end":
             return _context6.stop();
         }
       }
-    }, _callee6, null, [[0, 7]]);
+    }, _callee6, null, [[0, 6]]);
   }));
 
   return function resetPassword(_x5) {
@@ -48158,7 +48188,6 @@ var findCompanyById = /*#__PURE__*/function () {
 
 var toggleLike = /*#__PURE__*/function () {
   var _ref16 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee16(data) {
-    var response;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee16$(_context16) {
       while (1) {
         switch (_context16.prev = _context16.next) {
@@ -48168,11 +48197,10 @@ var toggleLike = /*#__PURE__*/function () {
             return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/like', data);
 
           case 3:
-            response = _context16.sent;
             return _context16.abrupt("return", true);
 
-          case 7:
-            _context16.prev = 7;
+          case 6:
+            _context16.prev = 6;
             _context16.t0 = _context16["catch"](0);
 
             if (axios__WEBPACK_IMPORTED_MODULE_1___default().isAxiosError(_context16.t0) && _context16.t0.response) {
@@ -48181,12 +48209,12 @@ var toggleLike = /*#__PURE__*/function () {
 
             return _context16.abrupt("return", false);
 
-          case 11:
+          case 10:
           case "end":
             return _context16.stop();
         }
       }
-    }, _callee16, null, [[0, 7]]);
+    }, _callee16, null, [[0, 6]]);
   }));
 
   return function toggleLike(_x12) {
