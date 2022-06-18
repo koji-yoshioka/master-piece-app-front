@@ -15,7 +15,7 @@ jobs:
           paths:
             - src/vendor
       - restore_cache:
-          key: npm-v1.1-{{ checksum "src/package-lock.json" }}
+          key: npm-v1.2-{{ checksum "src/package-lock.json" }}
       - run:
           name: npm ci
           working_directory: src
@@ -24,7 +24,7 @@ jobs:
               npm ci
             fi
       - save_cache:
-          key: npm-v1.1-{{ checksum "src/package-lock.json" }}
+          key: npm-v1.2-{{ checksum "src/package-lock.json" }}
           paths:
             - src/node_modules
       - run:
