@@ -23,7 +23,7 @@ https://master-piece.site
   - Sass: 1.15.2
 - バックエンド
   - PHP: 8.0.19
-  - Rails: 6.20.44
+  - Laravel: 6.20.44
 - インフラ・開発環境
   - MySQL: 8.0.28
   - nginx
