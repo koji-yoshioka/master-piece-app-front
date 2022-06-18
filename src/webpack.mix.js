@@ -14,6 +14,7 @@ const path = require('path')
 
 mix.ts('resources/js/app.ts', 'public/js').vue()
     .sass('resources/sass/app.scss', 'public/css')
+    .version()
     .webpackConfig({
         resolve: {
             alias: {

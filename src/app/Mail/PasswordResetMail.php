@@ -29,7 +29,7 @@ class PasswordResetMail extends Mailable
     public function build()
     {
         // 件名
-        $subject = 'Reset password mail';
+        $subject = 'Master Piece';
 
         $baseUrl = config('app.url');
         $token = $this->token;

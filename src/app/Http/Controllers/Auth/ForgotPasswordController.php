@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Mail\PasswordResetMail;
 use App\Models\PasswordReset;
+use App\Models\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,11 @@ class ForgotPasswordController extends Controller
     public function forgot(Request $request)
     {
         $this->validateEmail($request);
+
+        if (User::where('email', $request->email)->doesntExist()) {
+            // セキュリティを考慮して、メールアドレスに紐づくデータがなくても正常なレスポンスを返す
+            return response()->json([]);
+        }
 
         DB::transaction(function () use($request) {
             $token = $this->createToken();
