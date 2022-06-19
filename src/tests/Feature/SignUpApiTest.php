@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class RegisterApiTest extends TestCase
+class SignUpApiTest extends TestCase
 {
 
     use RefreshDatabase;
