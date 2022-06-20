@@ -5,7 +5,7 @@
 地域・価格から企業を検索し、予算にあったメニューを予約します。<br>
 近年の男性の美意識の向上、および競合サービスが少なかったため、需要があるのではないかと思い作成しました。
 
-<!-- <img src="/README_images/screen_shot.png"> -->
+<img src="/README_images/top-screen-shot.png">
 
 ## URL
 https://master-piece.site
