@@ -3,15 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GetCompanyRequest;
-use App\Http\Requests\GetLikeCompaniesRequest;
 use App\Models\Company;
 use App\Models\Prefecture;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class CompanyController extends Controller
 {
@@ -58,14 +54,14 @@ class CompanyController extends Controller
         if ($sellingPointIds) {
             // セールスポイント
             $companyIdsBySellingPoint = DB::table('company_selling_point')->select('company_id')
-                ->whereIn('id', $sellingPointIds)
+                ->whereIn('selling_point_id', $sellingPointIds)
+                ->distinct()
                 ->get()
                 ->map(fn($companyId) => $companyId->company_id);
             if (sizeof($companyIdsBySellingPoint) == 0) {
                 response()->json([]);
             }
         }
-
         // ユーザID
         $userId = $request->userId;
         $prefecture = Prefecture::find($request->prefectureId);
